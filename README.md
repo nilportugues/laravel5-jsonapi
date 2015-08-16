@@ -114,9 +114,9 @@ return [
         ],
         'urls' => [
             'self' => 'self' => route('get_post'),
-            'relationships' => [
-                'comment' => route('get_comment_author_relationship'),
-            ],
+        ],
+        'relationships' => [        
+            'comment' => route('get_comment_author_relationship'),
         ],
     ],
     [
