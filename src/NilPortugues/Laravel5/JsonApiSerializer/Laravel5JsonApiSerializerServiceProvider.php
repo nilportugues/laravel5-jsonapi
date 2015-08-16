@@ -38,7 +38,7 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi_mapping');
         $this->app->singleton(\NilPortugues\Serializer\Serializer::class, function ($app) {
-            return JsonApiSerialize::instance($app['config']->get('jsonapi_mapping'));
+            return JsonApiSerializer::instance($app['config']->get('jsonapi_mapping'));
         });
     }
 
