@@ -19,11 +19,12 @@ $ composer require nilportugues/laravel5-json-api
 **Recommendation**
 
 Due to the lack of current support for PSR-7 Requests and Responses, it is also recommended to install the package `symfony/psr-http-message-bridge`that will bridge between the PHP standard and the Response object used by Laravel.
-
+<br><br>
 
 ## Laravel 5 / Lumen Configuration
 
 **Step 1: Add the Service Provider**
+
 Open up `bootstrap/app.php`and add the following lines before the `return $app;` statement:
 
 ```php
@@ -249,7 +250,7 @@ class PostController extends \Laravel\Lumen\Routing\Controller
 }
 ```
 
-
+<br><br>
 ## Quality
 
 To run the PHPUnit tests at the command line, go to the tests directory and issue phpunit.
@@ -259,7 +260,7 @@ This library attempts to comply with [PSR-1](http://www.php-fig.org/psr/psr-1/),
 If you notice compliance oversights, please send a patch via [Pull Request](https://github.com/nilportugues/laravel5-jsonapi-transformer/pulls).
 
 
-
+<br><br>
 ## Contribute
 
 Contributions to the package are always welcome!
@@ -268,7 +269,7 @@ Contributions to the package are always welcome!
 * You can grab the source code at the package's [Git repository](https://github.com/nilportugues/laravel5-jsonapi-transformer).
 
 
-
+<br><br>
 ## Support
 
 Get in touch with me using one of the following means:
@@ -278,7 +279,7 @@ Get in touch with me using one of the following means:
  - Using Gitter: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nilportugues/laravel5-jsonapi-transformer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
-
+<br><br>
 ## Authors
 
 * [Nil Portugués Calderó](http://nilportugues.com)
