@@ -1,7 +1,7 @@
 # Laravel 5 JSON API Transformer Package
 
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nilportugues/laravel5-json-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nilportugues/json-api/?branch=master) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/e39e4c0e-a402-495b-a763-6e0482e2083d/mini.png)](https://insight.sensiolabs.com/projects/e39e4c0e-a402-495b-a763-6e0482e2083d) 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nilportugues/laravel5-jsonapi-transformer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nilportugues/laravel5-jsonapi-transformer/?branch=master) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/22db88f5-d061-4b32-bad1-4b806ac07318/mini.png)](https://insight.sensiolabs.com/projects/22db88f5-d061-4b32-bad1-4b806ac07318) 
 [![Latest Stable Version](https://poser.pugx.org/nilportugues/laravel5-json-api/v/stable)](https://packagist.org/packages/nilportugues/json-api) 
 [![Total Downloads](https://poser.pugx.org/nilportugues/laravel5-json-api/downloads)](https://packagist.org/packages/nilportugues/json-api) 
 [![License](https://poser.pugx.org/nilportugues/laravel5-json-api/license)](https://packagist.org/packages/nilportugues/json-api) 
@@ -250,7 +250,7 @@ class PostController extends \Laravel\Lumen\Routing\Controller
 }
 ```
 
-<br><br>
+<br>
 ## Quality
 
 To run the PHPUnit tests at the command line, go to the tests directory and issue phpunit.
@@ -260,7 +260,7 @@ This library attempts to comply with [PSR-1](http://www.php-fig.org/psr/psr-1/),
 If you notice compliance oversights, please send a patch via [Pull Request](https://github.com/nilportugues/laravel5-jsonapi-transformer/pulls).
 
 
-<br><br>
+<br>
 ## Contribute
 
 Contributions to the package are always welcome!
@@ -269,7 +269,7 @@ Contributions to the package are always welcome!
 * You can grab the source code at the package's [Git repository](https://github.com/nilportugues/laravel5-jsonapi-transformer).
 
 
-<br><br>
+<br>
 ## Support
 
 Get in touch with me using one of the following means:
@@ -279,7 +279,7 @@ Get in touch with me using one of the following means:
  - Using Gitter: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nilportugues/laravel5-jsonapi-transformer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
-<br><br>
+<br>
 ## Authors
 
 * [Nil Portugués Calderó](http://nilportugues.com)
