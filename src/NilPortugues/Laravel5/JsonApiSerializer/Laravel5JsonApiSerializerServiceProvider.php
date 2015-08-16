@@ -1,17 +1,16 @@
 <?php
+
 /**
  * Author: Nil Portugués Calderó <contact@nilportugues.com>
  * Date: 8/15/15
- * Time: 5:45 PM
+ * Time: 5:45 PM.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
 use Illuminate\Support\ServiceProvider;
-
 
 class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
 {
@@ -26,26 +25,21 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap the application events.
-     *
-     * @return void
      */
     public function boot()
     {
-        $this->publishes([__DIR__. self::PATH => config('jsonapi.php')]);
+        $this->publishes([__DIR__.self::PATH => config('jsonapi.php')]);
     }
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__. self::PATH, 'jsonapi_mapping');
-        $this->app->singleton(\NilPortugues\Serializer\Serializer::class, function($app) {
+        $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi_mapping');
+        $this->app->singleton(\NilPortugues\Serializer\Serializer::class, function ($app) {
             return JsonApiSerialize::instance($app['config']->get('jsonapi_mapping'));
         });
-
     }
 
     /**
@@ -57,4 +51,4 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
     {
         return ['jsonapi_mapping'];
     }
-} 
+}
