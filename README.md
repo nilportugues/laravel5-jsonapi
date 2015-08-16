@@ -16,10 +16,6 @@ Use [Composer](https://getcomposer.org) to install the package:
 $ composer require nilportugues/laravel5-json-api
 ```
 
-**Recommendation**
-
-Due to the lack of current support for PSR-7 Requests and Responses, it is also recommended to install the package `symfony/psr-http-message-bridge`that will bridge between the PHP standard and the Response object used by Laravel.
-<br><br>
 
 ## Laravel 5 / Lumen Configuration
 
@@ -426,6 +422,7 @@ The following PSR-7 Response objects providing the right headers and HTTP status
 - `NilPortugues\Api\JsonApi\Http\Message\Response($json)`
 - `NilPortugues\Api\JsonApi\Http\Message\UnsupportedActionResponse($json)`
 
+Due to the current lack of support for PSR-7 Requests and Responses in Laravel, it is also recommended to install the package `symfony/psr-http-message-bridge`that will bridge between the PHP standard and the Response object used by Laravel automatically, as seen in the Controller example code provided.
 
 
 <br>
