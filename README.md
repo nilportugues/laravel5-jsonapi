@@ -239,9 +239,13 @@ class PostController extends \Laravel\Lumen\Routing\Controller
     public function getPostAction($postId)
     {
         $post = $this->postRepository->findById($postId);
-        $json = $this->jsonApiSerializer->serialize($post);
+        
+        /** @var \NilPortugues\Api\JsonApi\JsonApiTransformer $transformer */
+        $transformer = $this->serializer->getTransformer();
+        $transformer->setSelfUrl(route('get_post', ['postId' => $postId]));
+        $transformer->setNextUrl(route('get_post', ['postId' => $postId+1]));
 
-        return (new HttpFoundationFactory())->createResponse(new Response($json));
+        return (new HttpFoundationFactory())->createResponse(new Response($this->serializer->serialize($post)));
     }
 }
 ```
