@@ -11,7 +11,6 @@
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
 use Illuminate\Support\ServiceProvider;
-use NilPortugues\Serializer\Serializer;
 
 
 class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
