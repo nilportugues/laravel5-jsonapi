@@ -250,6 +250,184 @@ class PostController extends \Laravel\Lumen\Routing\Controller
 }
 ```
 
+
+**Output:**
+
+```
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=0, must-revalidate
+Content-type: application/vnd.api+json
+```
+
+```json
+{
+    "data": {
+        "type": "message",
+        "id": "9",
+        "attributes": {
+            "headline": "Hello World",
+            "body": "Your first post"
+        },
+        "links": {
+            "self": {
+                "href": "http://example.com/posts/9"
+            },
+            "comments": {
+                "href": "http://example.com/posts/9/comments"
+            }
+        },
+        "relationships": {
+            "author": {
+                "links": {
+                    "self": {
+                        "href": "http://example.com/posts/9/relationships/author"
+                    },
+                    "related": {
+                        "href": "http://example.com/posts/9/author"
+                    }
+                },
+                "data": {
+                    "type": "user",
+                    "id": "1"
+                }
+            }
+        }
+    },
+    "included": [
+        {
+            "type": "user",
+            "id": "1",
+            "attributes": {
+                "name": "Post Author"
+            },
+            "links": {
+                "self": {
+                    "href": "http://example.com/users/1"
+                },
+                "friends": {
+                    "href": "http://example.com/users/1/friends"
+                },
+                "comments": {
+                    "href": "http://example.com/users/1/comments"
+                }
+            }
+        },
+        {
+            "type": "user",
+            "id": "2",
+            "attributes": {
+                "name": "Barristan Selmy"
+            },
+            "links": {
+                "self": {
+                    "href": "http://example.com/users/2"
+                },
+                "friends": {
+                    "href": "http://example.com/users/2/friends"
+                },
+                "comments": {
+                    "href": "http://example.com/users/2/comments"
+                }
+            }
+        },
+        {
+            "type": "comment",
+            "id": "1000",
+            "attributes": {
+                "dates": {
+                    "created_at": "2015-08-13T21:11:07+02:00",
+                    "accepted_at": "2015-08-13T21:46:07+02:00"
+                },
+                "comment": "Have no fear, sers, your king is safe."
+            },
+            "links": {
+                "self": {
+                    "href": "http://example.com/comments/1000"
+                }
+            }
+        }
+    ],
+    "links": {
+        "self": {
+            "href": "http://example.com/posts/9"
+        },
+        "next": {
+            "href": "http://example.com/posts/10"
+        }
+    },
+    "meta": {
+        "author": [
+            {
+                "name": "Nil Portugués Calderó",
+                "email": "contact@nilportugues.com"
+            }
+        ]
+    },
+    "jsonapi": {
+        "version": "1.0"
+    }
+}
+```
+
+#### Request objects
+
+JSON API comes with a helper Request class, `NilPortugues\Api\JsonApi\Http\Message\Request(ServerRequestInterface $request)`, implementing the PSR-7 Request Interface. Using this request object will provide you access to all the interactions expected in a JSON API:
+
+##### JSON API Query Parameters:
+
+- &filter[resource]=field1,field2
+- &include[resource]
+- &include[resource.field1]
+- &sort=field1,-field2
+- &sort=-field1,field2
+- &page[number]
+- &page[limit]
+- &page[cursor]
+- &page[offset]
+- &page[size]
+
+
+##### NilPortugues\Api\JsonApi\Http\Message\Request
+
+Given the query parameters listed above, Request implements helper methods that parse and return data already prepared.
+
+```php
+namespace NilPortugues\Api\JsonApi\Http\Message;
+
+final class Request
+{
+    public function __construct(ServerRequestInterface $request) { ... }
+    public function getQueryParam($name, $default = null) { ... }
+    public function getIncludedRelationships($baseRelationshipPath) { ... }
+    public function getSortFields() { ... }
+    public function getAttribute($name, $default = null) { ... }
+    public function getSortDirection() { ... }
+    public function getPageNumber() { ... }
+    public function getPageLimit() { ... }
+    public function getPageOffset() { ... }
+    public function getPageSize() { ... }
+    public function getPageCursor() { ... }
+    public function getFilters() { ... }
+}
+```
+
+#### Response objects
+
+The following PSR-7 Response objects providing the right headers and HTTP status codes are available:
+
+- `NilPortugues\Api\JsonApi\Http\Message\ErrorResponse($json)`
+- `NilPortugues\Api\JsonApi\Http\Message\ResourceCreatedResponse($json)`
+- `NilPortugues\Api\JsonApi\Http\Message\ResourceDeletedResponse($json)`
+- `NilPortugues\Api\JsonApi\Http\Message\ResourceNotFoundResponse($json)`
+- `NilPortugues\Api\JsonApi\Http\Message\ResourcePatchErrorResponse($json)`
+- `NilPortugues\Api\JsonApi\Http\Message\ResourcePostErrorResponse($json)`
+- `NilPortugues\Api\JsonApi\Http\Message\ResourceProcessingResponse($json)`
+- `NilPortugues\Api\JsonApi\Http\Message\ResourceUpdatedResponse($json)`
+- `NilPortugues\Api\JsonApi\Http\Message\Response($json)`
+- `NilPortugues\Api\JsonApi\Http\Message\UnsupportedActionResponse($json)`
+
+
+
 <br>
 ## Quality
 
