@@ -1,5 +1,13 @@
 # Laravel 5 JSON API Transformer Package
 
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nilportugues/laravel5-json-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nilportugues/json-api/?branch=master) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/e39e4c0e-a402-495b-a763-6e0482e2083d/mini.png)](https://insight.sensiolabs.com/projects/e39e4c0e-a402-495b-a763-6e0482e2083d) 
+[![Latest Stable Version](https://poser.pugx.org/nilportugues/laravel5-json-api/v/stable)](https://packagist.org/packages/nilportugues/json-api) 
+[![Total Downloads](https://poser.pugx.org/nilportugues/laravel5-json-api/downloads)](https://packagist.org/packages/nilportugues/json-api) 
+[![License](https://poser.pugx.org/nilportugues/laravel5-json-api/license)](https://packagist.org/packages/nilportugues/json-api) 
+
+
+
 ## Installation
 
 Use [Composer](https://getcomposer.org) to install the package:
@@ -9,7 +17,8 @@ $ composer require nilportugues/laravel5-json-api
 ```
 
 **Recommendation**
-Due to the lack of current support for PSR-7 Requests and Responses, it is also recommended to install the package `symfony/psr-http-message-bridge"`that will bridge between the PHP standard and the Response object used by Laravel.
+
+Due to the lack of current support for PSR-7 Requests and Responses, it is also recommended to install the package `symfony/psr-http-message-bridge`that will bridge between the PHP standard and the Response object used by Laravel.
 
 
 ## Laravel 5 / Lumen Configuration
@@ -29,7 +38,7 @@ Create a `jsonapi.php` file in `bootstrap/` directory. This file should return a
 An example as follows:
 
 
-** Step 3: Usage**
+**Step 3: Usage**
 
 For instance, lets say the following object has been fetched from a Repository , lets say `PostRepository` - this being implemented in Eloquent or whatever your flavour is:
 
@@ -66,11 +75,11 @@ $post = new Post(
 );
 ```
 
-And a series of mappings, placed in `bootstrap/jsonapi.php`, that require to use *named routes*:
+And a series of mappings, placed in `bootstrap/jsonapi.php`, that require to use *named routes* so we can use the `route()` helper function:
 
 ```php
 <?php
-
+//bootstrap/jsonapi.php
 return [
     [
         'class' => 'Acme\Domain\Dummy\Post',
@@ -93,8 +102,8 @@ return [
         // (Optional)
         'relationships' => [
             'author' => [
-                'related' => 'http://example.com/posts/{postId}/author',
-                'self' => 'http://example.com/posts/{postId}/relationships/author',
+                'related' => 'self' => route('get_post_author'),
+                'self' => 'self' => route('get_post_author_relationship'),
             ]
         ],
     ],
@@ -107,9 +116,9 @@ return [
             'postId',
         ],
         'urls' => [
-            'self' => 'http://example.com/posts/{postId}',
+            'self' => 'self' => route('get_post'),
             'relationships' => [
-                'comment' => 'http://example.com/posts/{postId}/relationships/comments',
+                'comment' => route('get_comment_author_relationship'),
             ],
         ],
     ],
@@ -122,9 +131,9 @@ return [
             'userId',
         ],
         'urls' => [
-            'self' => 'http://example.com/users/{userId}',
-            'friends' => 'http://example.com/users/{userId}/friends',
-            'comments' => 'http://example.com/users/{userId}/comments',
+            'self' => route('get_user'),
+            'friends' => route('get_user_friends'),
+            'comments' => route('get_user_comments'),
         ],
     ],
     [
@@ -136,9 +145,9 @@ return [
             'userId',
         ],
         'urls' => [
-            'self' => 'http://example.com/users/{userId}',
-            'friends' => 'http://example.com/users/{userId}/friends',
-            'comments' => 'http://example.com/users/{userId}/comments',
+            'self' => route('get_user'),
+            'friends' => route('get_user_friends'),
+            'comments' => route('get_user_comments'),
         ],
     ],
     [
@@ -150,11 +159,11 @@ return [
             'commentId',
         ],
         'urls' => [
-            'self' => 'http://example.com/comments/{commentId}',
+            'self' => route('get_comment'),
         ],
         'relationships' => [
             'post' => [
-                'self' => 'http://example.com/posts/{postId}/relationships/comments',
+                'self' => route('get_post_comments_relationship'),
             ]
         ],
     ],
@@ -167,16 +176,77 @@ return [
             'commentId',
         ],
         'urls' => [
-            'self' => 'http://example.com/comments/{commentId}',
+            'self' => route('get_comment'),
         ],
         'relationships' => [
             'post' => [
-                'self' => 'http://example.com/posts/{postId}/relationships/comments',
+                'self' => route('get_post_comments_relationship'),
             ]
         ],
     ],
 ];
 
+```
+
+The named routes belong to the `app/Http/routes.php`. Here's a sample for the routes provided mapping:
+
+```php
+$app->get(
+  '/post/{postId}',
+  ['as' => 'get_post', 'uses' => 'PostController@getPostAction']
+);
+
+$app->get(
+  '/post/{postId}/comments',
+  ['as' => 'get_post_comments', 'uses' => 'CommentsController@getPostCommentsAction']
+);
+
+//...
+``` 
+
+All of this set up allows you to easily use the `JsonApiSerializer` service as follows:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Acme\Domain\Dummy\PostRepository;
+use NilPortugues\Api\JsonApi\Http\Message\Response;
+use NilPortugues\Serializer\Serializer;
+use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
+
+
+class PostController extends \Laravel\Lumen\Routing\Controller
+{
+    /**
+     * @var PostRepository
+     */
+    private $postRepository;
+
+    /**
+     * @param PostRepository $postRepository
+     * @param Serializer $jsonApiSerializer
+     */
+    public function __construct(PostRepository $postRepository, Serializer $jsonApiSerializer)
+    {
+        $this->postRepository = $postRepository;
+        $this->jsonApiSerializer = $jsonApiSerializer;
+    }
+
+    /**
+     * @param int $postId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getPostAction($postId)
+    {
+        $post = $this->postRepository->findById($postId);
+        $json = $this->jsonApiSerializer->serialize($post);
+
+        return (new HttpFoundationFactory())->createResponse(new Response($json));
+    }
+}
 ```
 
 
