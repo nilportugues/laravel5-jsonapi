@@ -14,7 +14,7 @@
     ],
     "require": {
         "nilportugues/json-api": "~1.0",
-        "nilportugues/serializer": "1.0.0-alpha",
+        "nilportugues/serializer": "~1.0",
         "symfony/psr-http-message-bridge": "0.1"
     },
     "autoload": {
