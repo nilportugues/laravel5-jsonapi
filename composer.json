@@ -24,6 +24,5 @@
     },
     "config": {
         "preferred-install": "dist"
-    },
-    "minimum-stability": "alpha"
+    }
 }
