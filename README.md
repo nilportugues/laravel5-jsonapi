@@ -32,8 +32,6 @@ $app['config']->set('jsonapi_mapping', include('jsonapi.php'));
 
 Create a `jsonapi.php` file in `bootstrap/` directory. This file should return an array returning all the class mappings.
 
-An example as follows:
-
 
 **Step 3: Usage**
 
