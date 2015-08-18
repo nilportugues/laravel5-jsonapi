@@ -11,7 +11,6 @@
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
-use NilPortugues\Api\Mapping\Mapper;
 use NilPortugues\Serializer\Serializer;
 
 /**
@@ -19,5 +18,11 @@ use NilPortugues\Serializer\Serializer;
  */
 class JsonApiSerializer extends Serializer
 {
-
+    /**
+     * @param JsonApiTransformer $strategy
+     */
+    public function __construct(JsonApiTransformer $strategy)
+    {
+        parent::__construct($strategy);
+    }
 }
