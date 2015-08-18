@@ -246,10 +246,8 @@ All of this set up allows you to easily use the `JsonApiSerializer` service as f
 namespace App\Http\Controllers;
 
 use Acme\Domain\Dummy\PostRepository;
-use NilPortugues\Api\JsonApi\Http\Message\Response;
 use NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer;
 use NilPortugues\Laravel5\JsonApiSerializer\JsonApiResponseTrait;
-use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 
 /**
  * Laravel Controller example
