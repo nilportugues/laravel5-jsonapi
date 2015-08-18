@@ -240,7 +240,8 @@ namespace App\Http\Controllers;
 
 use Acme\Domain\Dummy\PostRepository;
 use NilPortugues\Api\JsonApi\Http\Message\Response;
-use NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer
+use NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer;
+use NilPortugues\Laravel5\JsonApiSerializer\JsonApiResponseTrait;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 
 /**
@@ -248,6 +249,8 @@ use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
  */
 class PostController extends \App\Http\Controllers\Controller
 {
+    use JsonApiResponseTrait;
+    
     /**
      * @var PostRepository
      */
@@ -282,7 +285,7 @@ class PostController extends \App\Http\Controllers\Controller
         $transformer->setSelfUrl(route('get_post', ['postId' => $postId]));
         $transformer->setNextUrl(route('get_post', ['postId' => $postId+1]));
 
-        return (new HttpFoundationFactory())->createResponse(new Response($this->serializer->serialize($post)));
+        return $this->response($this->serializer->serialize($post));
     }
 }
 ```
@@ -448,25 +451,24 @@ final class Request
 }
 ```
 
-#### Response objects
+#### Response objects (JsonApiResponseTrait)
 
-The following PSR-7 Response objects providing the right headers and HTTP status codes are available:
+The following `JsonApiResponseTrait` methods are provided to return the right headers and HTTP status codes are available:
 
-- `NilPortugues\Api\JsonApi\Http\Message\ErrorResponse($json)`
-- `NilPortugues\Api\JsonApi\Http\Message\ResourceCreatedResponse($json)`
-- `NilPortugues\Api\JsonApi\Http\Message\ResourceDeletedResponse($json)`
-- `NilPortugues\Api\JsonApi\Http\Message\ResourceNotFoundResponse($json)`
-- `NilPortugues\Api\JsonApi\Http\Message\ResourcePatchErrorResponse($json)`
-- `NilPortugues\Api\JsonApi\Http\Message\ResourcePostErrorResponse($json)`
-- `NilPortugues\Api\JsonApi\Http\Message\ResourceProcessingResponse($json)`
-- `NilPortugues\Api\JsonApi\Http\Message\ResourceUpdatedResponse($json)`
-- `NilPortugues\Api\JsonApi\Http\Message\Response($json)`
-- `NilPortugues\Api\JsonApi\Http\Message\UnsupportedActionResponse($json)`
+```
+    private function errorResponse($json);
+    private function resourceCreatedResponse($json);
+    private function resourceDeletedResponse($json);
+    private function resourceNotFoundResponse($json);
+    private function resourcePatchErrorResponse($json);
+    private function resourcePostErrorResponse($json);
+    private function resourceProcessingResponse($json);
+    private function resourceUpdatedResponse($json);
+    private function response($json);
+    private function unsupportedActionResponse($json);
+```    
 
-Due to the current lack of support for PSR-7 Requests and Responses in Laravel, `symfony/psr-http-message-bridge` will bridge between the PHP standard and the Response object used by Laravel automatically, as seen in the Controller example code provided.
 
-
-<br>
 ## Quality
 
 To run the PHPUnit tests at the command line, go to the tests directory and issue phpunit.
