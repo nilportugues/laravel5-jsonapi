@@ -460,7 +460,7 @@ final class Request
 
 The following `JsonApiResponseTrait` methods are provided to return the right headers and HTTP status codes are available:
 
-```
+```php
     private function errorResponse($json);
     private function resourceCreatedResponse($json);
     private function resourceDeletedResponse($json);
