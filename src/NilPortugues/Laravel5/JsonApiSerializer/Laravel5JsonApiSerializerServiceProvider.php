@@ -41,14 +41,24 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi');
         $this->app->singleton(\NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer::class, function ($app) {
 
-            $mapping = $app['config']->get('jsonapi');
-            foreach($mapping as &$map) {
-                self::parseUrls($map);
-                self::parseRelationshipUrls($map);
-            }
+                $mapping = $app['config']->get('jsonapi');
+                $key = md5(json_encode($mapping));
 
-            return new JsonApiSerializer(new JsonApiTransformer(new Mapper($mapping)));
-        });
+                $cachedMapping = Cache::get($key);
+                if(!empty($cachedMapping)) {
+                    return unserialize($cachedMapping);
+                }
+
+                foreach($mapping as &$map) {
+                    self::parseUrls($map);
+                    self::parseRelationshipUrls($map);
+                }
+
+                $serializer = new JsonApiSerializer(new JsonApiTransformer(new Mapper($mapping)));
+                Cache::put($key, serialize($serializer),60*60*24);
+
+                return $serializer;
+            });
     }
 
 
