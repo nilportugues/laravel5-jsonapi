@@ -17,15 +17,7 @@ use NilPortugues\Serializer\Serializer;
 /**
  * Class JsonApiSerializer.
  */
-class JsonApiSerializer
+class JsonApiSerializer extends Serializer
 {
-    /**
-     * @param array $mapping
-     *
-     * @return Serializer
-     */
-    public static function instance(array $mapping)
-    {
-        return new Serializer(new JsonApiTransformer(new Mapper($mapping)));
-    }
+
 }

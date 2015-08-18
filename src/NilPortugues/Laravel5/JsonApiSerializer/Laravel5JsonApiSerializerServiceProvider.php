@@ -11,6 +11,8 @@
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
 use Illuminate\Support\ServiceProvider;
+use NilPortugues\Api\JsonApi\JsonApiTransformer;
+use NilPortugues\Api\Mapping\Mapper;
 
 class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
 {
@@ -21,7 +23,7 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
      *
      * @var bool
      */
-    protected $defer = false;
+    protected $defer = true;
 
     /**
      * Bootstrap the application events.
@@ -36,10 +38,44 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi_mapping');
-        $this->app->singleton(\NilPortugues\Serializer\Serializer::class, function ($app) {
-            return JsonApiSerializer::instance($app['config']->get('jsonapi_mapping'));
+        $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi');
+        $this->app->singleton(\NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer::class, function ($app) {
+
+            $mapping = $app['config']->get('jsonapi');
+            foreach($mapping as &$map) {
+                self::parseUrls($map);
+                self::parseRelationshipUrls($map);
+            }
+
+            return new JsonApiSerializer(new JsonApiTransformer(new Mapper($mapping)));
         });
+    }
+
+
+    /**
+     * @param array $map
+     */
+    private static function parseUrls(array &$map)
+    {
+        if (!empty($map['urls'])) {
+            foreach ($map['urls'] as &$namedUrl) {
+                $namedUrl = urldecode(route($namedUrl));
+            }
+        }
+    }
+
+    /**
+     * @param array $map
+     */
+    private static function parseRelationshipUrls(array &$map)
+    {
+        if (!empty($map['relationships'])) {
+            foreach ($map['relationships'] as &$relationship) {
+                foreach($relationship as &$namedRelationship) {
+                    $namedRelationship = urldecode(route($namedRelationship));
+                }
+            }
+        }
     }
 
     /**
@@ -49,6 +85,6 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['jsonapi_mapping'];
+        return ['jsonapi'];
     }
 }

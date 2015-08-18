@@ -21,16 +21,30 @@ $ composer require nilportugues/laravel5-json-api
 
 **Step 1: Add the Service Provider**
 
-Open up `bootstrap/app.php`and add the following lines before the `return $app;` statement:
+**Laravel**
+
+Open up `config/app.php` and add the following line under `providers` array:
+
+```php
+'providers' => [
+
+    //...
+
+    \NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider::class,
+],
+```
+
+**Lumen**
+
+Open up `bootstrap/app.php`and add the following line before the `return $app;` statement:
 
 ```php
 $app->register('NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider');
-$app['config']->set('jsonapi_mapping', include('jsonapi.php'));
 ```
 
 **Step 2: Add the mapping**
 
-Create a `jsonapi.php` file in `bootstrap/` directory. This file should return an array returning all the class mappings.
+Create a `jsonapi.php` file in `config/` directory. This file should return an array returning all the class mappings.
 
 
 **Step 3: Usage**
@@ -70,11 +84,11 @@ $post = new Post(
 );
 ```
 
-And a series of mappings, placed in `bootstrap/jsonapi.php`, that require to use *named routes* so we can use the `route()` helper function:
+And a series of mappings, placed in `config/jsonapi.php`, that require to use *named routes* so we can use the `route()` helper function:
 
 ```php
 <?php
-//bootstrap/jsonapi.php
+//config/jsonapi.php
 return [
     [
         'class' => 'Acme\Domain\Dummy\Post',
@@ -91,14 +105,14 @@ return [
             'postId',
         ],
         'urls' => [
-            'self' => route('get_post'),
-            'comments' => route('get_post_comments'),
+            'self' => 'get_post', //named route
+            'comments' => 'get_post_comments', //named route
         ],
         // (Optional)
         'relationships' => [
             'author' => [
-                'related' => 'self' => route('get_post_author'),
-                'self' => 'self' => route('get_post_author_relationship'),
+                'related' => 'self' => get_post_author', //named route
+                'self' => 'get_post_author_relationship', //named route
             ]
         ],
     ],
@@ -111,10 +125,10 @@ return [
             'postId',
         ],
         'urls' => [
-            'self' => 'self' => route('get_post'),
+            'self' => 'get_post', //named route
         ],
         'relationships' => [        
-            'comment' => route('get_comment_author_relationship'),
+            'comment' => 'get_comment_author_relationship', //named route
         ],
     ],
     [
@@ -126,9 +140,9 @@ return [
             'userId',
         ],
         'urls' => [
-            'self' => route('get_user'),
-            'friends' => route('get_user_friends'),
-            'comments' => route('get_user_comments'),
+            'self' => 'get_user', //named route
+            'friends' => 'get_user_friends', //named route
+            'comments' => 'get_user_comments', //named route
         ],
     ],
     [
@@ -140,9 +154,9 @@ return [
             'userId',
         ],
         'urls' => [
-            'self' => route('get_user'),
-            'friends' => route('get_user_friends'),
-            'comments' => route('get_user_comments'),
+            'self' => 'get_user', //named route
+            'friends' => 'get_user_friends', //named route
+            'comments' => 'get_user_comments', //named route
         ],
     ],
     [
@@ -154,11 +168,11 @@ return [
             'commentId',
         ],
         'urls' => [
-            'self' => route('get_comment'),
+            'self' => 'get_comment',//named route
         ],
         'relationships' => [
             'post' => [
-                'self' => route('get_post_comments_relationship'),
+                'self' => 'get_post_comments_relationship', //named route
             ]
         ],
     ],
@@ -171,11 +185,11 @@ return [
             'commentId',
         ],
         'urls' => [
-            'self' => route('get_comment'),
+            'self' => 'get_comment', //named route
         ],
         'relationships' => [
             'post' => [
-                'self' => route('get_post_comments_relationship'),
+                'self' => 'get_post_comments_relationship',//named route
             ]
         ],
     ],
@@ -184,6 +198,24 @@ return [
 ```
 
 The named routes belong to the `app/Http/routes.php`. Here's a sample for the routes provided mapping:
+
+**Laravel**
+
+```php
+Route::get(
+  '/post/{postId}',
+  ['as' => 'get_post', 'uses' => 'PostController@getPostAction']
+);
+
+Route::get(
+  '/post/{postId}/comments',
+  ['as' => 'get_post_comments', 'uses' => 'CommentsController@getPostCommentsAction']
+);
+
+//...
+```
+
+**Lumen**
 
 ```php
 $app->get(
@@ -208,11 +240,13 @@ namespace App\Http\Controllers;
 
 use Acme\Domain\Dummy\PostRepository;
 use NilPortugues\Api\JsonApi\Http\Message\Response;
-use NilPortugues\Serializer\Serializer;
+use NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 
-
-class PostController extends \Laravel\Lumen\Routing\Controller
+/**
+ * Laravel Controller example
+ */
+class PostController extends \App\Http\Controllers\Controller
 {
     /**
      * @var PostRepository
@@ -220,13 +254,18 @@ class PostController extends \Laravel\Lumen\Routing\Controller
     private $postRepository;
 
     /**
-     * @param PostRepository $postRepository
-     * @param Serializer $jsonApiSerializer
+     * @var PostRepository
      */
-    public function __construct(PostRepository $postRepository, Serializer $jsonApiSerializer)
+    private $serializer;
+
+    /**
+     * @param PostRepository $postRepository
+     * @param JsonApiSerializer $jsonApiSerializer
+     */
+    public function __construct(PostRepository $postRepository, JsonApiSerializer $jsonApiSerializer)
     {
         $this->postRepository = $postRepository;
-        $this->jsonApiSerializer = $jsonApiSerializer;
+        $this->serializer = $jsonApiSerializer;
     }
 
     /**
