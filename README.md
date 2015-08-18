@@ -29,18 +29,25 @@ Open up `config/app.php` and add the following line under `providers` array:
 'providers' => [
 
     //...
-
     \NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider::class,
 ],
 ```
 
 **Lumen**
 
-Open up `bootstrap/app.php`and add the following line before the `return $app;` statement:
+Open up `bootstrap/app.php`and add the following lines before the `return $app;` statement:
 
 ```php
-$app->register('NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider');
+$app->register(\NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider::class);
+$app->configure('jsonapi');
 ```
+
+Also, enable Facades by uncommenting:
+
+```php
+$app->withFacades();
+```
+
 
 **Step 2: Add the mapping**
 

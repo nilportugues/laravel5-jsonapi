@@ -50,10 +50,7 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
                     return unserialize($cachedMapping);
                 }
 
-                foreach($mapping as &$map) {
-                    self::parseUrls($map);
-                    self::parseRelationshipUrls($map);
-                }
+                self::parseNamedRoutes($mapping);
 
                 $serializer = new JsonApiSerializer(new JsonApiTransformer(new Mapper($mapping)));
                 Cache::put($key, serialize($serializer),60*60*24);
@@ -62,6 +59,19 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
             });
     }
 
+
+    /**
+     * @param array $mapping
+     *
+     * @return mixed
+     */
+    private static function parseNamedRoutes(array &$mapping)
+    {
+        foreach ($mapping as &$map) {
+            self::parseUrls($map);
+            self::parseRelationshipUrls($map);
+        }
+    }
 
     /**
      * @param array $map
