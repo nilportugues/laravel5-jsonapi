@@ -10,6 +10,7 @@
  */
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
 use NilPortugues\Api\Mapping\Mapper;
