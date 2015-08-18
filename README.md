@@ -118,7 +118,7 @@ return [
         // (Optional)
         'relationships' => [
             'author' => [
-                'related' => get_post_author', //named route
+                'related' => 'get_post_author', //named route
                 'self' => 'get_post_author_relationship', //named route
             ]
         ],
