@@ -11,12 +11,12 @@
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
-use NilPortugues\Serializer\Serializer;
+use NilPortugues\Serializer\DeepCopySerializer;
 
 /**
  * Class JsonApiSerializer.
  */
-class JsonApiSerializer extends Serializer
+class JsonApiSerializer extends DeepCopySerializer
 {
     /**
      * @param JsonApiTransformer $strategy
