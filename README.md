@@ -262,7 +262,7 @@ class PostController extends \App\Http\Controllers\Controller
     private $postRepository;
 
     /**
-     * @var PostRepository
+     * @var JsonApiSerializer
      */
     private $serializer;
 
