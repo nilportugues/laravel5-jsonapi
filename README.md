@@ -60,7 +60,7 @@ For instance, lets say the following object has been fetched from a Repository ,
 
 This is its migration file:
 
-```
+```php
 <?php
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
