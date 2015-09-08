@@ -135,12 +135,12 @@ return [
         ],
         ,
         // (Optional)
-        'relationships' => [
-            'author' => [
-                'related' => 'get_user_friends', //named route
-                'self' => 'get_user_friends_relationship', //named route
-            ]
-        ],
+        // 'relationships' => [
+        //     'author' => [
+        //         'related' => 'get_user_friends', //named route
+        //         'self' => 'get_user_friends_relationship', //named route
+        //     ]
+        // ],
     ],
 ];
 
