@@ -133,7 +133,6 @@ return [
         'urls' => [
             'self' => 'get_user', //named route
         ],
-        ,
         // (Optional)
         // 'relationships' => [
         //     'author' => [
