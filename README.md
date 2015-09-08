@@ -29,7 +29,7 @@ Open up `config/app.php` and add the following line under `providers` array:
 'providers' => [
 
     //...
-    \NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider::class,
+    NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider::class,
 ],
 ```
 
@@ -56,39 +56,52 @@ Create a `jsonapi.php` file in `config/` directory. This file should return an a
 
 **Step 3: Usage**
 
-For instance, lets say the following object has been fetched from a Repository , lets say `PostRepository` - this being implemented in Eloquent or whatever your flavour is:
+For instance, lets say the following object has been fetched from a Repository , lets say `\App\Models\User` - this being implemented in **Eloquent**, but can be anything.
 
-```php
-use Acme\Domain\Dummy\Post;
-use Acme\Domain\Dummy\ValueObject\PostId;
-use Acme\Domain\Dummy\User;
-use Acme\Domain\Dummy\ValueObject\UserId;
-use Acme\Domain\Dummy\Comment;
-use Acme\Domain\Dummy\ValueObject\CommentId;
+This is its migration file:
 
-//$postId = 9;
-//PostRepository::findById($postId); 
+```
+<?php
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-$post = new Post(
-  new PostId(9),
-  'Hello World',
-  'Your first post',
-  new User(
-      new UserId(1),
-      'Post Author'
-  ),
-  [
-      new Comment(
-          new CommentId(1000),
-          'Have no fear, sers, your king is safe.',
-          new User(new UserId(2), 'Barristan Selmy'),
-          [
-              'created_at' => (new \DateTime('2015/07/18 12:13:00'))->format('c'),
-              'accepted_at' => (new \DateTime('2015/07/19 00:00:00'))->format('c'),
-          ]
-      ),
-  ]
-);
+class CreateUsersTable extends Migration 
+{
+
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('users', function(Blueprint $table)
+        {
+            $table->increments('id');
+            $table->string('username', 30)->unique();
+            $table->string('email')->unique();
+            $table->string('password', 60);
+            $table->integer('role_id')->unsigned();
+            $table->boolean('seen')->default(false);
+            $table->boolean('valid')->default(false);
+            $table->boolean('confirmed')->default(false);
+            $table->string('confirmation_code')->nullable();
+            $table->timestamps();
+            $table->rememberToken();            
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('users');
+    }
+
+}
 ```
 
 And a series of mappings, placed in `config/jsonapi.php`, that require to use *named routes* so we can use the `route()` helper function:
@@ -98,105 +111,34 @@ And a series of mappings, placed in `config/jsonapi.php`, that require to use *n
 //config/jsonapi.php
 return [
     [
-        'class' => 'Acme\Domain\Dummy\Post',
-        'alias' => 'Message',
+        'class' => '\App\Models\User',
+        'alias' => 'User',
         'aliased_properties' => [
-            'author' => 'author',
-            'title' => 'headline',
-            'content' => 'body',
+            'created_at' => 'registered_on',
         ],
         'hide_properties' => [
+            'password', 
+            'role_id',
+            'seen', 
+            'valid', 
+            'confirmed', 
+            'confirmation_code', 
+            'remember_token',
+            'updated_at'
 
         ],
         'id_properties' => [
-            'postId',
+            'id',
         ],
         'urls' => [
-            'self' => 'get_post', //named route
-            'comments' => 'get_post_comments', //named route
+            'self' => 'get_user', //named route
         ],
+        ,
         // (Optional)
         'relationships' => [
             'author' => [
-                'related' => 'get_post_author', //named route
-                'self' => 'get_post_author_relationship', //named route
-            ]
-        ],
-    ],
-    [
-        'class' => 'Acme\Domain\Dummy\ValueObject\PostId',
-        'alias' => '',
-        'aliased_properties' => [],
-        'hide_properties' => [],
-        'id_properties' => [
-            'postId',
-        ],
-        'urls' => [
-            'self' => 'get_post', //named route
-        ],
-        'relationships' => [        
-            'comment' => 'get_comment_author_relationship', //named route
-        ],
-    ],
-    [
-        'class' => 'Acme\Domain\Dummy\User',
-        'alias' => '',
-        'aliased_properties' => [],
-        'hide_properties' => [],
-        'id_properties' => [
-            'userId',
-        ],
-        'urls' => [
-            'self' => 'get_user', //named route
-            'friends' => 'get_user_friends', //named route
-            'comments' => 'get_user_comments', //named route
-        ],
-    ],
-    [
-        'class' => 'Acme\Domain\Dummy\ValueObject\UserId',
-        'alias' => '',
-        'aliased_properties' => [],
-        'hide_properties' => [],
-        'id_properties' => [
-            'userId',
-        ],
-        'urls' => [
-            'self' => 'get_user', //named route
-            'friends' => 'get_user_friends', //named route
-            'comments' => 'get_user_comments', //named route
-        ],
-    ],
-    [
-        'class' => 'Acme\Domain\Dummy\Comment',
-        'alias' => '',
-        'aliased_properties' => [],
-        'hide_properties' => [],
-        'id_properties' => [
-            'commentId',
-        ],
-        'urls' => [
-            'self' => 'get_comment',//named route
-        ],
-        'relationships' => [
-            'post' => [
-                'self' => 'get_post_comments_relationship', //named route
-            ]
-        ],
-    ],
-    [
-        'class' => 'Acme\Domain\Dummy\ValueObject\CommentId',
-        'alias' => '',
-        'aliased_properties' => [],
-        'hide_properties' => [],
-        'id_properties' => [
-            'commentId',
-        ],
-        'urls' => [
-            'self' => 'get_comment', //named route
-        ],
-        'relationships' => [
-            'post' => [
-                'self' => 'get_post_comments_relationship',//named route
+                'related' => 'get_user_friends', //named route
+                'self' => 'get_user_friends_relationship', //named route
             ]
         ],
     ],
@@ -210,13 +152,8 @@ The named routes belong to the `app/Http/routes.php`. Here's a sample for the ro
 
 ```php
 Route::get(
-  '/post/{postId}',
-  ['as' => 'get_post', 'uses' => 'PostController@getPostAction']
-);
-
-Route::get(
-  '/post/{postId}/comments',
-  ['as' => 'get_post_comments', 'uses' => 'CommentsController@getPostCommentsAction']
+  '/post/{id}',
+  ['as' => 'get_user', 'uses' => 'UserController@getPostAction']
 );
 
 //...
@@ -227,12 +164,7 @@ Route::get(
 ```php
 $app->get(
   '/post/{postId}',
-  ['as' => 'get_post', 'uses' => 'PostController@getPostAction']
-);
-
-$app->get(
-  '/post/{postId}/comments',
-  ['as' => 'get_post_comments', 'uses' => 'CommentsController@getPostCommentsAction']
+  ['as' => 'get_user', 'uses' => 'UserController@getPostAction']
 );
 
 //...
@@ -245,21 +177,21 @@ All of this set up allows you to easily use the `JsonApiSerializer` service as f
 
 namespace App\Http\Controllers;
 
-use Acme\Domain\Dummy\PostRepository;
+use App\Models\User;
 use NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer;
 use NilPortugues\Laravel5\JsonApiSerializer\JsonApiResponseTrait;
 
 /**
  * Laravel Controller example
  */
-class PostController extends \App\Http\Controllers\Controller
+class UserController extends \App\Http\Controllers\Controller
 {
     use JsonApiResponseTrait;
     
     /**
-     * @var PostRepository
+     * @var App\Models\User
      */
-    private $postRepository;
+    private $userRepository;
 
     /**
      * @var JsonApiSerializer
@@ -267,30 +199,30 @@ class PostController extends \App\Http\Controllers\Controller
     private $serializer;
 
     /**
-     * @param PostRepository $postRepository
+     * @param User $userRepository
      * @param JsonApiSerializer $jsonApiSerializer
      */
-    public function __construct(PostRepository $postRepository, JsonApiSerializer $jsonApiSerializer)
+    public function __construct(User $userRepository, JsonApiSerializer $jsonApiSerializer)
     {
-        $this->postRepository = $postRepository;
+        $this->userRepository = $userRepository;
         $this->serializer = $jsonApiSerializer;
     }
 
     /**
-     * @param int $postId
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getPostAction($postId)
+    public function getUserAction($id)
     {
-        $post = $this->postRepository->findById($postId);
+        $user = $this->userRepository->find($id);
         
         /** @var \NilPortugues\Api\JsonApi\JsonApiTransformer $transformer */
         $transformer = $this->serializer->getTransformer();
-        $transformer->setSelfUrl(route('get_post', ['postId' => $postId]));
-        $transformer->setNextUrl(route('get_post', ['postId' => $postId+1]));
+        $transformer->setSelfUrl(route('get_user', ['id' => $postId]));
+        $transformer->setNextUrl(route('get_user', ['id' => $postId+1]));
 
-        return $this->response($this->serializer->serialize($post));
+        return $this->response($this->serializer->serialize($user));
     }
 }
 ```
@@ -306,54 +238,18 @@ Content-type: application/vnd.api+json
 
 ```json
 {
-    "data": {
-        "type": "message",
-        "id": "9",
-        "attributes": {
-            "headline": "Hello World",
-            "body": "Your first post"
-        },
-        "links": {
-            "self": {
-                "href": "http://example.com/posts/9"
-            },
-            "comments": {
-                "href": "http://example.com/posts/9/comments"
-            }
-        },
-        "relationships": {
-            "author": {
-                "links": {
-                    "self": {
-                        "href": "http://example.com/posts/9/relationships/author"
-                    },
-                    "related": {
-                        "href": "http://example.com/posts/9/author"
-                    }
-                },
-                "data": {
-                    "type": "user",
-                    "id": "1"
-                }
-            }
-        }
-    },
-    "included": [
+    "data": [
         {
             "type": "user",
             "id": "1",
             "attributes": {
-                "name": "Post Author"
+                "username": "Admin",
+                "email": "admin@example.com",
+                "registered_on": "2015-09-07 18:02:18"
             },
             "links": {
                 "self": {
-                    "href": "http://example.com/users/1"
-                },
-                "friends": {
-                    "href": "http://example.com/users/1/friends"
-                },
-                "comments": {
-                    "href": "http://example.com/users/1/comments"
+                    "href": "http://localhost:8000/user/1"
                 }
             }
         },
@@ -361,61 +257,31 @@ Content-type: application/vnd.api+json
             "type": "user",
             "id": "2",
             "attributes": {
-                "name": "Barristan Selmy"
+                "username": "Redactor",
+                "email": "redac@example.com",
+                "registered_on": "2015-09-07 18:02:18"
             },
             "links": {
                 "self": {
-                    "href": "http://example.com/users/2"
-                },
-                "friends": {
-                    "href": "http://example.com/users/2/friends"
-                },
-                "comments": {
-                    "href": "http://example.com/users/2/comments"
+                    "href": "http://localhost:8000/user/2"
                 }
             }
         },
         {
-            "type": "comment",
-            "id": "1000",
+            "type": "user",
+            "id": "3",
             "attributes": {
-                "dates": {
-                    "created_at": "2015-08-13T21:11:07+02:00",
-                    "accepted_at": "2015-08-13T21:46:07+02:00"
-                },
-                "comment": "Have no fear, sers, your king is safe."
+                "username": "Walker",
+                "email": "walker@example.com",
+                "registered_on": "2015-09-07 18:02:18"
             },
-            "relationships": {
-                "user": {
-                    "data": {
-                        "type": "user",
-                        "id": "2"
-                    }
-                }
-            },            
             "links": {
                 "self": {
-                    "href": "http://example.com/comments/1000"
+                    "href": "http://localhost:8000/user/3"
                 }
             }
-        }
-    ],
-    "links": {
-        "self": {
-            "href": "http://example.com/posts/9"
         },
-        "next": {
-            "href": "http://example.com/posts/10"
-        }
-    },
-    "meta": {
-        "author": [
-            {
-                "name": "Nil Portugués Calderó",
-                "email": "contact@nilportugues.com"
-            }
-        ]
-    },
+    ],
     "jsonapi": {
         "version": "1.0"
     }
