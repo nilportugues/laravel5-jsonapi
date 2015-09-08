@@ -152,7 +152,12 @@ The named routes belong to the `app/Http/routes.php`. Here's a sample for the ro
 ```php
 Route::get(
   '/user/{id}',
-  ['as' => 'get_user', 'uses' => 'UserController@getPostAction']
+  ['as' => 'get_user', 'uses' => 'UserController@getOneUserAction']
+);
+
+Route::get(
+  '/user',
+  ['as' => 'get_users', 'uses' => 'UserController@getAllUsersAction']
 );
 
 //...
@@ -162,8 +167,13 @@ Route::get(
 
 ```php
 $app->get(
-  '/user/{postId}',
-  ['as' => 'get_user', 'uses' => 'UserController@getPostAction']
+  '/user/{id}',
+  ['as' => 'get_user', 'uses' => 'UserController@getOneUserAction']
+);
+
+$app->get(
+  '/user',
+  ['as' => 'get_users', 'uses' => 'UserController@getAllUsersAction']
 );
 
 //...
