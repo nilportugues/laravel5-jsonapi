@@ -212,22 +212,32 @@ class UserController extends \App\Http\Controllers\Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getUserAction($id)
+    public function getOneUserAction($id)
     {
         $user = $this->userRepository->find($id);
         
         /** @var \NilPortugues\Api\JsonApi\JsonApiTransformer $transformer */
         $transformer = $this->serializer->getTransformer();
-        $transformer->setSelfUrl(route('get_user', ['id' => $postId]));
-        $transformer->setNextUrl(route('get_user', ['id' => $postId+1]));
+        $transformer->setSelfUrl(route('get_user', ['id' => $id]));
+        $transformer->setNextUrl(route('get_user', ['id' => $id+1]));
 
         return $this->response($this->serializer->serialize($user));
+    }
+    
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getAllUsersAction()
+    {
+        return $this->response($this->serializer->serialize($this->userRepository->all()));
     }
 }
 ```
 
 
 **Output:**
+
+This is the output for `UserController@getAllUsersAction` method:
 
 ```
 HTTP/1.1 200 OK
