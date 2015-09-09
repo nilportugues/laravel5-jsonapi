@@ -39,7 +39,7 @@ class JsonApiSerializer extends DeepCopySerializer
     {
         if ($value instanceof \Illuminate\Database\Eloquent\Collection) {
             $items = [];
-            foreach ($value->all() as &$v) {
+            foreach ($value as &$v) {
                 $items[] = $this->serializeObject($v);
             }
             return [self::MAP_TYPE => 'array', self::SCALAR_VALUE => $items];
