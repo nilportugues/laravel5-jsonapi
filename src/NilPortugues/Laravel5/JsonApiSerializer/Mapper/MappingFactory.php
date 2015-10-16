@@ -63,7 +63,7 @@ class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
     {
         $methods = [];
         foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($method->class === $className) {
+            if (ltrim($method->class, "\\") === ltrim($className, "\\")) {
                 $methods[] = $method->name;
             }
         }
