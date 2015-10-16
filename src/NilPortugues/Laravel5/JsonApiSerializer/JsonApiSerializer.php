@@ -26,7 +26,6 @@ class JsonApiSerializer extends DeepCopySerializer
     {
         parent::__construct($strategy);
     }
-    
 
     /**
      * Extract the data from an object.
@@ -42,6 +41,7 @@ class JsonApiSerializer extends DeepCopySerializer
             foreach ($value as &$v) {
                 $items[] = $this->serializeObject($v);
             }
+
             return [self::MAP_TYPE => 'array', self::SCALAR_VALUE => $items];
         }
 
@@ -49,9 +49,10 @@ class JsonApiSerializer extends DeepCopySerializer
             $stdClass = (object) $value->getAttributes();
             $data =  $this->serializeData($stdClass);
             $data[self::CLASS_IDENTIFIER_KEY] = get_class($value);
+
             return $data;
         }
 
         return parent::serializeObject($value);
-    }    
+    }
 }

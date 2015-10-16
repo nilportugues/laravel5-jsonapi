@@ -13,7 +13,7 @@ namespace NilPortugues\Laravel5\JsonApiSerializer;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
-use NilPortugues\Api\Mapping\Mapper;
+use NilPortugues\Laravel5\JsonApiSerializer\Mapper\Mapper;
 
 class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
 {
@@ -46,7 +46,7 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
                 $key = md5(json_encode($mapping));
 
                 $cachedMapping = Cache::get($key);
-                if(!empty($cachedMapping)) {
+                if (!empty($cachedMapping)) {
                     return unserialize($cachedMapping);
                 }
 
@@ -58,7 +58,6 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
                 return $serializer;
             });
     }
-
 
     /**
      * @param array $mapping
@@ -92,7 +91,7 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
     {
         if (!empty($map['relationships'])) {
             foreach ($map['relationships'] as &$relationship) {
-                foreach($relationship as &$namedRelationship) {
+                foreach ($relationship as &$namedRelationship) {
                     $namedRelationship = urldecode(route($namedRelationship));
                 }
             }
