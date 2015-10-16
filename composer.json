@@ -14,7 +14,6 @@
     ],
     "require": {
         "nilportugues/json-api": "~1.0",
-        "nilportugues/api-transformer": "1.0.6",
         "symfony/psr-http-message-bridge": "~0.2"
     },
     "autoload": {
