@@ -36,10 +36,10 @@ class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
     {
         if (class_exists($className, true)) {
             $reflection = new ReflectionClass($className);
-            $value = $reflection->newInstanceWithoutConstructor();
+            $value      = $reflection->newInstanceWithoutConstructor();
 
             if (is_subclass_of($value, Model::class, true)) {
-                $attributes =  array_merge(
+                $attributes = array_merge(
                     Schema::getColumnListing($value->getTable()),
                     self::getRelationshipMethodsAsPropertyName($value, $className, $reflection)
                 );
@@ -53,7 +53,6 @@ class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
 
         return parent::getClassProperties($className);
     }
-
 
     /**
      * @param                 $value
@@ -69,7 +68,7 @@ class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
 
             if (ltrim($method->class, "\\") === ltrim($className, "\\")) {
 
-                $name = $method->name;
+                $name             = $method->name;
                 $reflectionMethod = $reflection->getMethod($name);
 
                 // Eloquent relations do not include parameters, so we'll be filtering based on this criteria.
@@ -86,7 +85,8 @@ class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
                             }
 
                         }
-                    } catch(ErrorException $e) {}
+                    } catch (ErrorException $e) {
+                    }
                 }
             }
         }

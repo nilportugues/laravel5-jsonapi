@@ -31,7 +31,7 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([__DIR__.self::PATH => config('jsonapi.php')]);
+        $this->publishes([__DIR__ . self::PATH => config('jsonapi.php')]);
     }
 
     /**
@@ -39,24 +39,24 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi');
-        $this->app->singleton(\NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer::class, function ($app) {
+        $this->mergeConfigFrom(__DIR__ . self::PATH, 'jsonapi');
+        $this->app->singleton(
+            \NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer::class,
+            function ($app) {
 
                 $mapping = $app['config']->get('jsonapi');
-                $key = md5(json_encode($mapping));
+                $key     = md5(json_encode($mapping));
 
-                $cachedMapping = Cache::get($key);
-                if (!empty($cachedMapping)) {
-                    return unserialize($cachedMapping);
-                }
+                return Cache::rememberForever(
+                    $key,
+                    function () use ($mapping) {
+                        self::parseNamedRoutes($mapping);
 
-                self::parseNamedRoutes($mapping);
-
-                $serializer = new JsonApiSerializer(new JsonApiTransformer(new Mapper($mapping)));
-                Cache::put($key, serialize($serializer),60*60*24);
-
-                return $serializer;
-            });
+                        return new JsonApiSerializer(new JsonApiTransformer(new Mapper($mapping)));
+                    }
+                );
+            }
+        );
     }
 
     /**
@@ -75,7 +75,7 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
     /**
      * @param array $map
      */
-    private static function parseUrls(array &$map)
+    private static function parseUrls(&$map)
     {
         if (!empty($map['urls'])) {
             foreach ($map['urls'] as &$namedUrl) {
@@ -87,7 +87,7 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
     /**
      * @param array $map
      */
-    private static function parseRelationshipUrls(array &$map)
+    private static function parseRelationshipUrls(&$map)
     {
         if (!empty($map['relationships'])) {
             foreach ($map['relationships'] as &$relationship) {

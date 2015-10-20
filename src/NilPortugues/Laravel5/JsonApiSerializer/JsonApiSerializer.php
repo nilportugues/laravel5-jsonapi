@@ -50,14 +50,17 @@ class JsonApiSerializer extends DeepCopySerializer
 
         if (is_subclass_of($value, Model::class, true)) {
 
-
-            $stdClass = (object) $value->getAttributes();
-            $data =  $this->serializeData($stdClass);
+            $stdClass                         = (object) $value->getAttributes();
+            $data                             = $this->serializeData($stdClass);
             $data[self::CLASS_IDENTIFIER_KEY] = get_class($value);
 
-            $methods = $this->getRelationshipMethodsAsPropertyName($value, get_class($value), new ReflectionClass($value));
+            $methods = $this->getRelationshipMethodsAsPropertyName(
+                $value,
+                get_class($value),
+                new ReflectionClass($value)
+            );
 
-            if(!empty($methods)) {
+            if (!empty($methods)) {
                 $data = array_merge($data, $methods);
             }
 
@@ -66,7 +69,6 @@ class JsonApiSerializer extends DeepCopySerializer
 
         return parent::serializeObject($value);
     }
-
 
     /**
      * @param                 $value
@@ -82,7 +84,7 @@ class JsonApiSerializer extends DeepCopySerializer
         foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if (ltrim($method->class, "\\") === ltrim($className, "\\")) {
 
-                $name = $method->name;
+                $name             = $method->name;
                 $reflectionMethod = $reflection->getMethod($name);
 
                 // Eloquent relations do not include parameters, so we'll be filtering based on this criteria.
@@ -97,27 +99,27 @@ class JsonApiSerializer extends DeepCopySerializer
                             if (false !== strpos(get_class($returned), 'Illuminate\Database\Eloquent\Relations')) {
 
                                 $items = [];
-                                foreach($returned->getResults() as $model) {
+                                foreach ($returned->getResults() as $model) {
 
-                                    if(is_object($model)) {
-                                        $stdClass = (object) $model->getAttributes();
-                                        $data =  $this->serializeData($stdClass);
+                                    if (is_object($model)) {
+                                        $stdClass                         = (object) $model->getAttributes();
+                                        $data                             = $this->serializeData($stdClass);
                                         $data[self::CLASS_IDENTIFIER_KEY] = get_class($model);
 
                                         $items[] = $data;
                                     }
                                 }
-                                if(!empty($items)) {
+                                if (!empty($items)) {
                                     $methods[$name] = [self::MAP_TYPE => 'array', self::SCALAR_VALUE => $items];
                                 }
 
                             }
                         }
-                    } catch(ErrorException $e) {}
+                    } catch (ErrorException $e) {
+                    }
                 }
             }
         }
-
 
         return $methods;
     }

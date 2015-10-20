@@ -15,7 +15,7 @@ use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 trait JsonApiResponseTrait
 {
     /**
-     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param  \Psr\Http\Message\ResponseInterface $response
      * @return \Psr\Http\Message\ResponseInterface
      */
     protected function addHeaders(\Psr\Http\Message\ResponseInterface $response)
@@ -28,7 +28,8 @@ trait JsonApiResponseTrait
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function errorResponse($json) {
+    private function errorResponse($json)
+    {
         return (new HttpFoundationFactory())
             ->createResponse($this->addHeaders(new \NilPortugues\Api\JsonApi\Http\Message\ErrorResponse($json)));
     }
