@@ -13,7 +13,9 @@ namespace NilPortugues\Laravel5\JsonApiSerializer;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
+use NilPortugues\Api\Mapping\Mapping;
 use NilPortugues\Laravel5\JsonApiSerializer\Mapper\Mapper;
+use ReflectionClass;
 
 class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
 {
@@ -50,9 +52,7 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
                 return Cache::rememberForever(
                     $key,
                     function () use ($mapping) {
-                        self::parseNamedRoutes($mapping);
-
-                        return new JsonApiSerializer(new JsonApiTransformer(new Mapper($mapping)));
+                        return new JsonApiSerializer(new JsonApiTransformer(self::parseRoutes(new Mapper($mapping))));
                     }
                 );
             }
@@ -60,41 +60,64 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
     }
 
     /**
-     * @param array $mapping
+     * @param Mapper $mapper
      *
-     * @return mixed
+     * @return Mapper
      */
-    private static function parseNamedRoutes(array &$mapping)
+    private static function parseRoutes(Mapper $mapper)
     {
-        foreach ($mapping as &$map) {
-            self::parseUrls($map);
-            self::parseRelationshipUrls($map);
-        }
-    }
+        foreach ($mapper->getClassMap() as &$mapping) {
 
-    /**
-     * @param array $map
-     */
-    private static function parseUrls(&$map)
-    {
-        if (!empty($map['urls'])) {
-            foreach ($map['urls'] as &$namedUrl) {
-                $namedUrl = urldecode(route($namedUrl));
-            }
-        }
-    }
+            $mappingClass = new \ReflectionClass($mapping);
 
-    /**
-     * @param array $map
-     */
-    private static function parseRelationshipUrls(&$map)
-    {
-        if (!empty($map['relationships'])) {
-            foreach ($map['relationships'] as &$relationship) {
-                foreach ($relationship as &$namedRelationship) {
-                    $namedRelationship = urldecode(route($namedRelationship));
+            self::setUrlWithReflection($mapping, $mappingClass, 'resourceUrlPattern');
+            self::setUrlWithReflection($mapping, $mappingClass, 'selfUrl');
+            $mappingProperty = $mappingClass->getProperty('otherUrls');
+            $mappingProperty->setAccessible(true);
+
+            $otherUrls = (array) $mappingProperty->getValue($mapping);
+            if(!empty($otherUrls)) {
+                foreach ($otherUrls as &$url) {
+                    $url = urldecode(route($url));
                 }
             }
+            $mappingProperty->setValue($mapping, $otherUrls);
+
+            //JSONAPI only
+            $mappingProperty = $mappingClass->getProperty('relationshipSelfUrl');
+            $mappingProperty->setAccessible(true);
+
+            $relationshipSelfUrl = (array) $mappingProperty->getValue($mapping);
+            if(!empty($relationshipSelfUrl)) {
+                foreach ($relationshipSelfUrl as &$urlMember) {
+                    if(!empty($urlMember)) {
+                        foreach ($urlMember as &$url) {
+                            $url = urldecode(route($url));
+                        }
+                    }
+                }
+            }
+            $mappingProperty->setValue($mapping, $relationshipSelfUrl);
+        }
+
+        return $mapper;
+    }
+
+
+    /**
+     * @param Mapping         $mapping
+     * @param ReflectionClass $mappingClass
+     * @param string          $property
+     */
+    private static function setUrlWithReflection(Mapping $mapping, ReflectionClass $mappingClass, $property)
+    {
+        $mappingProperty = $mappingClass->getProperty($property);
+        $mappingProperty->setAccessible(true);
+        $value = $mappingProperty->getValue($mapping);
+
+        if(!empty($value)) {
+            $value = urldecode(route($value));
+            $mappingProperty->setValue($mapping, $value);
         }
     }
 
