@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
 use ErrorException;
@@ -48,20 +49,19 @@ class JsonApiSerializer extends DeepCopySerializer
             return [self::MAP_TYPE => 'array', self::SCALAR_VALUE => $items];
         }
 
-        if (is_subclass_of($value, Model::class, true)) {
-
-            $stdClass                         = (object) $value->getAttributes();
-            $data                             = $this->serializeData($stdClass);
-            $data[self::CLASS_IDENTIFIER_KEY] = get_class($value);
+        if (\is_subclass_of($value, Model::class, true)) {
+            $stdClass = (object) $value->getAttributes();
+            $data = $this->serializeData($stdClass);
+            $data[self::CLASS_IDENTIFIER_KEY] = \get_class($value);
 
             $methods = $this->getRelationshipMethodsAsPropertyName(
                 $value,
-                get_class($value),
+                \get_class($value),
                 new ReflectionClass($value)
             );
 
             if (!empty($methods)) {
-                $data = array_merge($data, $methods);
+                $data = \array_merge($data, $methods);
             }
 
             return $data;
@@ -79,12 +79,10 @@ class JsonApiSerializer extends DeepCopySerializer
      */
     protected function getRelationshipMethodsAsPropertyName($value, $className, ReflectionClass $reflection)
     {
-
         $methods = [];
         foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (ltrim($method->class, "\\") === ltrim($className, "\\")) {
-
-                $name             = $method->name;
+            if (\ltrim($method->class, '\\') === \ltrim($className, '\\')) {
+                $name = $method->name;
                 $reflectionMethod = $reflection->getMethod($name);
 
                 // Eloquent relations do not include parameters, so we'll be filtering based on this criteria.
@@ -92,19 +90,17 @@ class JsonApiSerializer extends DeepCopySerializer
                     try {
                         $returned = $reflectionMethod->invoke($value);
                         //All operations (eg: boolean operations) are now filtered out.
-                        if (is_object($returned)) {
+                        if (\is_object($returned)) {
 
                             // Only keep those methods as properties if these are returning Eloquent relations.
                             // But do not run the operation as it is an expensive operation.
-                            if (false !== strpos(get_class($returned), 'Illuminate\Database\Eloquent\Relations')) {
-
+                            if (false !== \strpos(\get_class($returned), 'Illuminate\Database\Eloquent\Relations')) {
                                 $items = [];
                                 foreach ($returned->getResults() as $model) {
-
-                                    if (is_object($model)) {
-                                        $stdClass                         = (object) $model->getAttributes();
-                                        $data                             = $this->serializeData($stdClass);
-                                        $data[self::CLASS_IDENTIFIER_KEY] = get_class($model);
+                                    if (\is_object($model)) {
+                                        $stdClass = (object) $model->getAttributes();
+                                        $data = $this->serializeData($stdClass);
+                                        $data[self::CLASS_IDENTIFIER_KEY] = \get_class($model);
 
                                         $items[] = $data;
                                     }
@@ -112,7 +108,6 @@ class JsonApiSerializer extends DeepCopySerializer
                                 if (!empty($items)) {
                                     $methods[$name] = [self::MAP_TYPE => 'array', self::SCALAR_VALUE => $items];
                                 }
-
                             }
                         }
                     } catch (ErrorException $e) {

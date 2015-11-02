@@ -16,6 +16,11 @@
         "nilportugues/json-api": "~1.0",
         "symfony/psr-http-message-bridge": "~0.2"
     },
+    "require-dev": {
+        "laravel/laravel": "5.*",
+        "fabpot/php-cs-fixer": "~1.9",
+        "nilportugues/php_backslasher": "~0.2"
+    },
     "autoload": {
         "psr-4": {
             "NilPortugues\\Laravel5\\JsonApiSerializer\\" : "src/NilPortugues/Laravel5/JsonApiSerializer/"

@@ -2,7 +2,7 @@
 /**
  * Author: Nil Portugués Calderó <contact@nilportugues.com>
  * Date: 8/18/15
- * Time: 11:19 PM
+ * Time: 11:19 PM.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,7 +15,8 @@ use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 trait JsonApiResponseTrait
 {
     /**
-     * @param  \Psr\Http\Message\ResponseInterface $response
+     * @param \Psr\Http\Message\ResponseInterface $response
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     protected function addHeaders(\Psr\Http\Message\ResponseInterface $response)

@@ -2,7 +2,7 @@
 /**
  * Author: Nil Portugués Calderó <contact@nilportugues.com>
  * Date: 10/16/15
- * Time: 8:59 PM
+ * Time: 8:59 PM.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,8 +17,7 @@ use ReflectionClass;
 use ReflectionMethod;
 
 /**
- * Class MappingFactory
- * @package NilPortugues\Laravel5\JsonApiSerializer\Mapper
+ * Class MappingFactory.
  */
 class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
 {
@@ -34,12 +33,12 @@ class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
      */
     protected static function getClassProperties($className)
     {
-        if (class_exists($className, true)) {
+        if (\class_exists($className, true)) {
             $reflection = new ReflectionClass($className);
-            $value      = $reflection->newInstanceWithoutConstructor();
+            $value = $reflection->newInstanceWithoutConstructor();
 
-            if (is_subclass_of($value, Model::class, true)) {
-                $attributes = array_merge(
+            if (\is_subclass_of($value, Model::class, true)) {
+                $attributes = \array_merge(
                     Schema::getColumnListing($value->getTable()),
                     self::getRelationshipMethodsAsPropertyName($value, $className, $reflection)
                 );
@@ -48,7 +47,6 @@ class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
 
                 return self::$eloquentClasses[$className];
             }
-
         }
 
         return parent::getClassProperties($className);
@@ -65,10 +63,8 @@ class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
     {
         $methods = [];
         foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-
-            if (ltrim($method->class, "\\") === ltrim($className, "\\")) {
-
-                $name             = $method->name;
+            if (\ltrim($method->class, '\\') === \ltrim($className, '\\')) {
+                $name = $method->name;
                 $reflectionMethod = $reflection->getMethod($name);
 
                 // Eloquent relations do not include parameters, so we'll be filtering based on this criteria.
@@ -76,14 +72,13 @@ class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
                     try {
                         $returned = $reflectionMethod->invoke($value);
                         //All operations (eg: boolean operations) are now filtered out.
-                        if (is_object($returned)) {
+                        if (\is_object($returned)) {
 
                             // Only keep those methods as properties if these are returning Eloquent relations.
                             // But do not run the operation as it is an expensive operation.
-                            if (false !== strpos(get_class($returned), 'Illuminate\Database\Eloquent\Relations')) {
+                            if (false !== \strpos(\get_class($returned), 'Illuminate\Database\Eloquent\Relations')) {
                                 $methods[] = $method->name;
                             }
-
                         }
                     } catch (ErrorException $e) {
                     }

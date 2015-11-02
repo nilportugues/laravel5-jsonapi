@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
 use Illuminate\Support\Facades\Cache;
@@ -33,7 +34,7 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([__DIR__ . self::PATH => config('jsonapi.php')]);
+        $this->publishes([__DIR__.self::PATH => config('jsonapi.php')]);
     }
 
     /**
@@ -41,13 +42,13 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . self::PATH, 'jsonapi');
+        $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi');
         $this->app->singleton(
             \NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer::class,
             function ($app) {
 
                 $mapping = $app['config']->get('jsonapi');
-                $key     = md5(json_encode($mapping));
+                $key = \md5(\json_encode($mapping));
 
                 return Cache::rememberForever(
                     $key,
@@ -67,7 +68,6 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
     private static function parseRoutes(Mapper $mapper)
     {
         foreach ($mapper->getClassMap() as &$mapping) {
-
             $mappingClass = new \ReflectionClass($mapping);
 
             self::setUrlWithReflection($mapping, $mappingClass, 'resourceUrlPattern');
@@ -76,9 +76,9 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
             $mappingProperty->setAccessible(true);
 
             $otherUrls = (array) $mappingProperty->getValue($mapping);
-            if(!empty($otherUrls)) {
+            if (!empty($otherUrls)) {
                 foreach ($otherUrls as &$url) {
-                    $url = urldecode(route($url));
+                    $url = \urldecode(route($url));
                 }
             }
             $mappingProperty->setValue($mapping, $otherUrls);
@@ -88,11 +88,11 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
             $mappingProperty->setAccessible(true);
 
             $relationshipSelfUrl = (array) $mappingProperty->getValue($mapping);
-            if(!empty($relationshipSelfUrl)) {
+            if (!empty($relationshipSelfUrl)) {
                 foreach ($relationshipSelfUrl as &$urlMember) {
-                    if(!empty($urlMember)) {
+                    if (!empty($urlMember)) {
                         foreach ($urlMember as &$url) {
-                            $url = urldecode(route($url));
+                            $url = \urldecode(route($url));
                         }
                     }
                 }
@@ -102,7 +102,6 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
 
         return $mapper;
     }
-
 
     /**
      * @param Mapping         $mapping
@@ -115,8 +114,8 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
         $mappingProperty->setAccessible(true);
         $value = $mappingProperty->getValue($mapping);
 
-        if(!empty($value)) {
-            $value = urldecode(route($value));
+        if (!empty($value)) {
+            $value = \urldecode(route($value));
             $mappingProperty->setValue($mapping, $value);
         }
     }
