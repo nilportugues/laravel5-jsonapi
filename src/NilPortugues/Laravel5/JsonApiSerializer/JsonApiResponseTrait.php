@@ -84,13 +84,13 @@ trait JsonApiResponseTrait
                     'status' => 404,
                     'code' => 'not_found',
                     'title' => $errorTitle,
-                    'detail' => $errorMessage
+                    'detail' => $errorMessage,
                 ],
                 'links' => [
                     'parent' => [
-                        'href' => $parentUrl
-                    ]
-                ]
+                        'href' => $parentUrl,
+                    ],
+                ],
             ]);
 
         return (new HttpFoundationFactory())->createResponse($this->addHeaders(new ResourceNotFoundResponse($json)));
@@ -119,8 +119,8 @@ trait JsonApiResponseTrait
                     'status' => 409,
                     'code' => 'Conflict',
                     'title' => $errorTitle,
-                    'detail' => $errorMessage
-                ]
+                    'detail' => $errorMessage,
+                ],
             ]);
 
         return (new HttpFoundationFactory())->createResponse($this->addHeaders(new ResourcePostErrorResponse($json)));
@@ -133,8 +133,6 @@ trait JsonApiResponseTrait
      */
     protected function resourceProcessingResponse($json)
     {
-
-
         return (new HttpFoundationFactory())->createResponse($this->addHeaders(new ResourceProcessingResponse($json)));
     }
 
@@ -169,9 +167,9 @@ trait JsonApiResponseTrait
      */
     protected function collectionResponse($classMethod, Serializer $serializer, Request $request, $value, $totalAmount)
     {
-        $controllerRoute = str_replace('::', '@', "\\" . $classMethod);
+        $controllerRoute = str_replace('::', '@', '\\'.$classMethod);
 
-        $pageNumber     = $request->getPageNumber();
+        $pageNumber = $request->getPageNumber();
         $resultsPerPage = $request->getPageSize();
 
         $serializer->getTransformer()->setSelfUrl(
@@ -182,8 +180,8 @@ trait JsonApiResponseTrait
                         'page' => array_filter(
                             [
                                 'number' => $pageNumber,
-                                'size'   => $request->getPageSize(),
-                                'limit'  => $request->getPageLimit(),
+                                'size' => $request->getPageSize(),
+                                'limit' => $request->getPageLimit(),
                                 'cursor' => $request->getPageCursor(),
                                 'offset' => $request->getPageOffset(),
                             ]
@@ -191,7 +189,7 @@ trait JsonApiResponseTrait
                         'fields' => $request->getQueryParam('fields'),
                         'filter' => $request->getQueryParam('filter'),
                         'sort' => $request->getQueryParam('sort'),
-                        'include' => $request->getQueryParam('include')
+                        'include' => $request->getQueryParam('include'),
                     ]
                 )
             )
@@ -206,8 +204,8 @@ trait JsonApiResponseTrait
                             'page' => array_filter(
                                 [
                                     'number' => $pageNumber - 1,
-                                    'size'   => $request->getPageSize(),
-                                    'limit'  => $request->getPageLimit(),
+                                    'size' => $request->getPageSize(),
+                                    'limit' => $request->getPageLimit(),
                                     'cursor' => $request->getPageCursor(),
                                     'offset' => $request->getPageOffset(),
                                 ]
@@ -215,7 +213,7 @@ trait JsonApiResponseTrait
                             'fields' => $request->getQueryParam('fields'),
                             'filter' => $request->getQueryParam('filter'),
                             'sort' => $request->getQueryParam('sort'),
-                            'include' => $request->getQueryParam('include')
+                            'include' => $request->getQueryParam('include'),
                         ]
                     )
                 )
@@ -231,8 +229,8 @@ trait JsonApiResponseTrait
                             'page' => array_filter(
                                 [
                                     'number' => $pageNumber + 1,
-                                    'size'   => $request->getPageSize(),
-                                    'limit'  => $request->getPageLimit(),
+                                    'size' => $request->getPageSize(),
+                                    'limit' => $request->getPageLimit(),
                                     'cursor' => $request->getPageCursor(),
                                     'offset' => $request->getPageOffset(),
                                 ]
@@ -240,7 +238,7 @@ trait JsonApiResponseTrait
                             'fields' => $request->getQueryParam('fields'),
                             'filter' => $request->getQueryParam('filter'),
                             'sort' => $request->getQueryParam('sort'),
-                            'include' => $request->getQueryParam('include')
+                            'include' => $request->getQueryParam('include'),
                         ]
                     )
                 )
@@ -255,8 +253,8 @@ trait JsonApiResponseTrait
                         'page' => array_filter(
                             [
                                 'number' => 1,
-                                'size'   => $request->getPageSize(),
-                                'limit'  => $request->getPageLimit(),
+                                'size' => $request->getPageSize(),
+                                'limit' => $request->getPageLimit(),
                                 'cursor' => $request->getPageCursor(),
                                 'offset' => $request->getPageOffset(),
                             ]
@@ -264,7 +262,7 @@ trait JsonApiResponseTrait
                         'fields' => $request->getQueryParam('fields'),
                         'filter' => $request->getQueryParam('filter'),
                         'sort' => $request->getQueryParam('sort'),
-                        'include' => $request->getQueryParam('include')
+                        'include' => $request->getQueryParam('include'),
                     ]
                 )
             )
@@ -276,11 +274,11 @@ trait JsonApiResponseTrait
                     $controllerRoute,
                     array_filter(
                         [
-                            'page' =>  array_filter(
+                            'page' => array_filter(
                                 [
                                     'number' => ceil($totalAmount / $resultsPerPage),
-                                    'size'   => $request->getPageSize(),
-                                    'limit'  => $request->getPageLimit(),
+                                    'size' => $request->getPageSize(),
+                                    'limit' => $request->getPageLimit(),
                                     'cursor' => $request->getPageCursor(),
                                     'offset' => $request->getPageOffset(),
                                 ]
@@ -288,7 +286,7 @@ trait JsonApiResponseTrait
                             'fields' => $request->getQueryParam('fields'),
                             'filter' => $request->getQueryParam('filter'),
                             'sort' => $request->getQueryParam('sort'),
-                            'include' => $request->getQueryParam('include')
+                            'include' => $request->getQueryParam('include'),
                         ]
                     )
                 )
@@ -305,20 +303,20 @@ trait JsonApiResponseTrait
      * @param string  $errorMessage
      * @param string  $classMethod
      * @param Request $request
-     * @param int $totalAmount
+     * @param int     $totalAmount
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     private function collectionNotFoundResponse($errorTitle, $errorMessage, $classMethod, Request $request, $totalAmount)
     {
-        $controllerRoute = str_replace('::', '@', "\\" . $classMethod);
+        $controllerRoute = str_replace('::', '@', '\\'.$classMethod);
 
         $json = json_encode([
                 'errors' => [
                     'status' => 404,
                     'code' => 'not_found',
                     'title' => $errorTitle,
-                    'detail' => $errorMessage
+                    'detail' => $errorMessage,
                 ],
                 'links' => [
                     'first' => [
@@ -329,8 +327,8 @@ trait JsonApiResponseTrait
                                     'page' => array_filter(
                                         [
                                             'number' => 1,
-                                            'size'   => $request->getPageSize(),
-                                            'limit'  => $request->getPageLimit(),
+                                            'size' => $request->getPageSize(),
+                                            'limit' => $request->getPageLimit(),
                                             'cursor' => $request->getPageCursor(),
                                             'offset' => $request->getPageOffset(),
                                         ]
@@ -338,22 +336,22 @@ trait JsonApiResponseTrait
                                     'fields' => $request->getQueryParam('fields'),
                                     'filter' => $request->getQueryParam('filter'),
                                     'sort' => $request->getQueryParam('sort'),
-                                    'include' => $request->getQueryParam('include')
+                                    'include' => $request->getQueryParam('include'),
                                 ]
                             )
-                        )
+                        ),
                     ],
                     'last' => [
-                        'href' =>  urldecode(
+                        'href' => urldecode(
                             action(
                                 $controllerRoute,
                                 array_filter(
                                     [
-                                        'page' =>  array_filter(
+                                        'page' => array_filter(
                                             [
                                                 'number' => ceil($totalAmount / $request->getPageSize()),
-                                                'size'   => $request->getPageSize(),
-                                                'limit'  => $request->getPageLimit(),
+                                                'size' => $request->getPageSize(),
+                                                'limit' => $request->getPageLimit(),
                                                 'cursor' => $request->getPageCursor(),
                                                 'offset' => $request->getPageOffset(),
                                             ]
@@ -361,13 +359,13 @@ trait JsonApiResponseTrait
                                         'fields' => $request->getQueryParam('fields'),
                                         'filter' => $request->getQueryParam('filter'),
                                         'sort' => $request->getQueryParam('sort'),
-                                        'include' => $request->getQueryParam('include')
+                                        'include' => $request->getQueryParam('include'),
                                     ]
                                 )
                             )
-                        )
-                    ]
-                ]
+                        ),
+                    ],
+                ],
             ]);
 
         return (new HttpFoundationFactory())->createResponse($this->addHeaders(new ResourceNotFoundResponse($json)));

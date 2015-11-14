@@ -78,7 +78,9 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
             $otherUrls = (array) $mappingProperty->getValue($mapping);
             if (!empty($otherUrls)) {
                 foreach ($otherUrls as &$url) {
-                    $url = \urldecode(route($url));
+                    if (!empty($url['name'])) {
+                        $url = self::calculateRoute($url);
+                    }
                 }
             }
             $mappingProperty->setValue($mapping, $otherUrls);
@@ -92,7 +94,9 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
                 foreach ($relationshipSelfUrl as &$urlMember) {
                     if (!empty($urlMember)) {
                         foreach ($urlMember as &$url) {
-                            $url = \urldecode(route($url));
+                            if (!empty($url['name'])) {
+                                $url = self::calculateRoute($url);
+                            }
                         }
                     }
                 }
@@ -114,10 +118,27 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
         $mappingProperty->setAccessible(true);
         $value = $mappingProperty->getValue($mapping);
 
-        if (!empty($value)) {
-            $value = \urldecode(route($value));
-            $mappingProperty->setValue($mapping, $value);
+        if (!empty($value['name'])) {
+            $route = self::calculateRoute($value);
+            $mappingProperty->setValue($mapping, $route);
         }
+    }
+
+    /**
+     * @param array $value
+     *
+     * @return mixed|string
+     */
+    private static function calculateRoute(array $value)
+    {
+        $route = urldecode(route($value['name']));
+
+        if (!empty($url['as_id'])) {
+            preg_match_all('/{(.*?)}/', $route, $matches);
+            $route = str_replace($matches[0], '{'.$url['as_id'].'}', $route);
+        }
+
+        return $route;
     }
 
     /**
