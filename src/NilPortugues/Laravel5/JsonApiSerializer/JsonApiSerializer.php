@@ -13,6 +13,7 @@ namespace NilPortugues\Laravel5\JsonApiSerializer;
 
 use ErrorException;
 use Illuminate\Database\Eloquent\Model;
+use NilPortugues\Api\JsonApi\Http\Message\Request;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
 use NilPortugues\Serializer\DeepCopySerializer;
 use ReflectionClass;
@@ -24,11 +25,43 @@ use ReflectionMethod;
 class JsonApiSerializer extends DeepCopySerializer
 {
     /**
+     * @var JsonApiTransformer
+     */
+    protected $serializationStrategy;
+
+    /**
      * @param JsonApiTransformer $strategy
      */
     public function __construct(JsonApiTransformer $strategy)
     {
         parent::__construct($strategy);
+    }
+
+    /**
+     * @param mixed   $value
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function serialize($value, Request $request = null)
+    {
+        $mappings = $this->serializationStrategy->getMappings();
+
+        if ($request) {
+            $filters = $request->getFields();
+
+            if ($filters) {
+                foreach ($filters as $type => $properties) {
+                    foreach ($mappings as $mapping) {
+                        if ($mapping->getClassAlias() === $type) {
+                            $mapping->setFilterKeys($properties);
+                        }
+                    }
+                }
+            }
+        }
+
+        return parent::serialize($value);
     }
 
     /**

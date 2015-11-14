@@ -2,7 +2,7 @@
 /**
  * Author: Nil Portugués Calderó <contact@nilportugues.com>
  * Date: 11/14/15
- * Time: 11:46 AM
+ * Time: 11:46 AM.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,10 +14,8 @@ use NilPortugues\Api\JsonApi\Http\Message\Request as JsonApiRequest;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request;
 
-
 /**
- * Class JsonApiRequestTrait
- * @package NilPortugues\Laravel5\JsonApiSerializer
+ * Class JsonApiRequestTrait.
  */
 trait JsonApiRequestTrait
 {
@@ -34,4 +32,4 @@ trait JsonApiRequestTrait
 
         return $jsonApiRequest;
     }
-} 
+}

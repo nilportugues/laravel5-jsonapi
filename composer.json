@@ -18,8 +18,8 @@
     },
     "require-dev": {
         "laravel/laravel": "5.*",
-        "fabpot/php-cs-fixer": "~1.9",
-        "nilportugues/php_backslasher": "~0.2"
+        "nilportugues/php_backslasher": "~0.2",
+        "fabpot/php-cs-fixer": "^1.10"
     },
     "autoload": {
         "psr-4": {
