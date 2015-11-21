@@ -8,13 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
 use ErrorException;
 use Illuminate\Database\Eloquent\Model;
-use NilPortugues\Api\JsonApi\Http\Message\Request;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
+use NilPortugues\Laravel5\JsonApiSerializer\Factory\RequestFactory;
 use NilPortugues\Serializer\DeepCopySerializer;
 use ReflectionClass;
 use ReflectionMethod;
@@ -38,24 +37,20 @@ class JsonApiSerializer extends DeepCopySerializer
     }
 
     /**
-     * @param mixed   $value
-     * @param Request $request
+     * @param mixed $value
      *
      * @return string
      */
-    public function serialize($value, Request $request = null)
+    public function serialize($value)
     {
         $mappings = $this->serializationStrategy->getMappings();
+        $request = RequestFactory::create();
 
-        if ($request) {
-            $filters = $request->getFields();
-
-            if ($filters) {
-                foreach ($filters as $type => $properties) {
-                    foreach ($mappings as $mapping) {
-                        if ($mapping->getClassAlias() === $type) {
-                            $mapping->setFilterKeys($properties);
-                        }
+        if ($filters = $request->getFields()) {
+            foreach ($filters as $type => $properties) {
+                foreach ($mappings as $mapping) {
+                    if ($mapping->getClassAlias() === $type) {
+                        $mapping->setFilterKeys($properties);
                     }
                 }
             }

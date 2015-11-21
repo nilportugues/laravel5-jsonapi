@@ -14,7 +14,8 @@
     ],
     "require": {
         "nilportugues/json-api": "dev-master",
-        "symfony/psr-http-message-bridge": "~0.2"
+        "symfony/psr-http-message-bridge": "~0.2",
+        "nilportugues/serializer-eloquent": "^1.0"
     },
     "require-dev": {
         "laravel/laravel": "5.*",

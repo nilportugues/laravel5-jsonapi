@@ -7,11 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
 use Illuminate\Container\Container;
 use NilPortugues\Api\JsonApi\Http\Message\Request;
+use NilPortugues\Laravel5\JsonApiSerializer\Factory\RequestFactory;
 
 /**
  * Class PaginationTrait.
@@ -29,7 +29,7 @@ trait PaginationTrait
      */
     protected function pagePaginationLinks($routeName, array $routeParams = [], $pageNumber, $pageSize, $totalPages)
     {
-        $request = new Request();
+        $request = RequestFactory::create();
 
         $next = $pageNumber + 1;
         $previous = $pageNumber - 1;

@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3a590819-c56f-4287-9876-ea2a9ef08963" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Factory/RequestFactory.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/template/template_variable_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiSerializer.php" afterPath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiSerializer.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Facades/JsonApiSerializer.php" afterPath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Facades/JsonApiSerializer.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Laravel5JsonApiSerializerServiceProvider.php" afterPath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Laravel5JsonApiSerializerServiceProvider.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/Mapper.php" afterPath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/Mapper.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/MappingFactory.php" afterPath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/MappingFactory.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/PaginationTrait.php" afterPath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/PaginationTrait.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/RequestTrait.php" afterPath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/RequestTrait.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/ResponseTrait.php" afterPath="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/ResponseTrait.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/composer.json" afterPath="$PROJECT_DIR$/composer.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/composer.lock" afterPath="$PROJECT_DIR$/composer.lock" />
+    </list>
+    <ignored path="laravel5-jsonapi-transformer.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="laravel5-jsonapi-transformer" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="ResponseTrait.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/ResponseTrait.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="25" column="1" selection-start="1004" selection-end="1004" vertical-scroll-proportion="0.6053812" vertical-offset="0" max-vertical-offset="1905">
+              <folding>
+                <element signature="e#292#335#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JsonApiSerializer.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiSerializer.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="51" column="62" selection-start="1354" selection-end="1354" vertical-scroll-proportion="-14.375" vertical-offset="315" max-vertical-offset="2355">
+              <folding>
+                <element signature="e#292#311#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Model.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="2511" column="46" selection-start="66880" selection-end="66886" vertical-scroll-proportion="-7.6226416" vertical-offset="36871" max-vertical-offset="52470">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PaginationTrait.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/PaginationTrait.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="31" column="44" selection-start="881" selection-end="881" vertical-scroll-proportion="-6.0833335" vertical-offset="214" max-vertical-offset="1290">
+              <folding>
+                <element signature="e#293#328#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="helpers.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="53" column="19" selection-start="1369" selection-end="1369" vertical-scroll-proportion="-12.791667" vertical-offset="458" max-vertical-offset="11040">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RequestTrait.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/RequestTrait.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="15" column="3" selection-start="392" selection-end="392" vertical-scroll-proportion="-5.0" vertical-offset="0" max-vertical-offset="375">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Response.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vendor/nilportugues/json-api/src/Http/Message/Response.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="43" column="41" selection-start="985" selection-end="985" vertical-scroll-proportion="-7.3333335" vertical-offset="364" max-vertical-offset="810">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Laravel5JsonApiSerializerServiceProvider.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Laravel5JsonApiSerializerServiceProvider.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="7" selection-start="757" selection-end="757" vertical-scroll-proportion="53.125" vertical-offset="1575" max-vertical-offset="2385">
+              <folding>
+                <element signature="e#292#329#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BadRequest.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vendor/nilportugues/json-api/src/Http/Message/BadRequest.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="6" selection-start="561" selection-end="561" vertical-scroll-proportion="-5.0" vertical-offset="180" max-vertical-offset="765">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/Mapper.php" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/MappingFactory.php" />
+        <option value="$PROJECT_DIR$/vendor/nilportugues/api-transformer/src/Transformer/Transformer.php" />
+        <option value="$PROJECT_DIR$/vendor/nilportugues/json-api/src/Http/Message/Request.php" />
+        <option value="$PROJECT_DIR$/composer.json" />
+        <option value="$PROJECT_DIR$/vendor/nilportugues/json-api/src/Http/Message/Response.php" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiResponseTrait.php" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiPaginationTrait.php" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Laravel5JsonApiSerializerServiceProvider.php" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/ResponseTrait.php" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/RequestTrait.php" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/EloquentDriver.php" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiSerializer.php" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Factory/RequestFactory.php" />
+        <option value="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/PaginationTrait.php" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="width" value="1600" />
+    <option name="height" value="900" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="2" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel5-jsonapi-transformer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel5-jsonapi-transformer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel5-jsonapi-transformer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel5-jsonapi-transformer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel5-jsonapi-transformer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NilPortugues" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Laravel5" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JsonApiSerializer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel5-jsonapi-transformer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel5-jsonapi-transformer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$USER_HOME$/serializer-eloquent-driver" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="LayoutCode.rearrangeEntries" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
+    <list size="0" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3a590819-c56f-4287-9876-ea2a9ef08963" name="Default" comment="" />
+      <created>1439931746967</created>
+      <updated>1439931746967</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="0" width="1600" height="900" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3277635" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32904884" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2921493" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329235" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/api-transformer/src/Mapping/MappingFactory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="76" column="3" selection-start="2412" selection-end="2484" vertical-scroll-proportion="0.0" vertical-offset="1140" max-vertical-offset="4425">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/Mapper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="6" selection-start="409" selection-end="409" vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="480">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/api-transformer/src/Mapping/Mapper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="0" selection-start="1239" selection-end="1571" vertical-scroll-proportion="0.0" vertical-offset="720" max-vertical-offset="1245">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/ResponseTrait.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="114" column="0" selection-start="3261" selection-end="3261" vertical-scroll-proportion="0.0" vertical-offset="1710" max-vertical-offset="1980">
+          <folding>
+            <element signature="e#292#335#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiSerializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="82" column="68" selection-start="2240" selection-end="2240" vertical-scroll-proportion="0.0" vertical-offset="1230" max-vertical-offset="1950">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="35" selection-start="832" selection-end="832" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="495">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/serializer/src/DeepCopySerializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="37" selection-start="335" selection-end="335" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="690" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/serializer/src/Serializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="6" selection-start="187" selection-end="187" vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="8325" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Laravel5JsonApiSerializerServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="0" selection-start="419" selection-end="477" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="1740">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/MappingFactory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="0" selection-start="1501" selection-end="1501" vertical-scroll-proportion="0.0" vertical-offset="825" max-vertical-offset="1530">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/api-transformer/src/Mapping/MappingFactory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="76" column="3" selection-start="2412" selection-end="2484" vertical-scroll-proportion="0.0" vertical-offset="1140" max-vertical-offset="4425">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/Mapper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="6" selection-start="409" selection-end="409" vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="480">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/api-transformer/src/Mapping/Mapper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="0" selection-start="1239" selection-end="1571" vertical-scroll-proportion="0.0" vertical-offset="720" max-vertical-offset="1245">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="35" selection-start="795" selection-end="795" vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="7815" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/ResponseTrait.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="112" column="5" selection-start="3256" selection-end="3256" vertical-scroll-proportion="0.0" vertical-offset="1680" max-vertical-offset="1950">
+          <folding>
+            <element signature="e#292#335#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiSerializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="39" selection-start="629" selection-end="629" vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="510">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Laravel5JsonApiSerializerServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="28" selection-start="1744" selection-end="1744" vertical-scroll-proportion="0.0" vertical-offset="945" max-vertical-offset="1650">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="35" selection-start="795" selection-end="795" vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="7815" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/ResponseTrait.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="112" column="5" selection-start="3256" selection-end="3256" vertical-scroll-proportion="0.0" vertical-offset="1680" max-vertical-offset="1950">
+          <folding>
+            <element signature="e#292#335#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiSerializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="39" selection-start="629" selection-end="629" vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="510">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Laravel5JsonApiSerializerServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="28" selection-start="1744" selection-end="1744" vertical-scroll-proportion="0.0" vertical-offset="945" max-vertical-offset="1650">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="35" selection-start="795" selection-end="795" vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="7815" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/ResponseTrait.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="112" column="5" selection-start="3256" selection-end="3256" vertical-scroll-proportion="0.0" vertical-offset="1680" max-vertical-offset="1950">
+          <folding>
+            <element signature="e#292#335#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiSerializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="39" selection-start="629" selection-end="629" vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="510">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Laravel5JsonApiSerializerServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="28" selection-start="1744" selection-end="1744" vertical-scroll-proportion="0.0" vertical-offset="945" max-vertical-offset="1650">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/api-transformer/src/Mapping/MappingFactory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="77" column="3" selection-start="2322" selection-end="2322" vertical-scroll-proportion="0.0" vertical-offset="1155" max-vertical-offset="4470">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/serializer/src/DeepCopySerializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="37" selection-start="335" selection-end="335" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="690" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/serializer/src/Serializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="6" selection-start="187" selection-end="187" vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="8325" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/api-transformer/src/Transformer/Transformer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="18" selection-start="719" selection-end="719" vertical-scroll-proportion="-0.4362416" vertical-offset="570" max-vertical-offset="5235" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/api-transformer/src/Mapping/Mapper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="0" selection-start="1042" selection-end="1042" vertical-scroll-proportion="0.0" vertical-offset="735" max-vertical-offset="1170">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="44" selection-start="566" selection-end="566" vertical-scroll-proportion="-6.9583335" vertical-offset="58" max-vertical-offset="570">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/json-api/src/Http/Message/ResourceUpdated.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="446">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/json-api/src/Http/Message/Response.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="41" selection-start="985" selection-end="985" vertical-scroll-proportion="-7.3333335" vertical-offset="364" max-vertical-offset="810">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Container/Container.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="374" selection-end="374" vertical-scroll-proportion="0.13293944" vertical-offset="0" max-vertical-offset="18210">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="19" selection-start="1369" selection-end="1369" vertical-scroll-proportion="-12.791667" vertical-offset="458" max-vertical-offset="11040">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/symfony/psr-http-message-bridge/Factory/HttpFoundationFactory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="110" column="20" selection-start="3025" selection-end="3025" vertical-scroll-proportion="0.34416544" vertical-offset="1207" max-vertical-offset="2865">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/json-api/src/Http/Message/ResourceCreated.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="20" selection-start="436" selection-end="436" vertical-scroll-proportion="0.28803545" vertical-offset="0" max-vertical-offset="677">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/Mapper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="7" selection-start="439" selection-end="439" vertical-scroll-proportion="0.2437223" vertical-offset="0" max-vertical-offset="677">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Mapper/MappingFactory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="62" selection-start="1006" selection-end="1006" vertical-scroll-proportion="-12.583333" vertical-offset="118" max-vertical-offset="1290">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2511" column="46" selection-start="66880" selection-end="66886" vertical-scroll-proportion="-7.6226416" vertical-offset="36871" max-vertical-offset="52470">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="35" selection-start="795" selection-end="795" vertical-scroll-proportion="0.20979021" vertical-offset="0" max-vertical-offset="6180">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/json-api/src/Http/Message/Request.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="5" selection-start="820" selection-end="820" vertical-scroll-proportion="0.45067266" vertical-offset="69" max-vertical-offset="3210">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/json-api/src/JsonApiTransformer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="6" selection-start="685" selection-end="685" vertical-scroll-proportion="0.33183858" vertical-offset="17" max-vertical-offset="3510">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Facades/JsonApiSerializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="3" selection-start="375" selection-end="375" vertical-scroll-proportion="0.3026906" vertical-offset="0" max-vertical-offset="446">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Factory/RequestFactory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="28" selection-start="472" selection-end="472" vertical-scroll-proportion="0.2600897" vertical-offset="199" max-vertical-offset="645">
+          <folding>
+            <element signature="e#6#239#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/nilportugues/json-api/src/Http/Message/BadRequest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="6" selection-start="561" selection-end="561" vertical-scroll-proportion="-5.0" vertical-offset="180" max-vertical-offset="765">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/JsonApiSerializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="51" column="62" selection-start="1354" selection-end="1354" vertical-scroll-proportion="-14.375" vertical-offset="315" max-vertical-offset="2355">
+          <folding>
+            <element signature="e#292#311#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/Laravel5JsonApiSerializerServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="7" selection-start="757" selection-end="757" vertical-scroll-proportion="53.125" vertical-offset="1575" max-vertical-offset="2385">
+          <folding>
+            <element signature="e#292#329#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/PaginationTrait.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="44" selection-start="881" selection-end="881" vertical-scroll-proportion="-6.0833335" vertical-offset="214" max-vertical-offset="1290">
+          <folding>
+            <element signature="e#293#328#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/RequestTrait.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="3" selection-start="392" selection-end="392" vertical-scroll-proportion="-5.0" vertical-offset="0" max-vertical-offset="375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NilPortugues/Laravel5/JsonApiSerializer/ResponseTrait.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="1" selection-start="1004" selection-end="1004" vertical-scroll-proportion="0.6053812" vertical-offset="0" max-vertical-offset="1905">
+          <folding>
+            <element signature="e#292#335#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+

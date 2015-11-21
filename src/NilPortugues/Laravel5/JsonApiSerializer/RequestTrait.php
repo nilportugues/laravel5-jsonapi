@@ -7,12 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
-use NilPortugues\Api\JsonApi\Http\Message\Request as JsonApiRequest;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
-use Symfony\Component\HttpFoundation\Request;
+use NilPortugues\Laravel5\JsonApiSerializer\Factory\RequestFactory;
 
 /**
  * Class RequestTrait.
@@ -20,16 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 trait RequestTrait
 {
     /**
-     * @param Request $request
-     *
-     * @return JsonApiRequest
+     * @return \NilPortugues\Api\JsonApi\Http\Message\Request
      */
-    protected function buildJsonApiRequest(Request $request)
+    protected function buildJsonApiRequest()
     {
-        $psr7Factory = new DiactorosFactory();
-        $psrRequest = $psr7Factory->createRequest($request);
-        $jsonApiRequest = new JsonApiRequest($psrRequest);
-
-        return $jsonApiRequest;
+        return RequestFactory::create();
     }
 }
