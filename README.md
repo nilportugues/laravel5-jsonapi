@@ -188,14 +188,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer;
-use NilPortugues\Laravel5\JsonApiSerializer\JsonApiResponseTrait;
+use NilPortugues\Laravel5\JsonApiSerializer\ResponseTrait;
 
 /**
  * Laravel Controller example
  */
 class UserController extends \App\Http\Controllers\Controller
 {
-    use JsonApiResponseTrait;
+    use ResponseTrait;
     
     /**
      * @var App\Models\User
@@ -349,9 +349,9 @@ final class Request
 }
 ```
 
-#### Response objects (JsonApiResponseTrait)
+#### Response objects (ResponseTrait)
 
-The following `JsonApiResponseTrait` methods are provided to return the right headers and HTTP status codes are available:
+The following `ResponseTrait` methods are provided to return the right headers and HTTP status codes are available:
 
 ```php
     private function errorResponse($json);

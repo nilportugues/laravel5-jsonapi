@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4ede162c82edfc9d4968d0c18d8c9649",
-    "content-hash": "0f61000efbbe7eafab988d044052cf66",
+    "hash": "b067563841e0bcf7cf80092c9e29fc28",
+    "content-hash": "f4a15694fec89c9c1064c9b658d92fca",
     "packages": [
         {
             "name": "nilportugues/api-transformer",
-            "version": "1.2.3",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nilportugues/api-transformer.git",
-                "reference": "aeed4840a3bf30a7d7ff43663fde18fe64429b74"
+                "reference": "6fda960dde4e080e87526f733ea9f48ffb3cce80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nilportugues/api-transformer/zipball/aeed4840a3bf30a7d7ff43663fde18fe64429b74",
-                "reference": "aeed4840a3bf30a7d7ff43663fde18fe64429b74",
+                "url": "https://api.github.com/repos/nilportugues/api-transformer/zipball/6fda960dde4e080e87526f733ea9f48ffb3cce80",
+                "reference": "6fda960dde4e080e87526f733ea9f48ffb3cce80",
                 "shasum": ""
             },
             "require": {
@@ -63,20 +63,20 @@
                 "serializer",
                 "transformer"
             ],
-            "time": "2015-11-14 16:48:35"
+            "time": "2015-11-16 23:47:36"
         },
         {
             "name": "nilportugues/json-api",
-            "version": "1.0.21",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nilportugues/jsonapi-transformer.git",
-                "reference": "2e57f061839667a99121627967dcd221475cf332"
+                "reference": "9abe4b3b55544fa3ee9f8ff15800bce93649aaec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nilportugues/jsonapi-transformer/zipball/2e57f061839667a99121627967dcd221475cf332",
-                "reference": "2e57f061839667a99121627967dcd221475cf332",
+                "url": "https://api.github.com/repos/nilportugues/jsonapi-transformer/zipball/9abe4b3b55544fa3ee9f8ff15800bce93649aaec",
+                "reference": "9abe4b3b55544fa3ee9f8ff15800bce93649aaec",
                 "shasum": ""
             },
             "require": {
@@ -120,7 +120,7 @@
                 "serializer",
                 "transformer"
             ],
-            "time": "2015-11-14 16:37:29"
+            "time": "2015-11-21 11:11:49"
         },
         {
             "name": "nilportugues/php_backslasher",
@@ -503,16 +503,16 @@
         },
         {
             "name": "zendframework/zend-code",
-            "version": "2.5.2",
+            "version": "2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-code.git",
-                "reference": "a97ef49f82496fabc3b7379b37f6bbff925b58b8"
+                "reference": "2a69bd42bddf9a955f3747af9e06b6d26e7c41ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-code/zipball/a97ef49f82496fabc3b7379b37f6bbff925b58b8",
-                "reference": "a97ef49f82496fabc3b7379b37f6bbff925b58b8",
+                "url": "https://api.github.com/repos/zendframework/zend-code/zipball/2a69bd42bddf9a955f3747af9e06b6d26e7c41ba",
+                "reference": "2a69bd42bddf9a955f3747af9e06b6d26e7c41ba",
                 "shasum": ""
             },
             "require": {
@@ -523,8 +523,7 @@
                 "doctrine/common": ">=2.1",
                 "fabpot/php-cs-fixer": "1.7.*",
                 "phpunit/phpunit": "~4.0",
-                "zendframework/zend-stdlib": "~2.5",
-                "zendframework/zend-version": "~2.5"
+                "zendframework/zend-stdlib": "~2.5"
             },
             "suggest": {
                 "doctrine/common": "Doctrine\\Common >=2.1 for annotation features",
@@ -552,7 +551,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2015-07-21 22:40:59"
+            "time": "2015-11-18 18:22:37"
         },
         {
             "name": "zendframework/zend-diactoros",
@@ -2618,7 +2617,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nilportugues/json-api": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

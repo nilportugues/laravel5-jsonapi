@@ -15,9 +15,9 @@ use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class JsonApiRequestTrait.
+ * Class RequestTrait.
  */
-trait JsonApiRequestTrait
+trait RequestTrait
 {
     /**
      * @param Request $request
