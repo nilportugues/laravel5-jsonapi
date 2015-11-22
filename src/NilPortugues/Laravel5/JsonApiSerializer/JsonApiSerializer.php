@@ -10,8 +10,8 @@
  */
 namespace NilPortugues\Laravel5\JsonApiSerializer;
 
+use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
-use NilPortugues\Laravel5\JsonApiSerializer\Factory\RequestFactory;
 use NilPortugues\Serializer\DeepCopySerializer;
 use NilPortugues\Serializer\Drivers\Eloquent\EloquentDriver;
 
@@ -64,12 +64,19 @@ class JsonApiSerializer extends DeepCopySerializer
      */
     protected function serializeObject($value)
     {
-
         $serialized = EloquentDriver::serialize($value);
         if ($value !== $serialized) {
             return $serialized;
         }
 
         return parent::serializeObject($value);
+    }
+
+    /**
+     * @return JsonApiTransformer
+     */
+    public function getTransformer()
+    {
+        return $this->serializationStrategy;
     }
 }
