@@ -42,7 +42,7 @@ trait RequestTrait
         $apiRequest = $this->jsonApiRequest();
         $this->validateQueryParamsTypes($serializer, $apiRequest->getFields());
 
-        return empty($this->queryParamErrorBag);
+        return !empty($this->queryParamErrorBag);
     }
 
     /**
