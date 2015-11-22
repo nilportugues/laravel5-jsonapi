@@ -852,12 +852,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nilportugues/jsonapi-transformer.git",
-                "reference": "9abe4b3b55544fa3ee9f8ff15800bce93649aaec"
+                "reference": "6a4ef38989986956e864cda5f980c97af2930c64"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/nilportugues/jsonapi-transformer/zipball/6a4ef38989986956e864cda5f980c97af2930c64",
-                "reference": "9abe4b3b55544fa3ee9f8ff15800bce93649aaec",
+                "reference": "6a4ef38989986956e864cda5f980c97af2930c64",
                 "shasum": ""
             },
             "require": {
@@ -901,7 +901,7 @@
                 "serializer",
                 "transformer"
             ],
-            "time": "2015-11-21 11:11:49"
+            "time": "2015-11-21 14:37:01"
         },
         {
             "name": "nilportugues/php_backslasher",
@@ -1027,16 +1027,16 @@
         },
         {
             "name": "nilportugues/serializer-eloquent",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nilportugues/serializer-eloquent-driver.git",
-                "reference": "8b9b34fc722ea439f30f8ba34dd8e1e8c51bb94c"
+                "reference": "183b2e4dd7ed27b4385e0569ea0ccfc1ae85c798"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nilportugues/serializer-eloquent-driver/zipball/8b9b34fc722ea439f30f8ba34dd8e1e8c51bb94c",
-                "reference": "8b9b34fc722ea439f30f8ba34dd8e1e8c51bb94c",
+                "url": "https://api.github.com/repos/nilportugues/serializer-eloquent-driver/zipball/183b2e4dd7ed27b4385e0569ea0ccfc1ae85c798",
+                "reference": "183b2e4dd7ed27b4385e0569ea0ccfc1ae85c798",
                 "shasum": ""
             },
             "require": {
@@ -1082,7 +1082,7 @@
                 "serializer",
                 "transformer"
             ],
-            "time": "2015-11-21 15:58:53"
+            "time": "2015-11-21 16:09:48"
         },
         {
             "name": "paragonie/random_compat",
