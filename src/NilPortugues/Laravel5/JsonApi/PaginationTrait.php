@@ -7,11 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace NilPortugues\Laravel5\JsonApiSerializer;
+namespace NilPortugues\Laravel5\JsonApi;
 
 use Illuminate\Container\Container;
 use NilPortugues\Api\JsonApi\Http\Message\Request;
-use NilPortugues\Laravel5\JsonApiSerializer\Factory\RequestFactory;
+use NilPortugues\Laravel5\JsonApi\Factory\RequestFactory;
 
 /**
  * Class PaginationTrait.

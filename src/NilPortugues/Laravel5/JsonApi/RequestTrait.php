@@ -12,7 +12,7 @@ namespace NilPortugues\Laravel5\JsonApiJsonApiSerializer;
 use NilPortugues\Api\JsonApi\Http\Error;
 use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
 use NilPortugues\Api\JsonApi\Http\Message\Request;
-use NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer;
+use NilPortugues\Laravel5\JsonApi\JsonApiSerializer;
 
 /**
  * Class RequestTrait.

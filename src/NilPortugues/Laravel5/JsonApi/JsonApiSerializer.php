@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace NilPortugues\Laravel5\JsonApiSerializer;
+namespace NilPortugues\Laravel5\JsonApi;
 
 use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;

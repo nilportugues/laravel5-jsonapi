@@ -8,16 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace NilPortugues\Laravel5\JsonApiSerializer;
+namespace NilPortugues\Laravel5\JsonApi;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
 use NilPortugues\Api\Mapping\Mapping;
-use NilPortugues\Laravel5\JsonApiSerializer\Mapper\Mapper;
+use NilPortugues\Laravel5\JsonApi\Mapper\Mapper;
 use ReflectionClass;
 
-class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
+class Laravel5JsonApiServiceProvider extends ServiceProvider
 {
     const PATH = '/../../../config/jsonapi.php';
 

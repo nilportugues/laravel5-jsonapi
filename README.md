@@ -29,7 +29,7 @@ Open up `config/app.php` and add the following line under `providers` array:
 'providers' => [
 
     //...
-    NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider::class,
+    NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiServiceProvider::class,
 ],
 ```
 
@@ -38,7 +38,7 @@ Open up `config/app.php` and add the following line under `providers` array:
 Open up `bootstrap/app.php`and add the following lines before the `return $app;` statement:
 
 ```php
-$app->register(\NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider::class);
+$app->register(\NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiServiceProvider::class);
 $app->configure('jsonapi');
 ```
 
