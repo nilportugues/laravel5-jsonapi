@@ -39,16 +39,17 @@ trait RequestTrait
      */
     protected function hasValidQueryParams(JsonApiSerializer $serializer)
     {
-        $apiRequest = $this->jsonApiRequest();
-        $this->validateQueryParamsTypes($serializer, $apiRequest->getFields());
+        $apiRequest = $this->apiRequest();
+        $this->validateQueryParamsTypes($serializer, $apiRequest->getFields(), 'Fields');
+        $this->validateQueryParamsTypes($serializer, $apiRequest->getIncludedRelationships(), 'Include');
 
-        return !empty($this->queryParamErrorBag);
+        return empty($this->queryParamErrorBag);
     }
 
     /**
      * @return Request
      */
-    protected function jsonApiRequest()
+    protected function apiRequest()
     {
         return RequestFactory::create();
     }
@@ -56,25 +57,37 @@ trait RequestTrait
     /**
      * @param JsonApiSerializer $serializer
      * @param array             $fields
+     * @param                   $paramName
      */
-    private function validateQueryParamsTypes(JsonApiSerializer $serializer, array $fields)
+    private function validateQueryParamsTypes(JsonApiSerializer $serializer, array $fields, $paramName)
     {
         if (!empty($fields)) {
-            $mappings = $serializer->getTransformer()->getMappings();
-
+            $transformer = $serializer->getTransformer();
             $validateFields = array_keys($fields);
-            foreach ($mappings as $mapping) {
-                foreach ($validateFields as $key => &$field) {
-                    if (0 === strcasecmp($mapping->getClassAlias(), $field)) {
-                        unset($validateFields[$key]);
+
+            foreach ($validateFields as $key => $field) {
+                $mapping = $transformer->getMappingByAlias($field);
+
+                if (null !== $mapping) {
+                    $invalidProperties = array_diff($fields[$field], $mapping->getProperties());
+                    foreach ($invalidProperties as $extraField) {
+                        //@todo add attribute error to Error.
+                        $error = new Error(
+                            sprintf('Invalid %s Attribute', $paramName),
+                            sprintf("Attribute '%s' for resource '%s' does not exist.", $extraField, $field)
+                        );
+
+                        $this->queryParamErrorBag[] = $error;
                     }
+
+                    unset($validateFields[$key]);
                 }
             }
 
             if (false === empty($validateFields)) {
                 foreach ($validateFields as $field) {
                     $this->queryParamErrorBag[] = new Error(
-                        'Invalid Fields Parameter',
+                        sprintf('Invalid %s Parameter', $paramName),
                         sprintf("The resource type '%s' does not exist.", $field)
                     );
                 }
