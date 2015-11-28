@@ -11,7 +11,7 @@ namespace NilPortugues\Laravel5\JsonApi;
 
 use Illuminate\Container\Container;
 use NilPortugues\Api\JsonApi\Http\Message\Request;
-use NilPortugues\Laravel5\JsonApi\Factory\RequestFactory;
+use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
 
 /**
  * Class PaginationTrait.
@@ -38,7 +38,7 @@ trait PaginationTrait
         $links = array_filter([
                 'self' => $pageNumber,
                 'first' => 1,
-                'next' => ($next < $last) ? $next : null,
+                'next' => ($next <= $last) ? $next : null,
                 'previous' => ($previous > 1) ? $previous : null,
                 'last' => $last,
             ]);

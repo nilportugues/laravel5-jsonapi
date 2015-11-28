@@ -65,12 +65,16 @@ trait RequestTrait
             $transformer = $serializer->getTransformer();
             $validateFields = array_keys($fields);
 
-            foreach ($validateFields as $key => $field) {
+            foreach($validateFields as $key => $field) {
                 $mapping = $transformer->getMappingByAlias($field);
+                if(null !== $mapping) {
+                    $properties = array_merge(
+                        array_combine($mapping->getProperties(), $mapping->getProperties()),
+                        $mapping->getAliasedProperties()
+                    );
 
-                if (null !== $mapping) {
-                    $invalidProperties = array_diff($fields[$field], $mapping->getProperties());
-                    foreach ($invalidProperties as $extraField) {
+                    $invalidProperties = array_diff($fields[$field], $properties);
+                    foreach($invalidProperties as $extraField) {
                         //@todo add attribute error to Error.
                         $error = new Error(
                             sprintf('Invalid %s Attribute', $paramName),
@@ -79,7 +83,6 @@ trait RequestTrait
 
                         $this->queryParamErrorBag[] = $error;
                     }
-
                     unset($validateFields[$key]);
                 }
             }
