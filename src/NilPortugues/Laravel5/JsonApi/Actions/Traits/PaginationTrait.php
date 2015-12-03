@@ -7,7 +7,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace NilPortugues\Laravel5\JsonApi;
+
+namespace NilPortugues\Laravel5\JsonApi\Actions\Traits;
 
 use Illuminate\Container\Container;
 use NilPortugues\Api\JsonApi\Http\Message\Request;

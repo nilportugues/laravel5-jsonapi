@@ -2,12 +2,13 @@
 /**
  * Author: Nil Portugués Calderó <contact@nilportugues.com>
  * Date: 11/27/15
- * Time: 7:47 PM
+ * Time: 7:47 PM.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace NilPortugues\Laravel5\JsonApiJsonApiSerializer;
+
+namespace NilPortugues\Laravel5\JsonApi\Eloquent;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,17 +16,15 @@ use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
 use NilPortugues\Laravel5\JsonApi\JsonApiSerializer;
 
 /**
- * Class EloquentHelper
- * @package App\Http\Controllers
+ * Class EloquentHelper.
  */
 trait EloquentHelper
 {
-
     /**
      * @param JsonApiSerializer $serializer
      * @param Builder           $builder
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Builder
      */
     public static function paginate(JsonApiSerializer $serializer, Builder $builder)
     {
@@ -39,7 +38,8 @@ trait EloquentHelper
             'page',
             $request->getPageNumber()
         );
-        return $builder->get();
+
+        return $builder;
     }
 
     /**
@@ -64,12 +64,10 @@ trait EloquentHelper
                     $builder->orderBy($field, ($direction === 'ascending') ? 'ASC' : 'DESC');
                 }
             }
-
         }
 
         return $builder;
     }
-
 
     /**
      * @param JsonApiSerializer $serializer
@@ -85,7 +83,6 @@ trait EloquentHelper
             $classAlias = $mapping->getClassAlias();
 
             if (!empty($fields[$classAlias])) {
-
                 $className = $mapping->getClassName();
                 $aliased = $mapping->getAliasedProperties();
 
@@ -93,19 +90,17 @@ trait EloquentHelper
                 $model = new $className();
                 $columns = $fields[$classAlias];
 
-                if (count($aliased)>0) {
+                if (count($aliased) > 0) {
                     $columns = str_replace(array_values($aliased), array_keys($aliased), $columns);
                 }
 
                 foreach ($columns as &$column) {
-                    $filterColumns[] = sprintf("%s.%s", $model->getTable(), $column);
+                    $filterColumns[] = sprintf('%s.%s', $model->getTable(), $column);
                 }
-                $filterColumns[] = sprintf("%s.%s", $model->getTable(), $model->getKeyName());
+                $filterColumns[] = sprintf('%s.%s', $model->getTable(), $model->getKeyName());
             }
         }
 
-
-        return (count($filterColumns)>0) ? $filterColumns : ['*'];
+        return (count($filterColumns) > 0) ? $filterColumns : ['*'];
     }
-
-} 
+}

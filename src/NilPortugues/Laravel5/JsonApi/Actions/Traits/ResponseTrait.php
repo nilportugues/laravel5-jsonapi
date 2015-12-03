@@ -7,19 +7,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace NilPortugues\Laravel5\JsonApi;
 
-use NilPortugues\Api\JsonApi\Http\ErrorBag;
-use NilPortugues\Api\JsonApi\Http\Message\BadRequest;
-use NilPortugues\Api\JsonApi\Http\Message\ResourceConflicted;
-use NilPortugues\Api\JsonApi\Http\Message\ResourceCreated;
-use NilPortugues\Api\JsonApi\Http\Message\ResourceDeleted;
-use NilPortugues\Api\JsonApi\Http\Message\ResourceNotFound;
-use NilPortugues\Api\JsonApi\Http\Message\ResourceProcessing;
-use NilPortugues\Api\JsonApi\Http\Message\ResourceUpdated;
-use NilPortugues\Api\JsonApi\Http\Message\Response;
-use NilPortugues\Api\JsonApi\Http\Message\UnsupportedAction;
+namespace NilPortugues\Laravel5\JsonApi\Actions\Traits;
+
 use NilPortugues\Api\JsonApi\Http\PaginatedResource;
+use NilPortugues\Api\JsonApi\Http\Response\BadRequest;
+use NilPortugues\Api\JsonApi\Http\Response\ResourceConflicted;
+use NilPortugues\Api\JsonApi\Http\Response\ResourceCreated;
+use NilPortugues\Api\JsonApi\Http\Response\ResourceDeleted;
+use NilPortugues\Api\JsonApi\Http\Response\ResourceNotFound;
+use NilPortugues\Api\JsonApi\Http\Response\ResourceProcessing;
+use NilPortugues\Api\JsonApi\Http\Response\ResourceUpdated;
+use NilPortugues\Api\JsonApi\Http\Response\Response;
+use NilPortugues\Api\JsonApi\Http\Response\UnprocessableEntity;
+use NilPortugues\Api\JsonApi\Http\Response\UnsupportedAction;
+use NilPortugues\Api\JsonApi\Server\Errors\ErrorBag;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 
 trait ResponseTrait
@@ -35,11 +38,11 @@ trait ResponseTrait
     }
 
     /**
-     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param ResponseInterface $response
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface
      */
-    protected function addHeaders(\Psr\Http\Message\ResponseInterface $response)
+    protected function addHeaders(ResponseInterface $response)
     {
         return $response;
     }
@@ -124,5 +127,15 @@ trait ResponseTrait
     protected function unsupportedAction(ErrorBag $errorBag)
     {
         return (new HttpFoundationFactory())->createResponse($this->addHeaders(new UnsupportedAction($errorBag)));
+    }
+
+    /**
+     * @param ErrorBag $errorBag
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function unprocessableEntity(ErrorBag $errorBag)
+    {
+        return (new HttpFoundationFactory())->createResponse($this->addHeaders(new UnprocessableEntity($errorBag)));
     }
 }

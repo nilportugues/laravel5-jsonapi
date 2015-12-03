@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace NilPortugues\Laravel5\JsonApi;
 
 use Illuminate\Support\Facades\Cache;
@@ -47,7 +48,7 @@ class Laravel5JsonApiServiceProvider extends ServiceProvider
             function ($app) {
 
                 $mapping = $app['config']->get('jsonapi');
-                $key = \md5(\json_encode($mapping));
+                $key = md5(json_encode($mapping));
 
                 return Cache::rememberForever(
                     $key,
