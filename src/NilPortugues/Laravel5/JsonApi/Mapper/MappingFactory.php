@@ -46,5 +46,4 @@ class MappingFactory extends \NilPortugues\Api\Mapping\MappingFactory
 
         return parent::getClassProperties($className);
     }
-
 }

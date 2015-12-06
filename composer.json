@@ -13,13 +13,12 @@
         }
     ],
     "require": {
-        "nilportugues/json-api": "dev-master",
+        "nilportugues/json-api": "2.0.0-rc1",
         "symfony/psr-http-message-bridge": "~0.2",
         "nilportugues/serializer-eloquent": "^1.0"
     },
     "require-dev": {
         "laravel/laravel": "5.*",
-        "nilportugues/php_backslasher": "~0.2",
         "fabpot/php-cs-fixer": "^1.10"
     },
     "autoload": {

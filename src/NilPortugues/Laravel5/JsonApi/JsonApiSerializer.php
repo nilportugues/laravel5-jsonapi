@@ -11,51 +11,13 @@
 
 namespace NilPortugues\Laravel5\JsonApi;
 
-use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
-use NilPortugues\Api\JsonApi\JsonApiTransformer;
-use NilPortugues\Serializer\DeepCopySerializer;
 use NilPortugues\Serializer\Drivers\Eloquent\EloquentDriver;
 
 /**
  * Class JsonApiSerializer.
  */
-class JsonApiSerializer extends DeepCopySerializer
+class JsonApiSerializer extends \NilPortugues\Api\JsonApi\JsonApiSerializer
 {
-    /**
-     * @var JsonApiTransformer
-     */
-    protected $serializationStrategy;
-
-    /**
-     * @param JsonApiTransformer $strategy
-     */
-    public function __construct(JsonApiTransformer $strategy)
-    {
-        parent::__construct($strategy);
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return string
-     */
-    public function serialize($value)
-    {
-        $mappings = $this->serializationStrategy->getMappings();
-        $request = RequestFactory::create();
-
-        if ($filters = $request->getFields()) {
-            foreach ($filters as $type => $properties) {
-                foreach ($mappings as $mapping) {
-                    if ($mapping->getClassAlias() === $type) {
-                        $mapping->setFilterKeys($properties);
-                    }
-                }
-            }
-        }
-
-        return parent::serialize($value);
-    }
     /**
      * Extract the data from an object.
      *
@@ -71,13 +33,5 @@ class JsonApiSerializer extends DeepCopySerializer
         }
 
         return parent::serializeObject($value);
-    }
-
-    /**
-     * @return JsonApiTransformer
-     */
-    public function getTransformer()
-    {
-        return $this->serializationStrategy;
     }
 }
