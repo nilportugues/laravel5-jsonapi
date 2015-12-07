@@ -6,7 +6,7 @@
 [![Total Downloads](https://poser.pugx.org/nilportugues/laravel5-json-api/downloads)](https://packagist.org/packages/nilportugues/laravel5-json-api) 
 [![License](https://poser.pugx.org/nilportugues/laravel5-json-api/license)](https://packagist.org/packages/nilportugues/laravel5-json-api) 
 
-## Package Includes
+
 - Package provides a full implementation of the **[JSON API](https://github.com/json-api/json-api)** specification, and is **featured** on the official site!
 - A **JSON API Transformer** that will allow you to convert any mapped object into a valid JSON API resource.
 - Controller boilerplate to write a fully compiliant **JSON API Server** using your **exisiting Eloquent Models**.
@@ -636,31 +636,275 @@ Content-type: application/vnd.api+json
 
 ### POST
 
+POST requires all member attributes to be accepted, even those hidden by the mapper. 
+
+For instance, `attachments` member was hidden, but it is required, so it needs to be passed in with a valid value. On the other hand, `full_name` member value must not be passed in as an attribute or resource creation will fail.
+
+Passing and `id` is optional and will be used instead of a server-side generated value if provided.
+
+Sending the following data to the server using `POST`to the following URI  `http://localhost:9000/api/v1/employees`: 
+
 ```json
 {
-}
+    "data": {
+        "type": "employee",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "surname": "Portugués",
+            "first_name": "Nil",
+            "email_address": "nilportugues@example.com",
+            "job_title": "Web Developer",
+            "business_phone": "(123)555-0100",
+            "home_phone": "(123)555-0102",
+            "mobile_phone": null,
+            "fax_number": "(123)555-0103",
+            "address": "Plaça Catalunya 1",
+            "city": "Barcelona",
+            "state_province": "Barcelona",
+            "zip_postal_code": "08028",
+            "country_region": "Spain",
+            "web_page": "http://nilportugues.com",
+            "notes": null,
+            "attachments": null
+        }
+	}        
+}        
 ```
 
-### PATCH
+Will produce: 
+
+```
+HTTP/1.1 201 Created
+Cache-Control: private, max-age=0, must-revalidate
+Content-type: application/vnd.api+json
+Location: http://localhost:9000/api/v1/employees/10
+```
+
+Notice how 201 HTTP Status Code is returned and Location header too. Also `attachments` is not there anymore, and `full_name` was displayed.
 
 ```json
 {
+    "data": {
+        "type": "employee",
+        "id": "10",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "surname": "Portugués",
+            "first_name": "Nil",
+            "email_address": "nilportugues@example.com",
+            "job_title": "Web Developer",
+            "business_phone": "(123)555-0100",
+            "home_phone": "(123)555-0102",
+            "mobile_phone": null,
+            "fax_number": "(123)555-0103",
+            "address": "Plaça Catalunya 1",
+            "city": "Barcelona",
+            "state_province": "Barcelona",
+            "zip_postal_code": "08028",
+            "country_region": "Spain",
+            "web_page": "http://nilportugues.com",
+            "notes": null,
+            "full_name": "Nil Portugués"
+        },
+        "links": {
+            "self": {
+                "href": "http://localhost:9000/api/v1/employees/10"
+            },
+            "employee_orders": {
+                "href": "http://localhost:9000/api/v1/employees/10/orders"
+            }
+        }
+    },
+    "links": {
+        "employees": {
+            "href": "http://localhost:9000/api/v1/employees"
+        },
+        "employee_orders": {
+            "href": "http://localhost:9000/api/v1/employees/10/orders"
+        }
+    },
+    "jsonapi": {
+        "version": "1.0"
+    }
 }
 ```
 
 ### PUT
 
+PUT requires all member attributes to be accepted, just like POST.
+
+For the sake of this example, we'll just send in a new `job_title` value, and keep everything else exactly the same.
+
+It's important to notice this time we are required to pass in the `id`, even if it has been passed in by the URI, and of course the `id` values must match. Otherwise it will fail.
+
+
+Sending the following data to the server using `PUT`to the following URI  `http://localhost:9000/api/v1/employees/10`: 
+
 ```json
 {
+  "data": {
+    "type": "employee",
+    "id": 10,
+    "attributes": {
+      "company": "NilPortugues.com",
+      "surname": "Portugués",
+      "first_name": "Nil",
+      "email_address": "nilportugues@example.com",
+      "job_title": "Full Stack Web Developer",
+      "business_phone": "(123)555-0100",
+      "home_phone": "(123)555-0102",
+      "mobile_phone": null,
+      "fax_number": "(123)555-0103",
+      "address": "Plaça Catalunya 1",
+      "city": "Barcelona",
+      "state_province": "Barcelona",
+      "zip_postal_code": "08028",
+      "country_region": "Spain",
+      "web_page": "http://nilportugues.com",
+      "notes": null,
+      "attachments": null
+    }
+  }
 }
 ```
+
+
+Will produce: 
+
+```
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=0, must-revalidate
+Content-type: application/vnd.api+json
+```
+
+```json
+{
+    "data": {
+        "type": "employee",
+        "id": "10",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "surname": "Portugués",
+            "first_name": "Nil",
+            "email_address": "contact@nilportugues.com",
+            "job_title": "Full Stack Web Developer",
+            "business_phone": "(123)555-0100",
+            "home_phone": "(123)555-0102",
+            "mobile_phone": null,
+            "fax_number": "(123)555-0103",
+            "address": "Plaça Catalunya 1",
+            "city": "Barcelona",
+            "state_province": "Barcelona",
+            "zip_postal_code": "08028",
+            "country_region": "Spain",
+            "web_page": "http://nilportugues.com",
+            "notes": null,
+            "full_name": "Nil Portugués"
+        },
+        "links": {
+            "self": {
+                "href": "http://localhost:9000/api/v1/employees/10"
+            },
+            "employee_orders": {
+                "href": "http://localhost:9000/api/v1/employees/10/orders"
+            }
+        }
+    },
+    "included": [],
+    "links": {
+        "employees": {
+            "href": "http://localhost:9000/api/v1/employees"
+        },
+        "employee_orders": {
+            "href": "http://localhost:9000/api/v1/employees/10/orders"
+        }
+    },
+    "jsonapi": {
+        "version": "1.0"
+    }
+}
+```
+
+
+### PATCH
+
+PATCH allows partial updates, unlike PUT. 
+
+We are required to pass in the `id` member, even if it has been passed in by the URI, and of course the `id` values must match. Otherwise it will fail.
+
+For instance, sending the following data to the server using the following URI  `http://localhost:9000/api/v1/employees/10`: 
+
+```json
+{
+  "data": {
+    "type": "employee",
+    "id": 10,
+    "attributes": {
+      "email_address": "contact@nilportugues.com"
+    }
+  }
+}
+```
+
+Will produce: 
+
+```
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=0, must-revalidate
+Content-type: application/vnd.api+json
+```
+
+```json
+{
+    "data": {
+        "type": "employee",
+        "id": "10",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "surname": "Portugués",
+            "first_name": "Nil",
+            "email_address": "contact@nilportugues.com",
+            "job_title": "Full Stack Web Developer",
+            "business_phone": "(123)555-0100",
+            "home_phone": "(123)555-0102",
+            "mobile_phone": null,
+            "fax_number": "(123)555-0103",
+            "address": "Plaça Catalunya 1",
+            "city": "Barcelona",
+            "state_province": "Barcelona",
+            "zip_postal_code": "08028",
+            "country_region": "Spain",
+            "web_page": "http://nilportugues.com",
+            "notes": null,
+            "full_name": "Nil Portugués"
+        },
+        "links": {
+            "self": {
+                "href": "http://localhost:9000/api/v1/employees/10"
+            },
+            "employee_orders": {
+                "href": "http://localhost:9000/api/v1/employees/10/orders"
+            }
+        }
+    },
+    "included": [],
+    "links": {
+        "employees": {
+            "href": "http://localhost:9000/api/v1/employees"
+        },
+        "employee_orders": {
+            "href": "http://localhost:9000/api/v1/employees/10/orders"
+        }
+    },
+    "jsonapi": {
+        "version": "1.0"
+    }
+}
+```
+
+
 
 ### DELETE
-
-```json
-{
-}
-```
 
 <br>
 
@@ -739,6 +983,10 @@ Here's how it would be done for `createResourceCallable`.
 <?php namespace App\Http\Controllers;
 
 use App\Model\Database\Employees;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use NilPortugues\Api\JsonApi\Server\Errors\Error;
+use NilPortugues\Api\JsonApi\Server\Errors\ErrorBag;
 use NilPortugues\Laravel5\JsonApi\Controller\JsonApiController;
 
 class EmployeesController extends JsonApiController
@@ -755,54 +1003,156 @@ class EmployeesController extends JsonApiController
             if (!empty($data['relationships']['order']['data'])) {
                 $orderData = $data['relationships']['order']['data'];
 
-				//If single element, turn it into general case: array
                 if (!empty($orderData['type'])) {
                     $orderData = [$orderData];
                 }
 
                 foreach ($orderData as $order) {
-                    $orderAttributes = $order['attributes'];
-                    $orderAttributes['employee_id'] = $model->getKey();
-
-                    $order = Orders::create();
-                    foreach ($orderAttributes as $attribute => $value) {
-                        $order->setAttribute($attribute, $value);
-                    }
-                    $order->save();
+                    $attributes = array_merge($order['attributes'], ['employee_id' => $model->getKey()]);
+                    Orders::create($attributes);
                 }
-
             }
         };
 
-        return function (array $data, array $values) use ($createOrderResource) {
-            try {
-                DB::beginTransaction();
-                $model = $this->getDataModel()->newInstance();
-                foreach ($values as $attribute => $value) {
-                    $model->setAttribute($attribute, $value);
-                }
+        return function (array $data, array $values, ErrorBag $errorBag) use ($createOrderResource) {
 
-                if (!empty($data['id'])) {
-                    $model->setAttribute($model->getKeyName(), $values['id']);
-                }
-
-                $model->save();
-                $createOrderResource($model, $data);
-                DB::commit();
-
-            } catch (\PDOException $e) {
-                DB::rollback();
-                throw new \Exception();
+            $attributes = [];
+            foreach ($values as $name => $value) {
+                $attributes[$name] = $value;
             }
 
-            return $model;
+            if (!empty($data['id'])) {
+                $attributes[$this->getDataModel()->getKeyName()] = $values['id'];
+            }
+
+            DB::beginTransaction();
+            try {
+    			$model = $this->getDataModel()->create($attributes);
+                $createOrderResource($model, $data);
+                DB::commit();
+                return $model;
+                
+            } catch(\Exception $e) {
+                DB::rollback();
+                $errorBag[] = new Error('creation_error', 'Resource could not be created');
+                throw $e;
+            }
         };
     }
 
 }
 ```
 
-**Tip:** When code gets so massive, it's a good idea to use the `Factory pattern` and `Repository pattern` and encapsulate logic.
+It is important, in order to use Transactions, do define in `Eloquent` models the `$fillable` values. 
+
+Here's how `Employees` and `Orders` look like with `$fillable` defined.
+
+
+**Employees (Eloquent Model) with $fillable**
+```php
+<?php namespace App\Model\Database;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+
+class Employees extends Model
+{
+    public $timestamps = false;
+    protected $table = 'employees';    
+    protected $primaryKey = 'id';
+    protected $appends = ['full_name'];
+    
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'company',
+        'last_name',
+        'first_name',
+        'email_address',
+        'job_title',
+        'business_phone',
+        'home_phone',
+        'mobile_phone',
+        'fax_number',
+        'address',
+        'city',
+        'state_province',
+        'zip_postal_code',
+        'country_region',
+        'web_page',
+        'notes',
+        'attachments',
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function latestOrders()
+    {
+        return $this->hasMany(Orders::class, 'employee_id')->limit(10);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
+}
+
+```
+
+
+**Orders (Eloquent Model) with $fillable**
+
+```php
+<?php namespace App\Model\Database;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Orders extends Model
+{   
+    public $timestamps = false;
+    protected $table = 'orders';
+    protected $primaryKey = 'id';
+    
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'employee_id',
+        'customer_id',
+        'order_date',
+        'shipped_date',
+        'shipper_id',
+        'ship_name',
+        'ship_address',
+        'ship_city',
+        'ship_state_province',
+        'ship_zip_postal_code',
+        'ship_country_region',
+        'shipping_fee',
+        'taxes',
+        'payment_type',
+        'paid_date',
+        'notes',
+        'tax_rate',
+        'tax_status_id',
+        'status_id',
+    ];
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function employee()
+    {
+        return $this->belongsTo(Employees::class, 'employee_id');
+    }
+}
+```
+
 
 
 ## Custom Response Headers

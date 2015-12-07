@@ -19,6 +19,8 @@ use NilPortugues\Api\JsonApi\Server\Actions\ListResource;
 use NilPortugues\Api\JsonApi\Server\Actions\GetResource;
 use NilPortugues\Api\JsonApi\Server\Actions\PatchResource;
 use NilPortugues\Api\JsonApi\Server\Actions\PutResource;
+use NilPortugues\Api\JsonApi\Server\Errors\Error;
+use NilPortugues\Api\JsonApi\Server\Errors\ErrorBag;
 use NilPortugues\Laravel5\JsonApi\Eloquent\EloquentHelper;
 use NilPortugues\Laravel5\JsonApi\JsonApiSerializer;
 use Symfony\Component\HttpFoundation\Response;
@@ -138,7 +140,9 @@ abstract class JsonApiController extends Controller
 
         $resource = new CreateResource($this->serializer);
 
-        return $this->addHeaders($resource->get((array) $request->get('data'), get_class($this->getDataModel()), $createResource));
+        return $this->addHeaders(
+            $resource->get((array) $request->get('data'), get_class($this->getDataModel()), $createResource)
+        );
     }
 
     /**
@@ -159,7 +163,12 @@ abstract class JsonApiController extends Controller
                 $model->setAttribute($model->getKeyName(), $values['id']);
             }
 
-            $model->save();
+            try {
+                $model->save();
+            } catch (\Exception $e) {
+                $errorBag[] = new Error('creation_error', 'Resource could not be created');
+                throw $e;
+            }
 
             return $model;
         };
@@ -177,13 +186,15 @@ abstract class JsonApiController extends Controller
 
         $resource = new PatchResource($this->serializer);
 
-        return $this->addHeaders($resource->get(
-            $request->id,
-            (array) $request->get('data'),
-            get_class($this->getDataModel()),
-            $find,
-            $update
-        ));
+        return $this->addHeaders(
+            $resource->get(
+                $request->id,
+                (array) $request->get('data'),
+                get_class($this->getDataModel()),
+                $find,
+                $update
+            )
+        );
     }
 
     /**
@@ -191,11 +202,16 @@ abstract class JsonApiController extends Controller
      */
     protected function updateResourceCallable()
     {
-        return function (Model $model, $values) {
+        return function (Model $model, array $values, ErrorBag $errorBag) {
             foreach ($values as $attribute => $value) {
                 $model->$attribute = $value;
             }
-            $model->update();
+            try {
+                $model->update();
+            } catch (\Exception $e) {
+                $errorBag[] = new Error('update_failed', 'Could not update resource.');
+                throw $e;
+            }
         };
     }
 
@@ -211,13 +227,15 @@ abstract class JsonApiController extends Controller
 
         $resource = new PutResource($this->serializer);
 
-        return $this->addHeaders($resource->get(
-            $request->id,
-            (array) $request->get('data'),
-            get_class($this->getDataModel()),
-            $find,
-            $update
-        ));
+        return $this->addHeaders(
+            $resource->get(
+                $request->id,
+                (array) $request->get('data'),
+                get_class($this->getDataModel()),
+                $find,
+                $update
+            )
+        );
     }
 
     /**
