@@ -21,6 +21,7 @@ use NilPortugues\Api\JsonApi\Server\Actions\PatchResource;
 use NilPortugues\Api\JsonApi\Server\Actions\PutResource;
 use NilPortugues\Laravel5\JsonApi\Eloquent\EloquentHelper;
 use NilPortugues\Laravel5\JsonApi\JsonApiSerializer;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class JsonApiController.
@@ -53,15 +54,8 @@ abstract class JsonApiController extends Controller
         $controllerAction = '\\'.get_class($this).'@listAction';
         $uri = action($controllerAction, []);
 
-        return $resource->get($totalAmount, $results, $uri);
+        return $this->addHeaders($resource->get($totalAmount, $results, $uri));
     }
-
-    /**
-     * Returns an Eloquent Model.
-     *
-     * @return Model
-     */
-    abstract public function getDataModel();
 
     /**
      * Returns the total number of results available for the current resource.
@@ -78,6 +72,13 @@ abstract class JsonApiController extends Controller
     }
 
     /**
+     * Returns an Eloquent Model.
+     *
+     * @return Model
+     */
+    abstract public function getDataModel();
+
+    /**
      * Returns a list of resources based on pagination criteria.
      *
      * @return callable
@@ -90,6 +91,16 @@ abstract class JsonApiController extends Controller
     }
 
     /**
+     * @param Response $response
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function addHeaders(Response $response)
+    {
+        return $response;
+    }
+
+    /**
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -99,7 +110,7 @@ abstract class JsonApiController extends Controller
         $find = $this->findResourceCallable($request);
         $resource = new GetResource($this->serializer);
 
-        return $resource->get($request->id, get_class($this->getDataModel()), $find);
+        return $this->addHeaders($resource->get($request->id, get_class($this->getDataModel()), $find));
     }
 
     /**
@@ -127,7 +138,7 @@ abstract class JsonApiController extends Controller
 
         $resource = new CreateResource($this->serializer);
 
-        return $resource->get((array) $request->get('data'), get_class($this->getDataModel()), $createResource);
+        return $this->addHeaders($resource->get((array) $request->get('data'), get_class($this->getDataModel()), $createResource));
     }
 
     /**
@@ -166,13 +177,13 @@ abstract class JsonApiController extends Controller
 
         $resource = new PatchResource($this->serializer);
 
-        return $resource->get(
+        return $this->addHeaders($resource->get(
             $request->id,
             (array) $request->get('data'),
             get_class($this->getDataModel()),
             $find,
             $update
-        );
+        ));
     }
 
     /**
@@ -200,13 +211,13 @@ abstract class JsonApiController extends Controller
 
         $resource = new PutResource($this->serializer);
 
-        return $resource->get(
+        return $this->addHeaders($resource->get(
             $request->id,
             (array) $request->get('data'),
             get_class($this->getDataModel()),
             $find,
             $update
-        );
+        ));
     }
 
     /**
@@ -219,6 +230,6 @@ abstract class JsonApiController extends Controller
         $find = $this->findResourceCallable($request);
         $resource = new DeleteResource($this->serializer);
 
-        return $resource->get($request->id, get_class($this->getDataModel()), $find);
+        return $this->addHeaders($resource->get($request->id, get_class($this->getDataModel()), $find));
     }
 }
