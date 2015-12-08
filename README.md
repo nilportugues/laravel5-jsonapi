@@ -550,9 +550,8 @@ class EmployeesController extends JsonApiController
 }
 ```
 
-And you're ready to go. Yes, it is **THAT** simple!
 
-In case you need to overwrite any default behaviour, the JsonApiController methods are:
+In case you need to overwrite any default behaviour, the **JsonApiController** methods are:
 
 ```php
 //Constructor and defined actions
@@ -575,6 +574,67 @@ protected function updateResourceCallable();
 protected function addHeaders(Response $response);
 ```
 
+
+But wait! We're missing out one action, `EmployeesController@getOrdersByEmployee`. 
+
+As the name suggests, it should list orders, so the behaviour should be the same as the one of `ListAction`.
+
+If you look inside the `listAction`you'll find a code similar to the one below, but we just ajusted the behaviour and used it in our controller to support an additional action:
+
+```php
+<?php namespace App\Http\Controllers;
+
+use App\Model\Database\Employees;
+use App\Model\Database\Orders;
+use NilPortugues\Laravel5\JsonApi\Controller\JsonApiController;
+
+class EmployeesController extends JsonApiController
+{
+    /**
+     * Return the Eloquent model that will be used 
+	 * to model the JSON API resources. 
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function getDataModel()
+    {
+        return new Employees();
+    }    
+    
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getOrdersByEmployee(Request $request)
+    {       
+		$resource = new ListResource($this->serializer);
+        
+        $totalAmount = function() use ($request) {
+            $id = (new Orders())->getKeyName();
+            return Orders::query()
+            	->where('employee_id', '=', $request->employee_id)
+				->get([$id])
+				->count();
+        };
+
+        $results = function()  use ($request) {
+            return EloquentHelper::paginate(
+                $this->serializer,
+                Orders::query()
+                	->where('employee_id', '=', $request->employee_id)
+            )->get();
+        };
+
+        $uri = route('employees.orders', ['employee_id' => $request->employee_id]);
+		
+        return $resource->get($totalAmount, $results, $uri, Orders::class);
+    }
+}
+```
+
+
+And you're ready to go. Yes, it is **THAT** simple!
 
 
 ## Examples: Consuming the API

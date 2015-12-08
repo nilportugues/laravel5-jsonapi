@@ -52,17 +52,16 @@ trait EloquentHelper
     protected static function sort(JsonApiSerializer $serializer, Builder $builder, Model $model)
     {
         $mapping = $serializer->getTransformer()->getMappingByClassName(get_class($model));
-        $aliased = (array) $mapping->getAliasedProperties();
+        $sorts = RequestFactory::create()->getSortDirection();
 
-        if (!empty($aliased)) {
-            $sorts = RequestFactory::create()->getSortDirection();
-            if (!empty($sorts)) {
-                $sortsFields = str_replace(array_values($aliased), array_keys($aliased), array_keys($sorts));
-                $sorts = array_combine($sortsFields, array_values($sorts));
+        if (!empty($sorts)) {
+            $aliased = $mapping->getAliasedProperties();
 
-                foreach ($sorts as $field => $direction) {
-                    $builder->orderBy($field, ($direction === 'ascending') ? 'ASC' : 'DESC');
-                }
+            $sortsFields = str_replace(array_values($aliased), array_keys($aliased), array_keys($sorts));
+            $sorts = array_combine($sortsFields, array_values($sorts));
+
+            foreach ($sorts as $field => $direction) {
+                $builder->orderBy($field, ($direction === 'ascending') ? 'ASC' : 'DESC');
             }
         }
 
