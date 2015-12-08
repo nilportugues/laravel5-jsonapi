@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "nilportugues/json-api": "2.0.0-rc1",
+        "nilportugues/json-api": "2.0.0-rc3",
         "symfony/psr-http-message-bridge": "~0.2",
         "nilportugues/serializer-eloquent": "^1.0"
     },
