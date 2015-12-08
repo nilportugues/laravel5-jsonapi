@@ -1,4 +1,4 @@
-# Laravel 5 JSON API Transformer Package
+# Laravel 5 JSON API Server Package
 
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nilportugues/laravel5-jsonapi-transformer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nilportugues/laravel5-jsonapi-transformer/?branch=master) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/22db88f5-d061-4b32-bad1-4b806ac07318/mini.png)](https://insight.sensiolabs.com/projects/22db88f5-d061-4b32-bad1-4b806ac07318) 
@@ -6,6 +6,36 @@
 [![Total Downloads](https://poser.pugx.org/nilportugues/laravel5-json-api/downloads)](https://packagist.org/packages/nilportugues/laravel5-json-api) 
 [![License](https://poser.pugx.org/nilportugues/laravel5-json-api/license)](https://packagist.org/packages/nilportugues/laravel5-json-api) 
 
+
+- Package provides a full implementation of the **[JSON API](https://github.com/json-api/json-api)** specification, and is **featured** on the official site!
+- A **JSON API Transformer** that will allow you to convert any mapped object into a valid JSON API resource.
+- Controller boilerplate to write a fully compiliant **JSON API Server** using your **exisiting Eloquent Models**.
+- Works for Laravel 5 and Lumen frameworks.
+
+---
+
+- [Installation](#installation)
+- [Configuration (Laravel 5 & Lumen)](#configuration-laravel-5--lumen)
+  - [Configuration for Laravel 5](#configuration-for-laravel-5)
+      	- [Step 1: Add the Service Provider](#step-1-add-the-service-provider)
+   	- [Step 2: Defining routes](#step-2-defining-routes)
+   	- [Step 3: Definition](#step-3-definition)
+   	- [Step 4: Usage](#step-4-usage)
+  - [Configuration for Lumen](#configuration-for-lumen)
+      	- [Step 1: Add the Service Provider](#step-1-add-the-service-provider-1)
+   	- [Step 2: Defining routes](#step-2-defining-routes-1)
+   	- [Step 3: Definition](#step-3-definitio-1n)
+   	- [Step 4: Usage](#step-4-usage-1)
+- [JsonApiController](#jsonapicontroller)
+- [Examples: Consuming the API](#examples-consuming-the-api)
+  - [GET](#get)
+  - [POST](#post)
+  - [PUT](#put)
+  - [PATCH](#patch)
+  - [DELETE](#delete)
+- [GET Query Params: include, fields, sort and page](#get-query-params-include-fields-sort-and-page)
+- [POST/PUT/PATCH with Relationships](#postputpatch-with-relationships)
+- [Custom Response Headers](#custom-response-headers)
 
 
 ## Installation
@@ -17,28 +47,406 @@ $ composer require nilportugues/laravel5-json-api
 ```
 
 
-## Laravel 5 / Lumen Configuration
+## Configuration (Laravel 5 & Lumen)
 
-**Step 1: Add the Service Provider**
 
-**Laravel**
+For the sake of having a real life example, this configuration will guide you on how to set up **7 end-points** for two resources, `Employees` and `Orders`.
+
+Both `Employees` and `Orders` resources will be **Eloquent** models, being related one with the other. 
+
+Furthermore, `Employees`will be using an Eloquent feature, `appended fields` to demonstrate how it is possible to make the most of Eloquent and this package all together.
+
+### Configuration for Laravel 5
+
+#### Step 1: Add the Service Provider
 
 Open up `config/app.php` and add the following line under `providers` array:
 
 ```php
 'providers' => [
-
     //...
-    NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider::class,
+    NilPortugues\Laravel5\JsonApi\Laravel5JsonApiServiceProvider::class,
 ],
 ```
 
-**Lumen**
+
+
+#### Step 2: Defining routes
+
+We will be planning the resources ahead its implementation. All routes require to have a name.  
+
+This is how our `app/Http/routes.php` will look:
+
+
+```php
+<?php
+Route::group(['prefix' => 'api/v1/','namespace' => 'Api'], function() {
+    Route::post(
+		'employees', [
+        'as' => 'employees.post',
+        'uses' => 'EmployeesController@postAction'
+    ]);
+        
+    Route::get(
+    	'employees', [
+        'as' => 'employees.list',
+        'uses' => 'EmployeesController@listAction'
+    ]);
+    
+    Route::get(
+    	'employees/{id}', [
+        'as' => 'employees.get',
+        'uses' => 'EmployeesController@getAction'
+    ]);
+    
+    Route::put(
+    	'employees/{id}',[
+        'as' => 'employees.put',
+        'uses' => 'EmployeesController@putAction'
+    ]);
+    
+    Route::patch(
+    	'employees/{id}', [
+        'as' => 'employees.patch',
+        'uses' => 'EmployeesController@patchAction'
+    ]);
+    
+    Route::delete(
+    	'employees/{id}', [
+        'as' => 'employees.delete', 
+        'uses' => 'EmployeesController@deleteAction'
+    ]);
+    
+    Route::get(
+    	'employees/{employee_id}/orders', [
+        'as' => 'employees.orders',
+        'uses' => 'EmployeesController@getOrdersByEmployee'
+    ]);
+});
+//...
+```
+
+#### Step 3: Definition
+
+
+First, let's define the Models for `Employees` and `Orders` using Eloquent.
+
+
+**Employees (Eloquent Model)**
+```php
+<?php namespace App\Model\Database;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+
+class Employees extends Model
+{
+    public $timestamps = false;
+    protected $table = 'employees';    
+    protected $primaryKey = 'id';
+    protected $appends = ['full_name'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function latestOrders()
+    {
+        return $this->hasMany(Orders::class, 'employee_id')->limit(10);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
+}
+
+```
+
+**Employees SQL**
+
+```sql
+CREATE TABLE `employees` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `company` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `email_address` varchar(50) DEFAULT NULL,
+  `job_title` varchar(50) DEFAULT NULL,
+  `business_phone` varchar(25) DEFAULT NULL,
+  `home_phone` varchar(25) DEFAULT NULL,
+  `mobile_phone` varchar(25) DEFAULT NULL,
+  `fax_number` varchar(25) DEFAULT NULL,
+  `address` longtext,
+  `city` varchar(50) DEFAULT NULL,
+  `state_province` varchar(50) DEFAULT NULL,
+  `zip_postal_code` varchar(15) DEFAULT NULL,
+  `country_region` varchar(50) DEFAULT NULL,
+  `web_page` longtext,
+  `notes` longtext,
+  `attachments` longblob,
+  PRIMARY KEY (`id`),
+  KEY `city` (`city`),
+  KEY `company` (`company`),
+  KEY `first_name` (`first_name`),
+  KEY `last_name` (`last_name`),
+  KEY `zip_postal_code` (`zip_postal_code`),
+  KEY `state_province` (`state_province`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+```
+
+**Orders (Eloquent Model)**
+
+```php
+<?php namespace App\Model\Database;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Orders extends Model
+{   
+    public $timestamps = false;
+    protected $table = 'orders';
+    protected $primaryKey = 'id';
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function employee()
+    {
+        return $this->belongsTo(Employees::class, 'employee_id');
+    }
+}
+```
+
+**Orders SQL**
+
+```sql
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `employee_id` int(11) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `order_date` datetime DEFAULT NULL,
+  `shipped_date` datetime DEFAULT NULL,
+  `shipper_id` int(11) DEFAULT NULL,
+  `ship_name` varchar(50) DEFAULT NULL,
+  `ship_address` longtext,
+  `ship_city` varchar(50) DEFAULT NULL,
+  `ship_state_province` varchar(50) DEFAULT NULL,
+  `ship_zip_postal_code` varchar(50) DEFAULT NULL,
+  `ship_country_region` varchar(50) DEFAULT NULL,
+  `shipping_fee` decimal(19,4) DEFAULT '0.0000',
+  `taxes` decimal(19,4) DEFAULT '0.0000',
+  `payment_type` varchar(50) DEFAULT NULL,
+  `paid_date` datetime DEFAULT NULL,
+  `notes` longtext,
+  `tax_rate` double DEFAULT '0',
+  `tax_status_id` tinyint(4) DEFAULT NULL,
+  `status_id` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `employee_id` (`employee_id`),
+  KEY `id` (`id`),
+  KEY `shipper_id` (`shipper_id`),
+  KEY `tax_status` (`tax_status_id`),
+  KEY `ship_zip_postal_code` (`ship_zip_postal_code`),
+  KEY `fk_orders_orders_status1` (`status_id`),  
+  CONSTRAINT `fk_orders_employees1` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
+```
+
+Follow up, we'll be creating Transformers. One Transformer is required for each class and it must implement the `\NilPortugues\Api\Mappings\JsonApiMapping` interface.
+
+**EmployeesTransformer**
+
+```php
+<?php namespace App\Model\Api;
+
+use App\Model\Database\Employees;
+use NilPortugues\Api\Mappings\JsonApiMapping;
+
+class EmployeesTransformer implements JsonApiMapping
+{
+    /**
+     * Returns a string with the full class name, including namespace.
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return Employees::class;
+    }
+
+    /**
+     * Returns a string representing the resource name 
+     * as it will be shown after the mapping.
+     *
+     * @return string
+     */
+    public function getAlias()
+    {
+        return 'employee';
+    }
+
+    /**
+     * Returns an array of properties that will be renamed.
+     * Key is current property from the class. 
+     * Value is the property's alias name.
+     *
+     * @return array
+     */
+    public function getAliasedProperties()
+    {
+        return [
+            'last_name' => 'surname',
+            
+        ];
+    }
+
+    /**
+     * List of properties in the class that will be  ignored by the mapping.
+     *
+     * @return array
+     */
+    public function getHideProperties()
+    {
+        return [
+            'attachments'
+        ];
+    }
+
+    /**
+     * Returns an array of properties that are used as an ID value.
+     *
+     * @return array
+     */
+    public function getIdProperties()
+    {
+        return ['id'];
+    }
+
+    /**
+     * Returns a list of URLs. This urls must have placeholders 
+     * to be replaced with the getIdProperties() values.
+     *
+     * @return array
+     */
+    public function getUrls()
+    {
+        return [
+            'self' => ['name' => 'employees.get'],
+            'employees' => ['name' => 'employees.list'],
+            'employee_orders' => ['name' => 'employees.orders', 'as_id' => 'id']
+        ];
+    }
+
+    /**
+     * Returns an array containing the relationship mappings as an array.
+     * Key for each relationship defined must match a property of the mapped class.
+     *
+     * @return array
+     */
+    public function getRelationships()
+    {
+        return [];
+    }
+} 
+```
+
+Same goes for `Orders`. 
+
+**OrdersTransformer**
+
+```php
+<?php namespace App\Model\Api;
+
+use App\Orders;
+use NilPortugues\Api\Mappings\JsonApiMapping;
+
+class OrdersTransformer implements JsonApiMapping
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function getClass()
+    {
+        return Orders::class;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function getAlias()
+    {
+        return 'order';
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function getAliasedProperties()
+    {
+        return [];
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function getHideProperties()
+    {
+        return [];
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function getIdProperties()
+    {
+        return ['id'];
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function getUrls()
+    {
+        return [
+            'self'     => ['name' => 'orders.get'],
+            'employee' => ['name' => 'employees.get', 'as_id' => 'employee_id'],
+        ];
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function getRelationships()
+    {
+        return [];
+    }
+} 
+```
+
+
+#### Step 4: Usage
+
+Create a `jsonapi.php` file in `config/` directory. This file should return an array returning all the class mappings.
+
+
+```php
+<?php
+use App\Model\Api\EmployeesTransformer;
+use App\Model\Api\OrdersTransformer;
+
+return [
+    EmployeesTransformer::class,
+    OrdersTransformer::class,
+];
+```
+<br>
+
+### Configuration for Lumen
+
+#### Step 1: Add the Service Provider
 
 Open up `bootstrap/app.php`and add the following lines before the `return $app;` statement:
 
 ```php
-$app->register(\NilPortugues\Laravel5\JsonApiSerializer\Laravel5JsonApiSerializerServiceProvider::class);
+$app->register(\NilPortugues\Laravel5\JsonApi\Laravel5JsonApiServiceProvider::class);
 $app->configure('jsonapi');
 ```
 
@@ -48,206 +456,194 @@ Also, enable Facades by uncommenting:
 $app->withFacades();
 ```
 
+#### Step 2: Defining routes
 
-**Step 2: Add the mapping**
+We will be planning the resources ahead its implementation. All routes require to have a name.
 
-Create a `jsonapi.php` file in `config/` directory. This file should return an array returning all the class mappings.
+This is how our `app/Http/routes.php` will look:
 
-
-**Step 3: Usage**
-
-For instance, lets say the following object has been fetched from a Repository , lets say `\App\Models\User` - this being implemented in **Eloquent**, but can be anything.
-
-This is its migration file:
 
 ```php
 <?php
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
+$app->group(
+	['prefix' => 'api/v1/' , 'namespace' => 'Api'], function($app) {
+        $app->post(
+            'employees',  [
+			'as' => 'employees.post', 
+			'uses' => 'EmployeesController@postAction'
+		]);
 
-class CreateUsersTable extends Migration 
-{
+        $app->get(
+            'employees', [
+			'as' => 'employees.list', 
+			'uses' => 'EmployeesController@listAction'
+		]);
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('users', function(Blueprint $table)
-        {
-            $table->increments('id');
-            $table->string('username', 30)->unique();
-            $table->string('email')->unique();
-            $table->string('password', 60);
-            $table->integer('role_id')->unsigned();
-            $table->boolean('seen')->default(false);
-            $table->boolean('valid')->default(false);
-            $table->boolean('confirmed')->default(false);
-            $table->string('confirmation_code')->nullable();
-            $table->timestamps();
-            $table->rememberToken();            
-        });
-    }
+        $app->get(
+            'employees/{id}', [
+			'as' => 'employees.get',
+			'uses' => 'EmployeesController@getAction'
+		]);
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('users');
-    }
+        $app->put(
+            'employees/{id}', [
+			'as' => 'employees.put', 
+			'uses' => 'EmployeesController@putAction'
+		]);
 
-}
-```
+        $app->patch(
+            'employees/{id}', [
+			'as' => 'employees.patch', 
+			'uses' => 'EmployeesController@patchAction'
+		]);
 
-And a series of mappings, placed in `config/jsonapi.php`, that require to use *named routes* so we can use the `route()` helper function:
+        $app->delete(
+            'employees/{id}', [
+			'as' => 'employees.delete',
+			'uses' => 'EmployeesController@deleteAction'
+		]);
 
-```php
-<?php
-//config/jsonapi.php
-return [
-    [
-        'class' => '\App\Models\User',
-        'alias' => 'User',
-        'aliased_properties' => [
-            'created_at' => 'registered_on',
-        ],
-        'hide_properties' => [
-            'password', 
-            'role_id',
-            'seen', 
-            'valid', 
-            'confirmed', 
-            'confirmation_code', 
-            'remember_token',
-            'updated_at'
-
-        ],
-        'id_properties' => [
-            'id',
-        ],
-        'urls' => [
-            'self' => 'get_user', //named route
-        ],
-        // (Optional)
-        // 'relationships' => [
-        //     'author' => [
-        //         'related' => 'get_user_friends', //named route
-        //         'self' => 'get_user_friends_relationship', //named route
-        //     ]
-        // ],
-    ],
-];
-
-```
-
-The named routes belong to the `app/Http/routes.php`. Here's a sample for the routes provided mapping:
-
-**Laravel**
-
-```php
-Route::get(
-  '/user/{id}',
-  ['as' => 'get_user', 'uses' => 'UserController@getOneUserAction']
+        $app->get(
+            'employees/{employee_id}/orders', [
+			'as' => 'employees.orders', 
+			'uses' => 'EmployeesController@getOrdersByEmployee'
+		]);
+	}
 );
-
-Route::get(
-  '/user',
-  ['as' => 'get_users', 'uses' => 'UserController@getAllUsersAction']
-);
-
-//...
-```
-
-**Lumen**
-
-```php
-$app->get(
-  '/user/{id}',
-  ['as' => 'get_user', 'uses' => 'UserController@getOneUserAction']
-);
-
-$app->get(
-  '/user',
-  ['as' => 'get_users', 'uses' => 'UserController@getAllUsersAction']
-);
-
 //...
 ``` 
 
-All of this set up allows you to easily use the `JsonApiSerializer` service as follows:
+#### Step 3: Definition
+
+Same as Laravel 5.
+
+#### Step 4: Usage
+
+Same as Laravel 5.
+
+## JsonApiController
+
+Whether it's Laravel 5 or Lumen, usage is exactly the same. 
+
+Let's create a new controller that extends the `JsonApiController` provided by this package, as follows:
+
+
 
 ```php
-<?php
+<?php namespace App\Http\Controllers;
 
-namespace App\Http\Controllers;
+use App\Model\Database\Employees;
+use NilPortugues\Laravel5\JsonApi\Controller\JsonApiController;
 
-use App\Models\User;
-use NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer;
-use NilPortugues\Laravel5\JsonApiSerializer\JsonApiResponseTrait;
-
-/**
- * Laravel Controller example
- */
-class UserController extends \App\Http\Controllers\Controller
+class EmployeesController extends JsonApiController
 {
-    use JsonApiResponseTrait;
-    
     /**
-     * @var App\Models\User
-     */
-    private $userRepository;
-
-    /**
-     * @var JsonApiSerializer
-     */
-    private $serializer;
-
-    /**
-     * @param User $userRepository
-     * @param JsonApiSerializer $jsonApiSerializer
-     */
-    public function __construct(User $userRepository, JsonApiSerializer $jsonApiSerializer)
-    {
-        $this->userRepository = $userRepository;
-        $this->serializer = $jsonApiSerializer;
-    }
-
-    /**
-     * @param int $id
+     * Return the Eloquent model that will be used 
+	 * to model the JSON API resources. 
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function getOneUserAction($id)
+    public function getDataModel()
     {
-        $user = $this->userRepository->find($id);
-        
-        /** @var \NilPortugues\Api\JsonApi\JsonApiTransformer $transformer */
-        $transformer = $this->serializer->getTransformer();
-        $transformer->setSelfUrl(route('get_user', ['id' => $id]));
-        $transformer->setNextUrl(route('get_user', ['id' => $id+1]));
-
-        return $this->response($this->serializer->serialize($user));
-    }
-    
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getAllUsersAction()
-    {
-        return $this->response($this->serializer->serialize($this->userRepository->all()));
+        return new Employees();
     }
 }
 ```
 
 
-**Output:**
+In case you need to overwrite any default behaviour, the **JsonApiController** methods are:
 
-This is the output for `UserController@getAllUsersAction` method:
+```php
+//Constructor and defined actions
+public function __construct(JsonApiSerializer $serializer);
+public function listAction();
+public function getAction(Request $request);
+public function postAction(Request $request);
+public function patchAction(Request $request);
+public function putAction(Request $request);
+public function deleteAction(Request $request);
+
+//Methods returning callables that access the persistence layer
+protected function totalAmountResourceCallable();
+protected function listResourceCallable();
+protected function findResourceCallable(Request $request);
+protected function createResourceCallable();
+protected function updateResourceCallable();
+
+//Allows modification of the response object
+protected function addHeaders(Response $response);
+```
+
+
+But wait! We're missing out one action, `EmployeesController@getOrdersByEmployee`. 
+
+As the name suggests, it should list orders, so the behaviour should be the same as the one of `ListAction`.
+
+If you look inside the `listAction`you'll find a code similar to the one below, but we just ajusted the behaviour and used it in our controller to support an additional action:
+
+```php
+<?php namespace App\Http\Controllers;
+
+use App\Model\Database\Employees;
+use App\Model\Database\Orders;
+use NilPortugues\Laravel5\JsonApi\Controller\JsonApiController;
+
+class EmployeesController extends JsonApiController
+{
+    /**
+     * Return the Eloquent model that will be used 
+	 * to model the JSON API resources. 
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function getDataModel()
+    {
+        return new Employees();
+    }    
+    
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getOrdersByEmployee(Request $request)
+    {       
+		$resource = new ListResource($this->serializer);
+        
+        $totalAmount = function() use ($request) {
+            $id = (new Orders())->getKeyName();
+            return Orders::query()
+            	->where('employee_id', '=', $request->employee_id)
+				->get([$id])
+				->count();
+        };
+
+        $results = function()  use ($request) {
+            return EloquentHelper::paginate(
+                $this->serializer,
+                Orders::query()
+                	->where('employee_id', '=', $request->employee_id)
+            )->get();
+        };
+
+        $uri = route('employees.orders', ['employee_id' => $request->employee_id]);
+		
+        return $resource->get($totalAmount, $results, $uri, Orders::class);
+    }
+}
+```
+
+
+And you're ready to go. Yes, it is **THAT** simple!
+
+
+## Examples: Consuming the API
+
+### GET
+
+This is the output for `EmployeesController@getAction` being consumed from command-line method issuing: `curl -X GET "http://localhost:9000/api/v1/employees/1"`.
+
+**Output:**
 
 ```
 HTTP/1.1 200 OK
@@ -257,126 +653,732 @@ Content-type: application/vnd.api+json
 
 ```json
 {
-    "data": [
+    "data": {
+        "type": "employee",
+        "id": "1",
+        "attributes": {
+            "company": "Northwind Traders",
+            "surname": "Freehafer",
+            "first_name": "Nancy",
+            "email_address": "nancy@northwindtraders.com",
+            "job_title": "Sales Representative",
+            "business_phone": "(123)555-0100",
+            "home_phone": "(123)555-0102",
+            "mobile_phone": null,
+            "fax_number": "(123)555-0103",
+            "address": "123 1st Avenue",
+            "city": "Seattle",
+            "state_province": "WA",
+            "zip_postal_code": "99999",
+            "country_region": "USA",
+            "web_page": "http://northwindtraders.com",
+            "notes": null,
+            "full_name": "Nancy Freehafer"
+        },
+        "links": {
+            "self": {
+                "href": "http://localhost:9000/api/v1/employees/1"
+            },
+            "employee_orders": {
+                "href": "http://localhost:9000/api/v1/employees/1/orders"
+            }
+        },
+        "relationships": {
+            "latest_orders": [
+                {
+                    "data": {
+                        "type": "order",
+                        "id": "71"
+                    }
+                }
+            ]
+        }
+    },
+    "included": [        
         {
-            "type": "user",
-            "id": "1",
+            "type": "order",
+            "id": "71",
             "attributes": {
-                "username": "Admin",
-                "email": "admin@example.com",
-                "registered_on": "2015-09-07 18:02:18"
+                "employee_id": "1",
+                "customer_id": "1",
+                "order_date": "2006-05-24 00:00:00",
+                "shipped_date": null,
+                "shipper_id": "3",
+                "ship_name": "Anna Bedecs",
+                "ship_address": "123 1st Street",
+                "ship_city": "Seattle",
+                "ship_state_province": "WA",
+                "ship_zip_postal_code": "99999",
+                "ship_country_region": "USA",
+                "shipping_fee": "0.0000",
+                "taxes": "0.0000",
+                "payment_type": null,
+                "paid_date": null,
+                "notes": null,
+                "tax_rate": "0",
+                "tax_status_id": null,
+                "status_id": "0"
             },
             "links": {
                 "self": {
-                    "href": "http://localhost:8000/user/1"
+                    "href": "http://localhost:9000/api/v1/orders/71"
+                },
+                "employee": {
+                    "href": "http://localhost:9000/api/v1/employees/1"
                 }
             }
-        },
-        {
-            "type": "user",
-            "id": "2",
-            "attributes": {
-                "username": "Redactor",
-                "email": "redac@example.com",
-                "registered_on": "2015-09-07 18:02:18"
-            },
-            "links": {
-                "self": {
-                    "href": "http://localhost:8000/user/2"
-                }
-            }
-        },
-        {
-            "type": "user",
-            "id": "3",
-            "attributes": {
-                "username": "Walker",
-                "email": "walker@example.com",
-                "registered_on": "2015-09-07 18:02:18"
-            },
-            "links": {
-                "self": {
-                    "href": "http://localhost:8000/user/3"
-                }
-            }
-        },
+        }
     ],
+    "links": {
+        "employees": {
+            "href": "http://localhost:9000/api/v1/employees"
+        },
+        "employee_orders": {
+            "href": "http://localhost:9000/api/v1/employees/1/orders"
+        }
+    },
     "jsonapi": {
         "version": "1.0"
     }
 }
 ```
 
-#### Request objects
 
-JSON API comes with a helper Request class, `NilPortugues\Api\JsonApi\Http\Message\Request(ServerRequestInterface $request)`, implementing the PSR-7 Request Interface. Using this request object will provide you access to all the interactions expected in a JSON API:
+### POST
 
-##### JSON API Query Parameters:
+POST requires all member attributes to be accepted, even those hidden by the mapper. 
 
-- &filter[resource]=field1,field2
-- &include[resource]
-- &include[resource.field1]
-- &sort=field1,-field2
-- &sort=-field1,field2
-- &page[number]
-- &page[limit]
-- &page[cursor]
-- &page[offset]
-- &page[size]
+For instance, `attachments` member was hidden, but it is required, so it needs to be passed in with a valid value. On the other hand, `full_name` member value must not be passed in as an attribute or resource creation will fail.
 
+Passing and `id` is optional and will be used instead of a server-side generated value if provided.
 
-##### NilPortugues\Api\JsonApi\Http\Message\Request
+Sending the following data to the server using `POST`to the following URI  `http://localhost:9000/api/v1/employees`: 
 
-Given the query parameters listed above, Request implements helper methods that parse and return data already prepared.
-
-```php
-namespace NilPortugues\Api\JsonApi\Http\Message;
-
-final class Request
+```json
 {
-    public function __construct(ServerRequestInterface $request) { ... }
-    public function getQueryParam($name, $default = null) { ... }
-    public function getIncludedRelationships($baseRelationshipPath) { ... }
-    public function getSortFields() { ... }
-    public function getAttribute($name, $default = null) { ... }
-    public function getSortDirection() { ... }
-    public function getPageNumber() { ... }
-    public function getPageLimit() { ... }
-    public function getPageOffset() { ... }
-    public function getPageSize() { ... }
-    public function getPageCursor() { ... }
-    public function getFilters() { ... }
+    "data": {
+        "type": "employee",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "surname": "Portugués",
+            "first_name": "Nil",
+            "email_address": "nilportugues@example.com",
+            "job_title": "Web Developer",
+            "business_phone": "(123)555-0100",
+            "home_phone": "(123)555-0102",
+            "mobile_phone": null,
+            "fax_number": "(123)555-0103",
+            "address": "Plaça Catalunya 1",
+            "city": "Barcelona",
+            "state_province": "Barcelona",
+            "zip_postal_code": "08028",
+            "country_region": "Spain",
+            "web_page": "http://nilportugues.com",
+            "notes": null,
+            "attachments": null
+        }
+	}        
+}        
+```
+
+Will produce: 
+
+```
+HTTP/1.1 201 Created
+Cache-Control: private, max-age=0, must-revalidate
+Content-type: application/vnd.api+json
+Location: http://localhost:9000/api/v1/employees/10
+```
+
+Notice how 201 HTTP Status Code is returned and Location header too. Also `attachments` is not there anymore, and `full_name` was displayed.
+
+```json
+{
+    "data": {
+        "type": "employee",
+        "id": "10",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "surname": "Portugués",
+            "first_name": "Nil",
+            "email_address": "nilportugues@example.com",
+            "job_title": "Web Developer",
+            "business_phone": "(123)555-0100",
+            "home_phone": "(123)555-0102",
+            "mobile_phone": null,
+            "fax_number": "(123)555-0103",
+            "address": "Plaça Catalunya 1",
+            "city": "Barcelona",
+            "state_province": "Barcelona",
+            "zip_postal_code": "08028",
+            "country_region": "Spain",
+            "web_page": "http://nilportugues.com",
+            "notes": null,
+            "full_name": "Nil Portugués"
+        },
+        "links": {
+            "self": {
+                "href": "http://localhost:9000/api/v1/employees/10"
+            },
+            "employee_orders": {
+                "href": "http://localhost:9000/api/v1/employees/10/orders"
+            }
+        }
+    },
+    "links": {
+        "employees": {
+            "href": "http://localhost:9000/api/v1/employees"
+        },
+        "employee_orders": {
+            "href": "http://localhost:9000/api/v1/employees/10/orders"
+        }
+    },
+    "jsonapi": {
+        "version": "1.0"
+    }
 }
 ```
 
-#### Response objects (JsonApiResponseTrait)
+### PUT
 
-The following `JsonApiResponseTrait` methods are provided to return the right headers and HTTP status codes are available:
+PUT requires all member attributes to be accepted, just like POST.
 
-```php
-    private function errorResponse($json);
-    private function resourceCreatedResponse($json);
-    private function resourceDeletedResponse($json);
-    private function resourceNotFoundResponse($json);
-    private function resourcePatchErrorResponse($json);
-    private function resourcePostErrorResponse($json);
-    private function resourceProcessingResponse($json);
-    private function resourceUpdatedResponse($json);
-    private function response($json);
-    private function unsupportedActionResponse($json);
-```    
+For the sake of this example, we'll just send in a new `job_title` value, and keep everything else exactly the same.
+
+It's important to notice this time we are required to pass in the `id`, even if it has been passed in by the URI, and of course the `id` values must match. Otherwise it will fail.
 
 
-## Quality
+Sending the following data to the server using `PUT`to the following URI  `http://localhost:9000/api/v1/employees/10`: 
 
-To run the PHPUnit tests at the command line, go to the tests directory and issue phpunit.
+```json
+{
+  "data": {
+    "type": "employee",
+    "id": 10,
+    "attributes": {
+      "company": "NilPortugues.com",
+      "surname": "Portugués",
+      "first_name": "Nil",
+      "email_address": "nilportugues@example.com",
+      "job_title": "Full Stack Web Developer",
+      "business_phone": "(123)555-0100",
+      "home_phone": "(123)555-0102",
+      "mobile_phone": null,
+      "fax_number": "(123)555-0103",
+      "address": "Plaça Catalunya 1",
+      "city": "Barcelona",
+      "state_province": "Barcelona",
+      "zip_postal_code": "08028",
+      "country_region": "Spain",
+      "web_page": "http://nilportugues.com",
+      "notes": null,
+      "attachments": null
+    }
+  }
+}
+```
 
-This library attempts to comply with [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/), [PSR-4](http://www.php-fig.org/psr/psr-4/) and [PSR-7](http://www.php-fig.org/psr/psr-7/).
 
-If you notice compliance oversights, please send a patch via [Pull Request](https://github.com/nilportugues/laravel5-jsonapi-transformer/pulls).
+Will produce: 
 
+```
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=0, must-revalidate
+Content-type: application/vnd.api+json
+```
+
+```json
+{
+    "data": {
+        "type": "employee",
+        "id": "10",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "surname": "Portugués",
+            "first_name": "Nil",
+            "email_address": "contact@nilportugues.com",
+            "job_title": "Full Stack Web Developer",
+            "business_phone": "(123)555-0100",
+            "home_phone": "(123)555-0102",
+            "mobile_phone": null,
+            "fax_number": "(123)555-0103",
+            "address": "Plaça Catalunya 1",
+            "city": "Barcelona",
+            "state_province": "Barcelona",
+            "zip_postal_code": "08028",
+            "country_region": "Spain",
+            "web_page": "http://nilportugues.com",
+            "notes": null,
+            "full_name": "Nil Portugués"
+        },
+        "links": {
+            "self": {
+                "href": "http://localhost:9000/api/v1/employees/10"
+            },
+            "employee_orders": {
+                "href": "http://localhost:9000/api/v1/employees/10/orders"
+            }
+        }
+    },
+    "included": [],
+    "links": {
+        "employees": {
+            "href": "http://localhost:9000/api/v1/employees"
+        },
+        "employee_orders": {
+            "href": "http://localhost:9000/api/v1/employees/10/orders"
+        }
+    },
+    "jsonapi": {
+        "version": "1.0"
+    }
+}
+```
+
+
+### PATCH
+
+PATCH allows partial updates, unlike PUT. 
+
+We are required to pass in the `id` member, even if it has been passed in by the URI, and of course the `id` values must match. Otherwise it will fail.
+
+For instance, sending the following data to the server using the following URI  `http://localhost:9000/api/v1/employees/10`: 
+
+```json
+{
+  "data": {
+    "type": "employee",
+    "id": 10,
+    "attributes": {
+      "email_address": "contact@nilportugues.com"
+    }
+  }
+}
+```
+
+Will produce: 
+
+```
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=0, must-revalidate
+Content-type: application/vnd.api+json
+```
+
+```json
+{
+    "data": {
+        "type": "employee",
+        "id": "10",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "surname": "Portugués",
+            "first_name": "Nil",
+            "email_address": "contact@nilportugues.com",
+            "job_title": "Full Stack Web Developer",
+            "business_phone": "(123)555-0100",
+            "home_phone": "(123)555-0102",
+            "mobile_phone": null,
+            "fax_number": "(123)555-0103",
+            "address": "Plaça Catalunya 1",
+            "city": "Barcelona",
+            "state_province": "Barcelona",
+            "zip_postal_code": "08028",
+            "country_region": "Spain",
+            "web_page": "http://nilportugues.com",
+            "notes": null,
+            "full_name": "Nil Portugués"
+        },
+        "links": {
+            "self": {
+                "href": "http://localhost:9000/api/v1/employees/10"
+            },
+            "employee_orders": {
+                "href": "http://localhost:9000/api/v1/employees/10/orders"
+            }
+        }
+    },
+    "included": [],
+    "links": {
+        "employees": {
+            "href": "http://localhost:9000/api/v1/employees"
+        },
+        "employee_orders": {
+            "href": "http://localhost:9000/api/v1/employees/10/orders"
+        }
+    },
+    "jsonapi": {
+        "version": "1.0"
+    }
+}
+```
+
+
+
+### DELETE
+
+DELETE is the easiest method to use, as it does not require body. Just issue a DELETE to `http://localhost:9000/api/v1/employees/10/` and `Employee` with `id 10` will be gone.
+
+It will produce the following output: 
+
+```
+HTTP/1.1 204 No Content
+Cache-Control: private, max-age=0, must-revalidate
+Content-type: application/vnd.api+json
+```
+
+And notice how response will be empty:
+
+```
+```
 
 <br>
+
+## GET Query Params: include, fields, sort and page
+
+According to the standard, for GET method, it is possible to:
+- Show only those fields requested using `fields`query parameter.
+	- &fields[resource]=field1,field2
+    
+For instance, passing `/api/v1/employees/10?fields[employee]=company,first_name` will produce the following output: 
+
+```json
+{
+    "data": {
+        "type": "employee",
+        "id": "10",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "first_name": "Nil"
+        },
+        "links": {
+            "self": {
+                "href": "http://localhost:9000/api/v1/employees/10"
+            },
+            "employee_orders": {
+                "href": "http://localhost:9000/api/v1/employees/10/orders"
+            }
+        }
+    },
+    "links": {
+        "employees": {
+            "href": "http://localhost:9000/api/v1/employees"
+        },
+        "employee_orders": {
+            "href": "http://localhost:9000/api/v1/employees/10/orders"
+        }
+    },
+    "jsonapi": {
+        "version": "1.0"
+    }
+}
+```
+    
+- Show only those `included` resources by passing in the relationship between them separated by dot, or just pass in list of resources separated by comma.
+	- &include=resource1
+	- &include=resource1.resource2,resource2.resource3
+    
+    
+For instance, `/api/v1/employees?included=order` will only load order type data inside `included` member, but `/api/v1/employees?included=order.employee` will only load those orders related to the `employee` type.
+
+- Sort results using `sort` and passing in the member names of the main resource defined in `data[type]` member. If it starts with a `-` order is `DESCENDING`, otherwise it's `ASCENDING`.
+
+  - &sort=field1,-field2
+  - &sort=-field1,field2
+  
+For instance: `/api/v1/employees?sort=surname,-first_name`  
+
+- Pagination is also defined to allow doing page pagination, cursor pagination or offset pagination.
+  - &page[number]
+  - &page[limit]
+  - &page[cursor]
+  - &page[offset]
+  - &page[size]
+  
+For instance: `/api/v1/employees?page[number]=1&page[size]=10`  
+
+## POST/PUT/PATCH with Relationships
+
+The JSON API allows resource creation and modification and passing in `relationships` that will create or alter existing resources too. 
+
+Let's say we want to create a new `Employee` and pass in its first `Order`too. 
+
+This could be done issuing 2 `POST` to the end-points (one for Employee, one for Order) or pass in the first `Order` as a `relationship` with our `Employee`, for instance:
+
+```json
+{
+  "data": {
+    "type": "employee",
+    "attributes": {
+        "company": "Northwind Traders",
+        "surname": "Giussani",
+        "first_name": "Laura",
+        "email_address": "laura@northwindtraders.com",
+        "job_title": "Sales Coordinator",
+        "business_phone": "(123)555-0100",
+        "home_phone": "(123)555-0102",
+        "mobile_phone": null,
+        "fax_number": "(123)555-0103",
+        "address": "123 8th Avenue",
+        "city": "Redmond",
+        "state_province": "WA",
+        "zip_postal_code": "99999",
+        "country_region": "USA",
+        "web_page": "http://northwindtraders.com",
+        "notes": "Reads and writes French.",
+        "full_name": "Laura Giussani"
+	},    
+	"relationships": {
+      "order": {
+        "data": [
+          {
+          	"type": "order",
+          	"attributes": {
+              "customer_id": "28",
+              "order_date": "2006-05-11 00:00:00",
+              "shipped_date": "2006-05-11 00:00:00",
+              "shipper_id": "3",
+              "ship_name": "Amritansh Raghav",
+              "ship_address": "789 28th Street",
+              "ship_city": "Memphis",
+              "ship_state_province": "TN",
+              "ship_zip_postal_code": "99999",
+              "ship_country_region": "USA",
+              "shipping_fee": "10.0000",
+              "taxes": "0.0000",
+              "payment_type": "Check",
+              "paid_date": "2006-05-11 00:00:00",
+              "notes": null,
+              "tax_rate": "0",
+              "tax_status_id": null,
+              "status_id": "0"
+            }
+          }
+        ]
+      }
+    }    
+  }
+}       
+```
+
+Due to the existance of this use case, we'll have to ajust our Controller implementation overwriting some methods provided by the **JsonApiController**: `createResourceCallable`, `updateResourceCallable` and `patchResourceCallable`.
+
+Here's how it would be done for `createResourceCallable`.
+
+
+```php
+<?php namespace App\Http\Controllers;
+
+use App\Model\Database\Employees;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use NilPortugues\Api\JsonApi\Server\Errors\Error;
+use NilPortugues\Api\JsonApi\Server\Errors\ErrorBag;
+use NilPortugues\Laravel5\JsonApi\Controller\JsonApiController;
+
+class EmployeesController extends JsonApiController
+{
+	/**
+     * Now you can actually create Employee and Orders at once.
+     * Use transactions - DB::beginTransaction() for data integrity!
+     *
+     * @return callable
+     */
+    protected function createResourceCallable()
+    {
+		$createOrderResource = function (Model $model, array $data) {
+            if (!empty($data['relationships']['order']['data'])) {
+                $orderData = $data['relationships']['order']['data'];
+
+                if (!empty($orderData['type'])) {
+                    $orderData = [$orderData];
+                }
+
+                foreach ($orderData as $order) {
+                    $attributes = array_merge($order['attributes'], ['employee_id' => $model->getKey()]);
+                    Orders::create($attributes);
+                }
+            }
+        };
+
+        return function (array $data, array $values, ErrorBag $errorBag) use ($createOrderResource) {
+
+            $attributes = [];
+            foreach ($values as $name => $value) {
+                $attributes[$name] = $value;
+            }
+
+            if (!empty($data['id'])) {
+                $attributes[$this->getDataModel()->getKeyName()] = $values['id'];
+            }
+
+            DB::beginTransaction();
+            try {
+    			$model = $this->getDataModel()->create($attributes);
+                $createOrderResource($model, $data);
+                DB::commit();
+                return $model;
+                
+            } catch(\Exception $e) {
+                DB::rollback();
+                $errorBag[] = new Error('creation_error', 'Resource could not be created');
+                throw $e;
+            }
+        };
+    }
+
+}
+```
+
+It is important, in order to use Transactions, do define in `Eloquent` models the `$fillable` values. 
+
+Here's how `Employees` and `Orders` look like with `$fillable` defined.
+
+
+**Employees (Eloquent Model) with $fillable**
+```php
+<?php namespace App\Model\Database;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+
+class Employees extends Model
+{
+    public $timestamps = false;
+    protected $table = 'employees';    
+    protected $primaryKey = 'id';
+    protected $appends = ['full_name'];
+    
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'company',
+        'last_name',
+        'first_name',
+        'email_address',
+        'job_title',
+        'business_phone',
+        'home_phone',
+        'mobile_phone',
+        'fax_number',
+        'address',
+        'city',
+        'state_province',
+        'zip_postal_code',
+        'country_region',
+        'web_page',
+        'notes',
+        'attachments',
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function latestOrders()
+    {
+        return $this->hasMany(Orders::class, 'employee_id')->limit(10);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
+}
+
+```
+
+
+**Orders (Eloquent Model) with $fillable**
+
+```php
+<?php namespace App\Model\Database;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Orders extends Model
+{   
+    public $timestamps = false;
+    protected $table = 'orders';
+    protected $primaryKey = 'id';
+    
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'employee_id',
+        'customer_id',
+        'order_date',
+        'shipped_date',
+        'shipper_id',
+        'ship_name',
+        'ship_address',
+        'ship_city',
+        'ship_state_province',
+        'ship_zip_postal_code',
+        'ship_country_region',
+        'shipping_fee',
+        'taxes',
+        'payment_type',
+        'paid_date',
+        'notes',
+        'tax_rate',
+        'tax_status_id',
+        'status_id',
+    ];
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function employee()
+    {
+        return $this->belongsTo(Employees::class, 'employee_id');
+    }
+}
+```
+
+
+
+## Custom Response Headers
+
+Adding custom response headers can be done for multiple reasons: *versioning, setting expire headers, caching, setting private or public the served content...*
+
+In order to do this, it's as simple as overwriting the JsonApiController `addHeaders` method. For instance, let's use the EmployeeController as an example: 
+
+
+```php
+<?php namespace App\Http\Controllers;
+
+use App\Model\Database\Employees;
+use NilPortugues\Laravel5\JsonApi\Controller\JsonApiController;
+use Symfony\Component\HttpFoundation\Response;
+
+class EmployeesController extends JsonApiController
+{
+	//All your supported methods...
+    
+    /**
+     * @param Response $response
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function addHeaders(Response $response) {
+        $response->headers->set('X-API-Version', '1.0');
+        $response->setPublic();
+        $response->setMaxAge(60);
+        $response->setSharedMaxAge(60);
+
+        return $response;
+    }
+}    
+```
+
+Now all supported actions will include the addded custom headers.
+
+<br>
+
 ## Contribute
 
 Contributions to the package are always welcome!

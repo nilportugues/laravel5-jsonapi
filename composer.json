@@ -13,18 +13,17 @@
         }
     ],
     "require": {
-        "nilportugues/json-api": "~1.0",
+        "nilportugues/json-api": "2.0.0",
         "symfony/psr-http-message-bridge": "~0.2",
         "nilportugues/serializer-eloquent": "^1.0"
     },
     "require-dev": {
         "laravel/laravel": "5.*",
-        "nilportugues/php_backslasher": "~0.2",
         "fabpot/php-cs-fixer": "^1.10"
     },
     "autoload": {
         "psr-4": {
-            "NilPortugues\\Laravel5\\JsonApiSerializer\\" : "src/NilPortugues/Laravel5/JsonApiSerializer/"
+            "NilPortugues\\Laravel5\\JsonApi\\" : "src/NilPortugues/Laravel5/JsonApi/"
         }
     },
     "config": {

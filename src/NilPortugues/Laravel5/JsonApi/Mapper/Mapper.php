@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace NilPortugues\Laravel5\JsonApiSerializer\Mapper;
+namespace NilPortugues\Laravel5\JsonApi\Mapper;
 
 class Mapper extends \NilPortugues\Api\Mapping\Mapper
 {

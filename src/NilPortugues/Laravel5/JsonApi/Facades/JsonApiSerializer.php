@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace NilPortugues\Laravel5\JsonApiSerializer\Facades;
+namespace NilPortugues\Laravel5\JsonApi\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -23,6 +23,6 @@ class JsonApiSerializer extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return '\NilPortugues\Serializer\Serializer';
+        return \NilPortugues\Api\JsonApi\JsonApiSerializer::class;
     }
 }

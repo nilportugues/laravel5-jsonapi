@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace NilPortugues\Laravel5\JsonApiSerializer;
+namespace NilPortugues\Laravel5\JsonApi;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
 use NilPortugues\Api\Mapping\Mapping;
-use NilPortugues\Laravel5\JsonApiSerializer\Mapper\Mapper;
+use NilPortugues\Laravel5\JsonApi\Mapper\Mapper;
 use ReflectionClass;
 
-class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
+class Laravel5JsonApiServiceProvider extends ServiceProvider
 {
     const PATH = '/../../../config/jsonapi.php';
 
@@ -44,11 +44,11 @@ class Laravel5JsonApiSerializerServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi');
         $this->app->singleton(
-            \NilPortugues\Laravel5\JsonApiSerializer\JsonApiSerializer::class,
+            JsonApiSerializer::class,
             function ($app) {
 
                 $mapping = $app['config']->get('jsonapi');
-                $key = \md5(\json_encode($mapping));
+                $key = md5(json_encode($mapping));
 
                 return Cache::rememberForever(
                     $key,
