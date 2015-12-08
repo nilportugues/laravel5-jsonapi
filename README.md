@@ -527,6 +527,31 @@ class EmployeesController extends JsonApiController
 
 And you're ready to go. Yes, it is **THAT** simple!
 
+In case you need to overwrite any default behaviour, the JsonApiController methods are:
+
+```php
+//Constructor and defined actions
+public function __construct(JsonApiSerializer $serializer);
+public function listAction();
+public function getAction(Request $request);
+public function postAction(Request $request);
+public function patchAction(Request $request);
+public function putAction(Request $request);
+public function deleteAction(Request $request);
+
+//Methods returning callables that access the persistence layer
+protected function totalAmountResourceCallable();
+protected function listResourceCallable();
+protected function findResourceCallable(Request $request);
+protected function createResourceCallable();
+protected function updateResourceCallable();
+
+//Allows modification of the response object
+protected function addHeaders(Response $response);
+```
+
+
+
 ## Examples: Consuming the API
 
 ### GET
@@ -906,9 +931,85 @@ Content-type: application/vnd.api+json
 
 ### DELETE
 
+DELETE is the easiest method to use, as it does not require body. Just issue a DELETE to `http://localhost:9000/api/v1/employees/10/` and `Employee` with `id 10` will be gone.
+
+It will produce the following output: 
+
+```
+HTTP/1.1 204 No Content
+Cache-Control: private, max-age=0, must-revalidate
+Content-type: application/vnd.api+json
+```
+
+And notice how response will be empty:
+
+```
+```
+
 <br>
 
-## GET Query Params: include, fields and page
+## GET Query Params: include, fields, sort and page
+
+According to the standard, for GET method, it is possible to:
+- Show only those fields requested using `fields`query parameter.
+	- &fields[resource]=field1,field2
+    
+For instance, passing `/api/v1/employees/10?fields[employee]=company,first_name` will produce the following output: 
+
+```json
+{
+    "data": {
+        "type": "employee",
+        "id": "10",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "first_name": "Nil"
+        },
+        "links": {
+            "self": {
+                "href": "http://localhost:9000/api/v1/employees/10"
+            },
+            "employee_orders": {
+                "href": "http://localhost:9000/api/v1/employees/10/orders"
+            }
+        }
+    },
+    "links": {
+        "employees": {
+            "href": "http://localhost:9000/api/v1/employees"
+        },
+        "employee_orders": {
+            "href": "http://localhost:9000/api/v1/employees/10/orders"
+        }
+    },
+    "jsonapi": {
+        "version": "1.0"
+    }
+}
+```
+    
+- Show only those `included` resources by passing in the relationship between them separated by dot, or just pass in list of resources separated by comma.
+	- &include=resource1
+	- &include=resource1.resource2,resource2.resource3
+    
+    
+For instance, `/api/v1/employees?included=order` will only load order type data inside `included` member, but `/api/v1/employees?included=order.employee` will only load those orders related to the `employee` type.
+
+- Sort results using `sort` and passing in the member names of the main resource defined in `data[type]` member. If it starts with a `-` order is `DESCENDING`, otherwise it's `ASCENDING`.
+
+  - &sort=field1,-field2
+  - &sort=-field1,field2
+  
+For instance: `/api/v1/employees?sort=surname,-first_name`  
+
+- Pagination is also defined to allow doing page pagination, cursor pagination or offset pagination.
+  - &page[number]
+  - &page[limit]
+  - &page[cursor]
+  - &page[offset]
+  - &page[size]
+  
+For instance: `/api/v1/employees?page[number]=1&page[size]=10`  
 
 ## POST/PUT/PATCH with Relationships
 
@@ -974,7 +1075,7 @@ This could be done issuing 2 `POST` to the end-points (one for Employee, one for
 }       
 ```
 
-Due to the existance of this use case, we'll have to ajust the our Controller implementation overwriting some methods provided by the **JsonApiController**: `createResourceCallable`, `updateResourceCallable` and `patchResourceCallable`.
+Due to the existance of this use case, we'll have to ajust our Controller implementation overwriting some methods provided by the **JsonApiController**: `createResourceCallable`, `updateResourceCallable` and `patchResourceCallable`.
 
 Here's how it would be done for `createResourceCallable`.
 
