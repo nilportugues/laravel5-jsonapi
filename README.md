@@ -12,7 +12,8 @@
 - Controller boilerplate to write a fully compiliant **JSON API Server** using your **exisiting Eloquent Models**.
 - Works for Laravel 5 and Lumen frameworks.
 
-<br>
+---
+
 - [Installation](#installation)
 - [Configuration (Laravel 5 & Lumen)](#configuration-laravel-5--lumen)
   - [Configuration for Laravel 5](#configuration-for-laravel-5)
