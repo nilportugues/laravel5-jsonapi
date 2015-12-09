@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Test Suite" tests="9" assertions="0" failures="0" errors="0" time="1.097775">
+    <testsuite name="NilPortugues\Tests\Laravel5\JsonApi\Controller\JsonApiControllerTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Controller/JsonApiControllerTest.php" tests="7" assertions="0" failures="0" errors="0" time="0.019826">
+      <testcase name="testListAction" class="NilPortugues\Tests\Laravel5\JsonApi\Controller\JsonApiControllerTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Controller/JsonApiControllerTest.php" line="35" assertions="0" time="0.003147"/>
+      <testcase name="testGetDataModel" class="NilPortugues\Tests\Laravel5\JsonApi\Controller\JsonApiControllerTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Controller/JsonApiControllerTest.php" line="40" assertions="0" time="0.002899"/>
+      <testcase name="testGetAction" class="NilPortugues\Tests\Laravel5\JsonApi\Controller\JsonApiControllerTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Controller/JsonApiControllerTest.php" line="45" assertions="0" time="0.002701"/>
+      <testcase name="testPostAction" class="NilPortugues\Tests\Laravel5\JsonApi\Controller\JsonApiControllerTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Controller/JsonApiControllerTest.php" line="50" assertions="0" time="0.002877"/>
+      <testcase name="testPatchAction" class="NilPortugues\Tests\Laravel5\JsonApi\Controller\JsonApiControllerTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Controller/JsonApiControllerTest.php" line="55" assertions="0" time="0.002682"/>
+      <testcase name="testPutAction" class="NilPortugues\Tests\Laravel5\JsonApi\Controller\JsonApiControllerTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Controller/JsonApiControllerTest.php" line="60" assertions="0" time="0.002814"/>
+      <testcase name="testDeleteAction" class="NilPortugues\Tests\Laravel5\JsonApi\Controller\JsonApiControllerTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Controller/JsonApiControllerTest.php" line="65" assertions="0" time="0.002706"/>
+    </testsuite>
+    <testsuite name="NilPortugues\Tests\Laravel5\JsonApi\Eloquent\EloquentHelperTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Eloquent/EloquentHelperTest.php" tests="1" assertions="0" failures="0" errors="0" time="0.600202">
+      <testcase name="testItCanPaginate" class="NilPortugues\Tests\Laravel5\JsonApi\Eloquent\EloquentHelperTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Eloquent/EloquentHelperTest.php" line="21" assertions="0" time="0.600202"/>
+    </testsuite>
+    <testsuite name="NilPortugues\Tests\Laravel5\JsonApi\Facades\JsonApiSerializerTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Facades/JsonApiSerializerTest.php" tests="1" assertions="0" failures="0" errors="0" time="0.477747">
+      <testcase name="testItReturnsFacade" class="NilPortugues\Tests\Laravel5\JsonApi\Facades\JsonApiSerializerTest" file="/home/nilopc/laravel5-jsonapi-transformer/tests/NilPortugues/Laravel5/JsonApi/Facades/JsonApiSerializerTest.php" line="18" assertions="0" time="0.477747"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

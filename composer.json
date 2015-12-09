@@ -19,11 +19,18 @@
     },
     "require-dev": {
         "laravel/laravel": "5.*",
+        "phpunit/phpunit": "4.*",
         "fabpot/php-cs-fixer": "^1.10"
     },
     "autoload": {
         "psr-4": {
             "NilPortugues\\Laravel5\\JsonApi\\" : "src/NilPortugues/Laravel5/JsonApi/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "" : "vendor",
+            "NilPortugues\\Tests\\Laravel5\\JsonApi\\" : "tests/NilPortugues/Laravel5/JsonApi/"
         }
     },
     "config": {

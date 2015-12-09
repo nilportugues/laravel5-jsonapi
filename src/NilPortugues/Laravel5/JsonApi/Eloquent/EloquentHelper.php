@@ -74,7 +74,7 @@ trait EloquentHelper
      *
      * @return array
      */
-    public static function columns(JsonApiSerializer $serializer, array $fields)
+    protected static function columns(JsonApiSerializer $serializer, array $fields)
     {
         $filterColumns = [];
 
