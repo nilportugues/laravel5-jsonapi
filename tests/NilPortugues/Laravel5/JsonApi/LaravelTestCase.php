@@ -30,7 +30,6 @@ class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
         $this->app['config']->set('database.connections.sqlite.database', ':memory:');
 
         $this->app->boot();
-
         $this->migrate();
     }
 
@@ -45,33 +44,8 @@ class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
         foreach ($fileSystem->files(__DIR__.'/../../../../tests/NilPortugues/Laravel5/JsonApi/Migrations') as $file) {
             $fileSystem->requireOnce($file);
             $migrationClass = $classFinder->findClass($file);
-
-            (new $migrationClass())->up();
-        }
-    }
-
-    /**
-     *
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-        $this->destroy();
-    }
-
-    /**
-     * run package database migrations.
-     */
-    public function destroy()
-    {
-        $fileSystem = new Filesystem();
-        $classFinder = new ClassFinder();
-
-        foreach ($fileSystem->files(__DIR__.'/../../../../tests/NilPortugues/Laravel5/JsonApi/Migrations') as $file) {
-            $fileSystem->requireOnce($file);
-            $migrationClass = $classFinder->findClass($file);
-
             (new $migrationClass())->down();
+            (new $migrationClass())->up();
         }
     }
 
@@ -82,8 +56,11 @@ class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
      */
     public function createApplication()
     {
+
         $app = require __DIR__.'/../../../../vendor/laravel/laravel/bootstrap/app.php';
+
         $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+        $app->register(\Illuminate\Database\DatabaseServiceProvider::class);
         $app->register(Laravel5JsonApiServiceProvider::class);
 
         return $app;
