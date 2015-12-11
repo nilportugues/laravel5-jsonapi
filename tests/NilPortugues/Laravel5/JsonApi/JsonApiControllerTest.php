@@ -15,6 +15,15 @@ namespace NilPortugues\Tests\Laravel5\JsonApi;
  */
 class JsonApiControllerTest extends LaravelTestCase
 {
+   
+    /**
+     * Setup DB before each test.
+     */
+    public function setUp()
+    {
+        parent::setUp();
+    }
+
     public function testListAction()
     {
         $response = $this->call('GET', 'http://localhost/api/v1/employees');
