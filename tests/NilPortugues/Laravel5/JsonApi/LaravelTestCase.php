@@ -10,9 +10,13 @@
 
 namespace NilPortugues\Tests\Laravel5\JsonApi;
 
+use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\ClassFinder;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Routing\Router;
 use NilPortugues\Laravel5\JsonApi\Laravel5JsonApiServiceProvider;
+use NilPortugues\Tests\App\Transformers\EmployeesTransformer;
+use NilPortugues\Tests\App\Transformers\OrdersTransformer;
 
 /**
  * Class LaravelTestCase.
@@ -28,8 +32,15 @@ class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
 
         $this->app['config']->set('database.default', 'sqlite');
         $this->app['config']->set('database.connections.sqlite.database', ':memory:');
+        $this->app['config']->set('jsonapi', [EmployeesTransformer::class, OrdersTransformer::class]);
+        $this->app['config']->set('jsonapi', [EmployeesTransformer::class, OrdersTransformer::class]);
+        $this->app['config']->set('app.url', 'http://localhost/');
+        $this->app['config']->set('app.debug', true);
+        $this->app['config']->set('app.key', \env('APP_KEY', '1234567890123456'));
+        $this->app['config']->set('app.cipher', 'AES-128-CBC');
 
         $this->app->boot();
+
         $this->migrate();
     }
 
@@ -41,7 +52,7 @@ class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
         $fileSystem = new Filesystem();
         $classFinder = new ClassFinder();
 
-        foreach ($fileSystem->files(__DIR__.'/../../../../tests/NilPortugues/Laravel5/JsonApi/Migrations') as $file) {
+        foreach ($fileSystem->files(__DIR__.'/../../../../tests/NilPortugues/App/Migrations') as $file) {
             $fileSystem->requireOnce($file);
             $migrationClass = $classFinder->findClass($file);
             (new $migrationClass())->down();
@@ -56,13 +67,58 @@ class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
      */
     public function createApplication()
     {
-
+        /** @var $app \Illuminate\Foundation\Application */
         $app = require __DIR__.'/../../../../vendor/laravel/laravel/bootstrap/app.php';
 
-        $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+        $this->setUpHttpKernel($app);
+
         $app->register(\Illuminate\Database\DatabaseServiceProvider::class);
+        $app->register(\NilPortugues\Tests\App\Providers\RouteServiceProvider::class);
         $app->register(Laravel5JsonApiServiceProvider::class);
 
         return $app;
+    }
+
+    /**
+     * @return Router
+     */
+    protected function getRouter()
+    {
+        $router = new Router(new Dispatcher());
+
+        $router->group(
+            ['prefix' => 'api/v1/', 'namespace' => 'NilPortugues\Tests\App\Controller'],
+            function () use ($router) {
+                $router->post('employees', ['as' => 'employees.post', 'uses' => 'EmployeesController@postAction']);
+                $router->get('employees', ['as' => 'employees.list', 'uses' => 'EmployeesController@listAction']);
+                $router->get('employees/{id}', ['as' => 'employees.get', 'uses' => 'EmployeesController@getAction']);
+                $router->put('employees/{id}', ['as' => 'employees.put', 'uses' => 'EmployeesController@putAction']);
+                $router->patch(
+                    'employees/{id}',
+                    ['as' => 'employees.patch', 'uses' => 'EmployeesController@patchAction']
+                );
+                $router->delete(
+                    'employees/{id}',
+                    ['as' => 'employees.delete', 'uses' => 'EmployeesController@deleteAction']
+                );
+                $router->get('orders', ['as' => 'orders.list', 'uses' => 'OrdersController@listAction']);
+                $router->get('orders/{id}', ['as' => 'orders.get', 'uses' => 'OrdersController@getAction']);
+                $router->get(
+                    'employees/{employee_id}/orders',
+                    ['as' => 'employees.orders', 'uses' => 'OrdersController@getOrdersByEmployee']
+                );
+            }
+        );
+
+        return $router;
+    }
+
+    /**
+     * @param \Illuminate\Foundation\Application $app
+     */
+    private function setUpHttpKernel($app)
+    {
+        $app->instance('request', \Illuminate\Http\Request::capture());
+        $app->make('Illuminate\Foundation\Http\Kernel', [$app, $this->getRouter()])->bootstrap();
     }
 }

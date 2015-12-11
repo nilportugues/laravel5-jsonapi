@@ -1,6 +1,6 @@
 <?php
 
-namespace NilPortugues\Tests\Laravel5\JsonApi\Migrations;
+namespace NilPortugues\Tests\App\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

@@ -30,7 +30,7 @@
     "autoload-dev": {
         "psr-4": {
             "" : "vendor",
-            "NilPortugues\\Tests\\Laravel5\\JsonApi\\" : "tests/NilPortugues/Laravel5/JsonApi/"
+            "NilPortugues\\Tests\\" : "tests/NilPortugues/"
         }
     },
     "config": {

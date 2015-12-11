@@ -8,22 +8,18 @@
  * file that was distributed with this source code.
  */
 
-namespace NilPortugues\Tests\Laravel5\JsonApi\Controller;
+namespace NilPortugues\Tests\App\Controller;
 
-use Illuminate\Database\Eloquent\Model;
 use NilPortugues\Laravel5\JsonApi\Controller\JsonApiController;
+use NilPortugues\Tests\App\Models\Orders;
 
-/**
- * Class DummyJsonApiController.
- */
-class DummyJsonApiController extends JsonApiController
+class OrdersController extends JsonApiController
 {
     /**
-     * Returns an Eloquent Model.
-     *
-     * @return Model
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function getDataModel()
     {
+        return new Orders();
     }
 }

@@ -8,29 +8,18 @@
  * file that was distributed with this source code.
  */
 
-namespace NilPortugues\Tests\Laravel5\JsonApi\Controller;
-
-use NilPortugues\Tests\Laravel5\JsonApi\LaravelTestCase;
+namespace NilPortugues\Tests\Laravel5\JsonApi;
 
 /**
  * Class JsonApiControllerTest.
  */
 class JsonApiControllerTest extends LaravelTestCase
 {
-    /**
-     * @var DummyJsonApiController
-     */
-    protected $controller;
-
-    /**
-     *
-     */
-    public function setUp()
-    {
-    }
-
     public function testListAction()
     {
+        $response = $this->call('GET', 'http://localhost/api/v1/employees');
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetDataModel()
