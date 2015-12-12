@@ -12,6 +12,7 @@ namespace NilPortugues\Laravel5\JsonApi\Controller;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use NilPortugues\Api\JsonApi\Server\Actions\CreateResource;
 use NilPortugues\Api\JsonApi\Server\Actions\DeleteResource;
@@ -124,8 +125,13 @@ abstract class JsonApiController extends Controller
     {
         return function () use ($request) {
             $idKey = $this->getDataModel()->getKeyName();
+            $model = $this->getDataModel()->query()->where($idKey, $request->id)->first();
 
-            return $this->getDataModel()->query()->where($idKey, $request->id)->first();
+            if (empty($model)) {
+                throw new ModelNotFoundException('Not found');
+            }
+
+            return $model;
         };
     }
 
