@@ -14,31 +14,27 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    protected $namespace = 'NilPortugues\Tests\App\Controller';
 
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router $router
-     * @return void
+     * @param \Illuminate\Routing\Router $router
      */
     public function boot(Router $router)
     {
-        //
-
         parent::boot($router);
     }
 
     /**
      * Define the routes for the application.
      *
-     * @param  \Illuminate\Routing\Router $router
-     * @return void
+     * @param \Illuminate\Routing\Router $router
      */
     public function map(Router $router)
     {
         $router->group(['namespace' => $this->namespace], function ($router) {
-            require app_path('Http/routes.php');
+            require dirname(__FILE__).'/../routes.php';
         });
     }
 }

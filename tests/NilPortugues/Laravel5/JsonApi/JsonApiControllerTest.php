@@ -15,7 +15,6 @@ namespace NilPortugues\Tests\Laravel5\JsonApi;
  */
 class JsonApiControllerTest extends LaravelTestCase
 {
-   
     /**
      * Setup DB before each test.
      */
@@ -24,19 +23,35 @@ class JsonApiControllerTest extends LaravelTestCase
         parent::setUp();
     }
 
+    /**
+     * This is required for \Symfony\Bridge\PsrHttpMessage\Factory to work.
+     * This comes as a trade-off of building the underlying package as framework-agnostic.
+     *
+     * @param string $method
+     * @param string $server
+     * @param string $uri
+     */
+    protected function serverEnvironment($method, $server, $uri)
+    {
+        $_SERVER['REQUEST_METHOD'] = strtoupper($method);
+        $_SERVER['SERVER_NAME'] = str_replace(['http://', 'https://'], '', $server);
+        $_SERVER['REQUEST_URI'] = $uri;
+    }
+
     public function testListAction()
     {
-        $response = $this->call('GET', 'http://localhost/api/v1/employees');
+        $this->serverEnvironment('GET', 'example.com', '/api/v1/employees');
+        $response = $this->call('GET', 'http://example.com/api/v1/employees');
 
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testGetDataModel()
-    {
-    }
-
     public function testGetAction()
     {
+        $this->serverEnvironment('GET', 'example.com', '/api/v1/employees/1');
+        $response = $this->call('GET', 'http://example.com/api/v1/employees/1');
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testPostAction()
