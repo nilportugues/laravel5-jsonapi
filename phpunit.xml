@@ -29,10 +29,6 @@
     <testsuites>
         <testsuite name="Test Suite">
             <directory>./tests</directory>
-            <directory>./lib1/tests</directory>
-            <directory>./lib2/tests</directory>
-            <directory>./lib3/tests</directory>
-            <directory>./lib4/tests</directory>
         </testsuite>
     </testsuites>
 
@@ -40,7 +36,7 @@
         <whitelist>
             <directory>./src/</directory>
             <exclude>
-                <directory>./example/</directory>
+                <directory>./src/config/</directory>
                 <directory>./vendor/</directory>
             </exclude>
         </whitelist>

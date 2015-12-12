@@ -13,6 +13,7 @@ namespace NilPortugues\Tests\Laravel5\JsonApi;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\ClassFinder;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Routing\Router;
 use NilPortugues\Tests\App\Transformers\EmployeesTransformer;
 use NilPortugues\Tests\App\Transformers\OrdersTransformer;
@@ -22,6 +23,7 @@ use NilPortugues\Tests\App\Transformers\OrdersTransformer;
  */
 class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
 {
+    use WithoutMiddleware;
     /**
      * Setup DB before each test.
      */

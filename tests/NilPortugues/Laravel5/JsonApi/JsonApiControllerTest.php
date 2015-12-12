@@ -46,12 +46,12 @@ class JsonApiControllerTest extends LaravelTestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testGetAction()
+    public function testGetActionWhenEmployeeDoesNotExist()
     {
-        $this->serverEnvironment('GET', 'example.com', '/api/v1/employees/1');
-        $response = $this->call('GET', 'http://example.com/api/v1/employees/1');
+        $this->serverEnvironment('GET', 'example.com', '/api/v1/employees/1000');
+        $response = $this->call('GET', 'http://example.com/api/v1/employees/1000');
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     public function testPostAction()
@@ -66,7 +66,11 @@ class JsonApiControllerTest extends LaravelTestCase
     {
     }
 
-    public function testDeleteAction()
+    public function testDeleteActionWhenEmployeeDoesNotExistReturns404()
     {
+        $this->serverEnvironment('DELETE', 'example.com', '/api/v1/employees/1000');
+        $response = $this->call('DELETE', 'http://example.com/api/v1/employees/1000');
+
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }
