@@ -37,6 +37,7 @@
             <directory>./src/</directory>
             <exclude>
                 <directory>./src/config/</directory>
+                <directory>./src/NilPortugues/Laravel5/JsonApi/Facades/</directory>
                 <directory>./vendor/</directory>
             </exclude>
         </whitelist>

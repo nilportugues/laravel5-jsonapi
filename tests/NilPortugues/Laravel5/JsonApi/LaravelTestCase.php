@@ -96,4 +96,28 @@ class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
         $app->instance('request', \Illuminate\Http\Request::capture());
         $app->make('Illuminate\Foundation\Http\Kernel', [$app, $this->getRouter()])->bootstrap();
     }
+
+    /**
+     * This is required for \Symfony\Bridge\PsrHttpMessage\Factory to work.
+     * This comes as a trade-off of building the underlying package as framework-agnostic.
+     *
+     * @param string $method
+     * @param string $uri
+     * @param array  $parameters
+     * @param array  $cookies
+     * @param array  $files
+     * @param array  $server
+     * @param string $content
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function call($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+    {
+        $_SERVER['REQUEST_METHOD'] = strtoupper($method);
+        $_SERVER['SERVER_NAME'] = parse_url($uri, PHP_URL_HOST);
+        $_SERVER['REQUEST_URI'] = $uri;
+        $_SERVER['CONTENT_TYPE'] = 'application/json';
+
+        return parent::call($method, $uri, $parameters, $cookies, $files, $server, $content);
+    }
 }

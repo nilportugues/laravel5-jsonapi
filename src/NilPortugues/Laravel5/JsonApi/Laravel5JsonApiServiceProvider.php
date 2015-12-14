@@ -46,16 +46,14 @@ class Laravel5JsonApiServiceProvider extends ServiceProvider
         $this->app->singleton(
             JsonApiSerializer::class,
             function ($app) {
-
                 $mapping = $app['config']->get('jsonapi');
-                $key = md5(json_encode($mapping));
+                $transformer = new JsonApiTransformer(self::parseRoutes(new Mapper($mapping)));
 
-                return Cache::rememberForever(
-                    $key,
-                    function () use ($mapping) {
-                        return new JsonApiSerializer(new JsonApiTransformer(self::parseRoutes(new Mapper($mapping))));
-                    }
-                );
+                $cacheableConfig = function () use ($transformer) {
+                    return new JsonApiSerializer($transformer);
+                };
+
+                return Cache::rememberForever(md5(json_encode($mapping)), $cacheableConfig);
             }
         );
     }

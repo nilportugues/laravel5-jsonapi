@@ -64,6 +64,7 @@ abstract class JsonApiController extends Controller
      * Returns the total number of results available for the current resource.
      *
      * @return callable
+     * @codeCoverageIgnore
      */
     protected function totalAmountResourceCallable()
     {
@@ -85,6 +86,7 @@ abstract class JsonApiController extends Controller
      * Returns a list of resources based on pagination criteria.
      *
      * @return callable
+     * @codeCoverageIgnore
      */
     protected function listResourceCallable()
     {
@@ -120,6 +122,7 @@ abstract class JsonApiController extends Controller
      * @param Request $request
      *
      * @return callable
+     * @codeCoverageIgnore
      */
     protected function findResourceCallable(Request $request)
     {
@@ -155,6 +158,7 @@ abstract class JsonApiController extends Controller
      * Reads the input and creates and saves a new Eloquent Model.
      *
      * @return callable
+     * @codeCoverageIgnore
      */
     protected function createResourceCallable()
     {
@@ -205,6 +209,7 @@ abstract class JsonApiController extends Controller
 
     /**
      * @return callable
+     * @codeCoverageIgnore
      */
     protected function updateResourceCallable()
     {
