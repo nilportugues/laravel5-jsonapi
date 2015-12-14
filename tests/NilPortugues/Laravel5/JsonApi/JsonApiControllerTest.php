@@ -11,21 +11,36 @@
 namespace NilPortugues\Tests\Laravel5\JsonApi;
 
 /**
- * Class JsonApiControllerTest.
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class JsonApiControllerTest extends LaravelTestCase
 {
-    /**
-     * Setup DB before each test.
-     */
     public function setUp()
     {
         parent::setUp();
     }
 
-    /**
-     * @test
-     */
+    public function testListActionCanSort()
+    {
+        $this->call('GET', 'http://localhost/api/v1/employees?sort=-id');
+        $response = $this->response;
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
+        $this->assertContains('&sort=-id', $response->getContent());
+    }
+
+    public function testListActionCanFilterMembers()
+    {
+        $this->call('GET', 'http://localhost/api/v1/employees?fields[employee]=company,first_name');
+        $response = $this->response;
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
+        $this->assertContains('&fields[employee]=company,first_name', $response->getContent());
+    }
+
     public function testListAction()
     {
         $response = $this->call('GET', 'http://localhost/api/v1/employees');
@@ -34,40 +49,9 @@ class JsonApiControllerTest extends LaravelTestCase
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
     }
 
-    /**
-     * @test
-     */
     public function testGetAction()
     {
-        $content = <<<JSON
-{
-    "data": {
-        "type": "employee",
-        "attributes": {
-            "company": "NilPortugues.com",
-            "surname": "Portugués",
-            "first_name": "Nil",
-            "email_address": "nilportugues@localhost",
-            "job_title": "Web Developer",
-            "business_phone": "(123)555-0100",
-            "home_phone": "(123)555-0102",
-            "mobile_phone": null,
-            "fax_number": "(123)555-0103",
-            "address": "Plaça Catalunya 1",
-            "city": "Barcelona",
-            "state_province": "Barcelona",
-            "zip_postal_code": "08028",
-            "country_region": "Spain",
-            "web_page": "http://nilportugues.com",
-            "notes": null,
-            "attachments": null
-        }
-    }
-}
-JSON;
-
-        $this->call('POST', 'http://localhost/api/v1/employees', json_decode($content, true), [], [], []);
-
+        $this->createNewEmployee();
         $response = $this->call('GET', 'http://localhost/api/v1/employees/1');
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -75,20 +59,9 @@ JSON;
     }
 
     /**
-     * @test
+     * @return \Illuminate\Http\Response
      */
-    public function testGetActionWhenEmployeeDoesNotExist()
-    {
-        $response = $this->call('GET', 'http://localhost/api/v1/employees/1000');
-
-        $this->assertEquals(404, $response->getStatusCode());
-        $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
-    }
-
-    /**
-     * @test
-     */
-    public function testPostAction()
+    private function createNewEmployee()
     {
         $content = <<<JSON
 {
@@ -118,14 +91,26 @@ JSON;
 JSON;
         $response = $this->call('POST', 'http://localhost/api/v1/employees', json_decode($content, true), [], [], []);
 
+        return $response;
+    }
+
+    public function testGetActionWhenEmployeeDoesNotExist()
+    {
+        $response = $this->call('GET', 'http://localhost/api/v1/employees/1000');
+
+        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
+    }
+
+    public function testPostAction()
+    {
+        $response = $this->createNewEmployee();
+
         $this->assertEquals(201, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
         $this->assertEquals('http://localhost/api/v1/employees/1', $response->headers->get('Location'));
     }
 
-    /**
-     * @test
-     */
     public function testPostActionCreateNonexistentTypeAndReturnErrors()
     {
         $content = <<<JSON
@@ -142,9 +127,6 @@ JSON;
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
     }
 
-    /**
-     * @test
-     */
     public function testPostActionReturnsErrorBecauseAttributesAreMissing()
     {
         $content = <<<JSON
@@ -174,9 +156,6 @@ JSON;
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
     }
 
-    /**
-     * @test
-     */
     public function testPatchActionWhenEmployeeDoesNotExistReturns400()
     {
         $content = <<<JSON
@@ -190,15 +169,19 @@ JSON;
   }
 }
 JSON;
-        $response = $this->call('PATCH', 'http://localhost/api/v1/employees/1000', json_decode($content, true), [], [], []);
+        $response = $this->call(
+            'PATCH',
+            'http://localhost/api/v1/employees/1000',
+            json_decode($content, true),
+            [],
+            [],
+            []
+        );
 
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
     }
 
-    /**
-     * @test
-     */
     public function testPutActionWhenEmployeeDoesNotExistReturns400()
     {
         $content = <<<JSON
@@ -228,15 +211,19 @@ JSON;
   }
 }
 JSON;
-        $response = $this->call('PUT', 'http://localhost/api/v1/employees/1000', json_decode($content, true), [], [], []);
+        $response = $this->call(
+            'PUT',
+            'http://localhost/api/v1/employees/1000',
+            json_decode($content, true),
+            [],
+            [],
+            []
+        );
 
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
     }
 
-    /**
-     * @test
-     */
     public function testDeleteActionWhenEmployeeDoesNotExistReturns404()
     {
         $response = $this->call('DELETE', 'http://localhost/api/v1/employees/1000');

@@ -29,7 +29,6 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "" : "vendor",
             "NilPortugues\\Tests\\" : "tests/NilPortugues/"
         }
     },

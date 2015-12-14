@@ -93,7 +93,7 @@ class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
      */
     private function setUpHttpKernel($app)
     {
-        $app->instance('request', \Illuminate\Http\Request::capture());
+        $app->instance('request', (new \Illuminate\Http\Request())->instance());
         $app->make('Illuminate\Foundation\Http\Kernel', [$app, $this->getRouter()])->bootstrap();
     }
 
@@ -113,10 +113,14 @@ class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
      */
     public function call($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
     {
-        $_SERVER['REQUEST_METHOD'] = strtoupper($method);
         $_SERVER['SERVER_NAME'] = parse_url($uri, PHP_URL_HOST);
-        $_SERVER['REQUEST_URI'] = $uri;
+        $_SERVER['REQUEST_URI'] = str_replace([parse_url($uri, PHP_URL_HOST), parse_url($uri, PHP_URL_SCHEME).'://'], '', $uri);
+        $_SERVER['REQUEST_METHOD'] = strtoupper($method);
+        $_SERVER['QUERY_STRING'] = parse_url($uri, PHP_URL_QUERY);
+        $_SERVER['PATH_INFO'] = str_replace('?'.$_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
         $_SERVER['CONTENT_TYPE'] = 'application/json';
+        $_SERVER['argv'] = explode('&', $_SERVER['QUERY_STRING']);
+        parse_str($_SERVER['QUERY_STRING'], $_GET);
 
         return parent::call($method, $uri, $parameters, $cookies, $files, $server, $content);
     }
