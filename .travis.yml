@@ -5,6 +5,8 @@ php:
   - "hhvm"
 
 before_script:
+  - curl -sS https://getcomposer.org/installer | php -- --filename=composer
+  - chmod +x composer
   - composer install
 
 script: 
