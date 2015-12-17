@@ -608,7 +608,21 @@ class EmployeesController extends JsonApiController
      */
     public function getOrdersByEmployee(Request $request)
     {       
-		$resource = new ListResource($this->serializer);
+        $apiRequest = RequestFactory::create();
+        $page = $apiRequest->getPage();
+
+        if (!$page->size()) {
+            $page->setSize(10); //Default elements per page
+        }
+
+        $resource = new ListResource(
+            $this->serializer,
+            $page,
+            $apiRequest->getFields(),
+            $apiRequest->getSort(),
+            $apiRequest->getIncludedRelationships(),
+            $apiRequest->getFilters()
+        );
         
         $totalAmount = function() use ($request) {
             $id = (new Orders())->getKeyName();

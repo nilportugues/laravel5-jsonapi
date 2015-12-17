@@ -12,8 +12,8 @@ namespace NilPortugues\Laravel5\JsonApi\Controller;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
 use NilPortugues\Api\JsonApi\Server\Actions\CreateResource;
 use NilPortugues\Api\JsonApi\Server\Actions\DeleteResource;
 use NilPortugues\Api\JsonApi\Server\Actions\ListResource;
@@ -45,19 +45,36 @@ abstract class JsonApiController extends Controller
     }
 
     /**
+     * @param int $pageSize
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction()
+    public function listAction($pageSize = 10)
     {
-        $resource = new ListResource($this->serializer);
+        $apiRequest = RequestFactory::create();
+        $page = $apiRequest->getPage();
 
-        $totalAmount = $this->totalAmountResourceCallable();
-        $results = $this->listResourceCallable();
+        if (!$page->size()) {
+            $page->setSize($pageSize);
+        }
 
-        $controllerAction = '\\'.get_class($this).'@listAction';
-        $uri = action($controllerAction, []);
+        $resource = new ListResource(
+            $this->serializer,
+            $page,
+            $apiRequest->getFields(),
+            $apiRequest->getSort(),
+            $apiRequest->getIncludedRelationships(),
+            $apiRequest->getFilters()
+        );
 
-        return $this->addHeaders($resource->get($totalAmount, $results, $uri, get_class($this->getDataModel())));
+        $response = $resource->get(
+            $this->totalAmountResourceCallable(),
+            $this->listResourceCallable(),
+            action('\\'.get_class($this).'@listAction', []),
+            get_class($this->getDataModel())
+        );
+
+        return $this->addHeaders($response);
     }
 
     /**
@@ -112,10 +129,21 @@ abstract class JsonApiController extends Controller
      */
     public function getAction(Request $request)
     {
-        $find = $this->findResourceCallable($request);
-        $resource = new GetResource($this->serializer);
+        $apiRequest = RequestFactory::create();
 
-        return $this->addHeaders($resource->get($request->id, get_class($this->getDataModel()), $find));
+        $resource = new GetResource(
+            $this->serializer,
+            $apiRequest->getFields(),
+            $apiRequest->getIncludedRelationships()
+        );
+
+        $response = $resource->get(
+            $request->id,
+            get_class($this->getDataModel()),
+            $this->findResourceCallable($request)
+        );
+
+        return $this->addHeaders($response);
     }
 
     /**
@@ -130,10 +158,6 @@ abstract class JsonApiController extends Controller
             $idKey = $this->getDataModel()->getKeyName();
             $model = $this->getDataModel()->query()->where($idKey, $request->id)->first();
 
-            if (empty($model)) {
-                throw new ModelNotFoundException('Not found');
-            }
-
             return $model;
         };
     }
@@ -145,13 +169,15 @@ abstract class JsonApiController extends Controller
      */
     public function postAction(Request $request)
     {
-        $createResource = $this->createResourceCallable();
-
         $resource = new CreateResource($this->serializer);
 
-        return $this->addHeaders(
-            $resource->get((array) $request->get('data'), get_class($this->getDataModel()), $createResource)
+        $response = $resource->get(
+            (array) $request->get('data'),
+            get_class($this->getDataModel()),
+            $this->createResourceCallable()
         );
+
+        return $this->addHeaders($response);
     }
 
     /**
@@ -191,20 +217,17 @@ abstract class JsonApiController extends Controller
      */
     public function patchAction(Request $request)
     {
-        $find = $this->findResourceCallable($request);
-        $update = $this->updateResourceCallable();
-
         $resource = new PatchResource($this->serializer);
 
-        return $this->addHeaders(
-            $resource->get(
-                $request->id,
-                (array) $request->get('data'),
-                get_class($this->getDataModel()),
-                $find,
-                $update
-            )
+        $response = $resource->get(
+            $request->id,
+            (array) $request->get('data'),
+            get_class($this->getDataModel()),
+            $this->findResourceCallable($request),
+            $this->updateResourceCallable()
         );
+
+        return $this->addHeaders($response);
     }
 
     /**
@@ -233,20 +256,17 @@ abstract class JsonApiController extends Controller
      */
     public function putAction(Request $request)
     {
-        $find = $this->findResourceCallable($request);
-        $update = $this->updateResourceCallable();
-
         $resource = new PutResource($this->serializer);
 
-        return $this->addHeaders(
-            $resource->get(
-                $request->id,
-                (array) $request->get('data'),
-                get_class($this->getDataModel()),
-                $find,
-                $update
-            )
+        $response = $resource->get(
+            $request->id,
+            (array) $request->get('data'),
+            get_class($this->getDataModel()),
+            $this->findResourceCallable($request),
+            $this->updateResourceCallable()
         );
+
+        return $this->addHeaders($response);
     }
 
     /**
@@ -256,9 +276,31 @@ abstract class JsonApiController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $find = $this->findResourceCallable($request);
         $resource = new DeleteResource($this->serializer);
 
-        return $this->addHeaders($resource->get($request->id, get_class($this->getDataModel()), $find));
+        $response = $resource->get(
+            $request->id,
+            get_class($this->getDataModel()),
+            $this->findResourceCallable($request),
+            $this->deleteResourceCallable($request)
+        );
+
+        return $this->addHeaders($response);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return callable
+     * @codeCoverageIgnore
+     */
+    protected function deleteResourceCallable(Request $request)
+    {
+        return function () use ($request) {
+            $idKey = $this->getDataModel()->getKeyName();
+            $model = $this->getDataModel()->query()->where($idKey, $request->id)->first();
+
+            return $model->delete();
+        };
     }
 }

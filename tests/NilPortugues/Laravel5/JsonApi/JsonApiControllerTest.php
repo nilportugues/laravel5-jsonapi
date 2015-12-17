@@ -58,6 +58,14 @@ class JsonApiControllerTest extends LaravelTestCase
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
     }
 
+    public function testDeleteAction()
+    {
+        $this->createNewEmployee();
+        $response = $this->call('DELETE', 'http://localhost/api/v1/employees/1');
+
+        $this->assertEquals(204, $response->getStatusCode());
+    }
+
     /**
      * @return \Illuminate\Http\Response
      */
@@ -156,7 +164,7 @@ JSON;
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
     }
 
-    public function testPatchActionWhenEmployeeDoesNotExistReturns400()
+    public function testPatchActionWhenEmployeeDoesNotExistReturns404()
     {
         $content = <<<JSON
 {
@@ -178,11 +186,11 @@ JSON;
             []
         );
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
     }
 
-    public function testPutActionWhenEmployeeDoesNotExistReturns400()
+    public function testPutActionWhenEmployeeDoesNotExistReturns404()
     {
         $content = <<<JSON
 {
@@ -219,14 +227,6 @@ JSON;
             [],
             []
         );
-
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
-    }
-
-    public function testDeleteActionWhenEmployeeDoesNotExistReturns404()
-    {
-        $response = $this->call('DELETE', 'http://localhost/api/v1/employees/1000');
 
         $this->assertEquals(404, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));

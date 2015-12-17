@@ -33,10 +33,10 @@ trait EloquentHelper
         $request = RequestFactory::create();
 
         $builder->paginate(
-            $request->getPageSize(),
-            self::columns($serializer, $request->getFields()),
+            $request->getPage()->size(),
+            self::columns($serializer, $request->getFields()->get()),
             'page',
-            $request->getPageNumber()
+            $request->getPage()->number()
         );
 
         return $builder;
@@ -52,7 +52,7 @@ trait EloquentHelper
     protected static function sort(JsonApiSerializer $serializer, Builder $builder, Model $model)
     {
         $mapping = $serializer->getTransformer()->getMappingByClassName(get_class($model));
-        $sorts = RequestFactory::create()->getSortDirection();
+        $sorts = RequestFactory::create()->getSort()->sorting();
 
         if (!empty($sorts)) {
             $aliased = $mapping->getAliasedProperties();
