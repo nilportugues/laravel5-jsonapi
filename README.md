@@ -80,43 +80,8 @@ This is how our `app/Http/routes.php` will look:
 
 ```php
 <?php
-Route::group(['prefix' => 'api/v1/','namespace' => 'Api'], function() {
-    Route::post(
-		'employees', [
-        'as' => 'employees.post',
-        'uses' => 'EmployeesController@postAction'
-    ]);
-        
-    Route::get(
-    	'employees', [
-        'as' => 'employees.list',
-        'uses' => 'EmployeesController@listAction'
-    ]);
-    
-    Route::get(
-    	'employees/{id}', [
-        'as' => 'employees.get',
-        'uses' => 'EmployeesController@getAction'
-    ]);
-    
-    Route::put(
-    	'employees/{id}',[
-        'as' => 'employees.put',
-        'uses' => 'EmployeesController@putAction'
-    ]);
-    
-    Route::patch(
-    	'employees/{id}', [
-        'as' => 'employees.patch',
-        'uses' => 'EmployeesController@patchAction'
-    ]);
-    
-    Route::delete(
-    	'employees/{id}', [
-        'as' => 'employees.delete', 
-        'uses' => 'EmployeesController@deleteAction'
-    ]);
-    
+Route::group(['namespace' => 'Api'], function() {
+    Route::resource('employees', 'EmployeesController');    
     Route::get(
     	'employees/{employee_id}/orders', [
         'as' => 'employees.orders',
@@ -466,43 +431,9 @@ This is how our `app/Http/routes.php` will look:
 ```php
 <?php
 $app->group(
-	['prefix' => 'api/v1/' , 'namespace' => 'Api'], function($app) {
-        $app->post(
-            'employees',  [
-			'as' => 'employees.post', 
-			'uses' => 'EmployeesController@postAction'
-		]);
-
-        $app->get(
-            'employees', [
-			'as' => 'employees.list', 
-			'uses' => 'EmployeesController@listAction'
-		]);
-
-        $app->get(
-            'employees/{id}', [
-			'as' => 'employees.get',
-			'uses' => 'EmployeesController@getAction'
-		]);
-
-        $app->put(
-            'employees/{id}', [
-			'as' => 'employees.put', 
-			'uses' => 'EmployeesController@putAction'
-		]);
-
-        $app->patch(
-            'employees/{id}', [
-			'as' => 'employees.patch', 
-			'uses' => 'EmployeesController@patchAction'
-		]);
-
-        $app->delete(
-            'employees/{id}', [
-			'as' => 'employees.delete',
-			'uses' => 'EmployeesController@deleteAction'
-		]);
-
+	['namespace' => 'Api'], function($app) {
+        $app->resource('employees', 'EmployeesController');
+        
         $app->get(
             'employees/{employee_id}/orders', [
 			'as' => 'employees.orders', 

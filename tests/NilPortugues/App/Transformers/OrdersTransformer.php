@@ -78,8 +78,8 @@ class OrdersTransformer implements JsonApiMapping
     public function getUrls()
     {
         return [
-            'self' => ['name' => 'orders.get'],
-            'employee' => ['name' => 'employees.get', 'as_id' => 'employee_id'],
+            'self' => ['name' => 'orders.show', 'as_id' => 'id'],
+            'employee' => ['name' => 'employees.show', 'as_id' => 'employee_id'],
         ];
     }
 

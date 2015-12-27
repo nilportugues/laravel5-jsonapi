@@ -14,10 +14,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
+use NilPortugues\Api\JsonApi\Http\Response\ResourceNotFound;
 use NilPortugues\Api\JsonApi\Server\Actions\CreateResource;
 use NilPortugues\Api\JsonApi\Server\Actions\DeleteResource;
-use NilPortugues\Api\JsonApi\Server\Actions\ListResource;
 use NilPortugues\Api\JsonApi\Server\Actions\GetResource;
+use NilPortugues\Api\JsonApi\Server\Actions\ListResource;
 use NilPortugues\Api\JsonApi\Server\Actions\PatchResource;
 use NilPortugues\Api\JsonApi\Server\Actions\PutResource;
 use NilPortugues\Api\JsonApi\Server\Errors\Error;
@@ -45,36 +46,35 @@ abstract class JsonApiController extends Controller
     }
 
     /**
+     * Get many resources.
+     *
      * @param int $pageSize
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction($pageSize = 10)
+    public function index($pageSize = 10)
     {
         $apiRequest = RequestFactory::create();
-        $page = $apiRequest->getPage();
 
+        $page = $apiRequest->getPage();
         if (!$page->size()) {
             $page->setSize($pageSize);
         }
 
-        $resource = new ListResource(
-            $this->serializer,
-            $page,
-            $apiRequest->getFields(),
-            $apiRequest->getSort(),
-            $apiRequest->getIncludedRelationships(),
-            $apiRequest->getFilters()
-        );
+        $fields = $apiRequest->getFields();
+        $sorting = $apiRequest->getSort();
+        $included = $apiRequest->getIncludedRelationships();
+        $filters = $apiRequest->getFilters();
 
-        $response = $resource->get(
-            $this->totalAmountResourceCallable(),
-            $this->listResourceCallable(),
-            action('\\'.get_class($this).'@listAction', []),
-            get_class($this->getDataModel())
-        );
+        $resource = new ListResource($this->serializer, $page, $fields, $sorting, $included, $filters);
 
-        return $this->addHeaders($response);
+        $totalAmount = $this->totalAmountResourceCallable();
+        $results = $this->listResourceCallable();
+
+        $controllerAction = '\\'.get_class($this).'@index';
+        $uri = action($controllerAction, []);
+
+        return $this->addHeaders($resource->get($totalAmount, $results, $uri, get_class($this->getDataModel())));
     }
 
     /**
@@ -123,11 +123,21 @@ abstract class JsonApiController extends Controller
     }
 
     /**
+     * @return ResourceNotFound
+     */
+    public function create()
+    {
+        return new ResourceNotFound();
+    }
+
+    /**
+     * Get single resource.
+     *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAction(Request $request)
+    public function show($id)
     {
         $apiRequest = RequestFactory::create();
 
@@ -137,13 +147,9 @@ abstract class JsonApiController extends Controller
             $apiRequest->getIncludedRelationships()
         );
 
-        $response = $resource->get(
-            $request->id,
-            get_class($this->getDataModel()),
-            $this->findResourceCallable($request)
-        );
+        $find = $this->findResourceCallable($id);
 
-        return $this->addHeaders($response);
+        return $this->addHeaders($resource->get($id, get_class($this->getDataModel()), $find));
     }
 
     /**
@@ -152,32 +158,31 @@ abstract class JsonApiController extends Controller
      * @return callable
      * @codeCoverageIgnore
      */
-    protected function findResourceCallable(Request $request)
+    protected function findResourceCallable($id)
     {
-        return function () use ($request) {
+        return function () use ($id) {
             $idKey = $this->getDataModel()->getKeyName();
-            $model = $this->getDataModel()->query()->where($idKey, $request->id)->first();
+            $model = $this->getDataModel()->query()->where($idKey, $id)->first();
 
             return $model;
         };
     }
 
     /**
+     * Post Action.
+     *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction(Request $request)
+    public function store(Request $request)
     {
+        $createResource = $this->createResourceCallable();
         $resource = new CreateResource($this->serializer);
 
-        $response = $resource->get(
-            (array) $request->get('data'),
-            get_class($this->getDataModel()),
-            $this->createResourceCallable()
+        return $this->addHeaders(
+            $resource->get((array) $request->get('data'), get_class($this->getDataModel()), $createResource)
         );
-
-        return $this->addHeaders($response);
     }
 
     /**
@@ -211,23 +216,37 @@ abstract class JsonApiController extends Controller
     }
 
     /**
+     * @param $id
+     *
+     * @return Response
+     */
+    public function update(Request $request, $id)
+    {
+        return (strtoupper($request->getMethod()) === 'PUT') ? $this->putAction($request,
+            $id) : $this->patchAction($request, $id);
+    }
+
+    /**
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function patchAction(Request $request)
+    protected function putAction(Request $request, $id)
     {
-        $resource = new PatchResource($this->serializer);
+        $find = $this->findResourceCallable($id);
+        $update = $this->updateResourceCallable();
 
-        $response = $resource->get(
-            $request->id,
-            (array) $request->get('data'),
-            get_class($this->getDataModel()),
-            $this->findResourceCallable($request),
-            $this->updateResourceCallable()
+        $resource = new PutResource($this->serializer);
+
+        return $this->addHeaders(
+            $resource->get(
+                $id,
+                (array) $request->get('data'),
+                get_class($this->getDataModel()),
+                $find,
+                $update
+            )
         );
-
-        return $this->addHeaders($response);
     }
 
     /**
@@ -251,54 +270,62 @@ abstract class JsonApiController extends Controller
 
     /**
      * @param Request $request
+     * @param         $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function putAction(Request $request)
+    protected function patchAction(Request $request, $id)
     {
-        $resource = new PutResource($this->serializer);
+        $find = $this->findResourceCallable($id);
+        $update = $this->updateResourceCallable();
 
-        $response = $resource->get(
-            $request->id,
-            (array) $request->get('data'),
-            get_class($this->getDataModel()),
-            $this->findResourceCallable($request),
-            $this->updateResourceCallable()
+        $resource = new PatchResource($this->serializer);
+
+        return $this->addHeaders(
+            $resource->get(
+                $id,
+                (array) $request->get('data'),
+                get_class($this->getDataModel()),
+                $find,
+                $update
+            )
         );
-
-        return $this->addHeaders($response);
     }
 
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return ResourceNotFound
      */
-    public function deleteAction(Request $request)
+    public function edit()
     {
+        return new ResourceNotFound();
+    }
+
+    /**
+     * @param $id
+     *
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        $find = $this->findResourceCallable($id);
+
+        $delete = $this->deleteResourceCallable($id);
+
         $resource = new DeleteResource($this->serializer);
 
-        $response = $resource->get(
-            $request->id,
-            get_class($this->getDataModel()),
-            $this->findResourceCallable($request),
-            $this->deleteResourceCallable($request)
-        );
-
-        return $this->addHeaders($response);
+        return $this->addHeaders($resource->get($id, get_class($this->getDataModel()), $find, $delete));
     }
 
     /**
-     * @param Request $request
+     * @param $id
      *
-     * @return callable
-     * @codeCoverageIgnore
+     * @return \Closure
      */
-    protected function deleteResourceCallable(Request $request)
+    protected function deleteResourceCallable($id)
     {
-        return function () use ($request) {
+        return function () use ($id) {
             $idKey = $this->getDataModel()->getKeyName();
-            $model = $this->getDataModel()->query()->where($idKey, $request->id)->first();
+            $model = $this->getDataModel()->query()->where($idKey, $id)->first();
 
             return $model->delete();
         };

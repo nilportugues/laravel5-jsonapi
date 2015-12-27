@@ -23,7 +23,7 @@ class JsonApiControllerTest extends LaravelTestCase
 
     public function testListActionCanSort()
     {
-        $this->call('GET', 'http://localhost/api/v1/employees?sort=-id');
+        $this->call('GET', 'http://localhost/employees?sort=-id');
         $response = $this->response;
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -33,7 +33,7 @@ class JsonApiControllerTest extends LaravelTestCase
 
     public function testListActionCanFilterMembers()
     {
-        $this->call('GET', 'http://localhost/api/v1/employees?fields[employee]=company,first_name');
+        $this->call('GET', 'http://localhost/employees?fields[employee]=company,first_name');
         $response = $this->response;
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -43,7 +43,7 @@ class JsonApiControllerTest extends LaravelTestCase
 
     public function testListAction()
     {
-        $response = $this->call('GET', 'http://localhost/api/v1/employees');
+        $response = $this->call('GET', 'http://localhost/employees');
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
@@ -52,7 +52,7 @@ class JsonApiControllerTest extends LaravelTestCase
     public function testGetAction()
     {
         $this->createNewEmployee();
-        $response = $this->call('GET', 'http://localhost/api/v1/employees/1');
+        $response = $this->call('GET', 'http://localhost/employees/1');
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
@@ -61,7 +61,7 @@ class JsonApiControllerTest extends LaravelTestCase
     public function testDeleteAction()
     {
         $this->createNewEmployee();
-        $response = $this->call('DELETE', 'http://localhost/api/v1/employees/1');
+        $response = $this->call('DELETE', 'http://localhost/employees/1');
 
         $this->assertEquals(204, $response->getStatusCode());
     }
@@ -97,14 +97,14 @@ class JsonApiControllerTest extends LaravelTestCase
     }
 }
 JSON;
-        $response = $this->call('POST', 'http://localhost/api/v1/employees', json_decode($content, true), [], [], []);
+        $response = $this->call('POST', 'http://localhost/employees', json_decode($content, true), [], [], []);
 
         return $response;
     }
 
     public function testGetActionWhenEmployeeDoesNotExist()
     {
-        $response = $this->call('GET', 'http://localhost/api/v1/employees/1000');
+        $response = $this->call('GET', 'http://localhost/employees/1000');
 
         $this->assertEquals(404, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
@@ -116,7 +116,7 @@ JSON;
 
         $this->assertEquals(201, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
-        $this->assertEquals('http://localhost/api/v1/employees/1', $response->headers->get('Location'));
+        $this->assertEquals('http://localhost/employees/1', $response->headers->get('Location'));
     }
 
     public function testPostActionCreateNonexistentTypeAndReturnErrors()
@@ -129,7 +129,7 @@ JSON;
     }
 }
 JSON;
-        $response = $this->call('POST', 'http://localhost/api/v1/employees', json_decode($content, true), [], [], []);
+        $response = $this->call('POST', 'http://localhost/employees', json_decode($content, true), [], [], []);
 
         $this->assertEquals(422, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
@@ -158,7 +158,7 @@ JSON;
     }
 }
 JSON;
-        $response = $this->call('POST', 'http://localhost/api/v1/employees', json_decode($content, true), [], [], []);
+        $response = $this->call('POST', 'http://localhost/employees', json_decode($content, true), [], [], []);
 
         $this->assertEquals(422, $response->getStatusCode());
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
@@ -179,7 +179,7 @@ JSON;
 JSON;
         $response = $this->call(
             'PATCH',
-            'http://localhost/api/v1/employees/1000',
+            'http://localhost/employees/1000',
             json_decode($content, true),
             [],
             [],
@@ -221,7 +221,7 @@ JSON;
 JSON;
         $response = $this->call(
             'PUT',
-            'http://localhost/api/v1/employees/1000',
+            'http://localhost/employees/1000',
             json_decode($content, true),
             [],
             [],

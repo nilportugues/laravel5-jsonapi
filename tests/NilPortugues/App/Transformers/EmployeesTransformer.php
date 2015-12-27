@@ -82,8 +82,8 @@ class EmployeesTransformer implements JsonApiMapping
     public function getUrls()
     {
         return [
-            'self' => ['name' => 'employees.get'],
-            'employees' => ['name' => 'employees.list'],
+            'self' => ['name' => 'employees.show', 'as_id' => 'id'],
+            'employees' => ['name' => 'employees.index'],
             'employee_orders' => ['name' => 'employees.orders', 'as_id' => 'id'],
         ];
     }

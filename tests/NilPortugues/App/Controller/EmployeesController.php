@@ -11,8 +11,8 @@
 namespace NilPortugues\Tests\App\Controller;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
 use NilPortugues\Api\JsonApi\Server\Actions\ListResource;
 use NilPortugues\Api\JsonApi\Server\Errors\Error;
 use NilPortugues\Api\JsonApi\Server\Errors\ErrorBag;
@@ -82,28 +82,41 @@ class EmployeesController extends JsonApiController
     }
 
     /**
-     * @param Request $request
+     * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getOrdersByEmployee(Request $request)
+    public function getOrdersByEmployee($id)
     {
-        $resource = new ListResource($this->serializer);
+        $apiRequest = RequestFactory::create();
 
-        $totalAmount = function () use ($request) {
-            $id = (new Orders())->getKeyName();
+        $pageSize = 10;
+        $page = $apiRequest->getPage();
+        if (!$page->size()) {
+            $page->setSize($pageSize);
+        }
 
-            return Orders::query()->where('employee_id', '=', $request->employee_id)->get([$id])->count();
+        $fields = $apiRequest->getFields();
+        $sorting = $apiRequest->getSort();
+        $included = $apiRequest->getIncludedRelationships();
+        $filters = $apiRequest->getFilters();
+
+        $resource = new ListResource($this->serializer, $page, $fields, $sorting, $included, $filters);
+
+        $totalAmount = function () use ($id) {
+            $idKey = (new Orders())->getKeyName();
+
+            return Orders::query()->where('employee_id', '=', $id)->get([$idKey])->count();
         };
 
-        $results = function () use ($request) {
+        $results = function () use ($id) {
             return EloquentHelper::paginate(
                 $this->serializer,
-                Orders::query()->where('employee_id', '=', $request->employee_id)
+                Orders::query()->where('employee_id', '=', $id)
             )->get();
         };
 
-        $uri = route('employees.orders', ['employee_id' => $request->employee_id]);
+        $uri = route('employees.orders', ['employee_id' => $id]);
 
         return $resource->get($totalAmount, $results, $uri, Orders::class);
     }
