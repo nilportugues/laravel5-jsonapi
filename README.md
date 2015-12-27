@@ -17,15 +17,15 @@
 - [Installation](#installation)
 - [Configuration (Laravel 5 & Lumen)](#configuration-laravel-5--lumen)
   - [Configuration for Laravel 5](#configuration-for-laravel-5)
-      	- [Step 1: Add the Service Provider](#step-1-add-the-service-provider)
-      	- [Step 2: Defining routes](#step-2-defining-routes)
-      	- [Step 3: Definition](#step-3-definition)
-      	- [Step 4: Usage](#step-4-usage)
+        - [Step 1: Add the Service Provider](#step-1-add-the-service-provider)
+        - [Step 2: Defining routes](#step-2-defining-routes)
+        - [Step 3: Definition](#step-3-definition)
+        - [Step 4: Usage](#step-4-usage)
   - [Configuration for Lumen](#configuration-for-lumen)
-      	- [Step 1: Add the Service Provider](#step-1-add-the-service-provider-1)
-      	- [Step 2: Defining routes](#step-2-defining-routes-1)
-      	- [Step 3: Definition](#step-3-definition-1)
-      	- [Step 4: Usage](#step-4-usage-1)
+        - [Step 1: Add the Service Provider](#step-1-add-the-service-provider-1)
+        - [Step 2: Defining routes](#step-2-defining-routes-1)
+        - [Step 3: Definition](#step-3-definition-1)
+        - [Step 4: Usage](#step-4-usage-1)
 - [JsonApiController](#jsonapicontroller)
 - [Examples: Consuming the API](#examples-consuming-the-api)
   - [GET](#get)
@@ -83,7 +83,7 @@ This is how our `app/Http/routes.php` will look:
 Route::group(['namespace' => 'Api'], function() {
     Route::resource('employees', 'EmployeesController');    
     Route::get(
-    	'employees/{employee_id}/orders', [
+        'employees/{employee_id}/orders', [
         'as' => 'employees.orders',
         'uses' => 'EmployeesController@getOrdersByEmployee'
     ]);
@@ -431,15 +431,15 @@ This is how our `app/Http/routes.php` will look:
 ```php
 <?php
 $app->group(
-	['namespace' => 'Api'], function($app) {
+    ['namespace' => 'Api'], function($app) {
         $app->resource('employees', 'EmployeesController');
         
         $app->get(
             'employees/{employee_id}/orders', [
-			'as' => 'employees.orders', 
-			'uses' => 'EmployeesController@getOrdersByEmployee'
-		]);
-	}
+            'as' => 'employees.orders', 
+            'uses' => 'EmployeesController@getOrdersByEmployee'
+        ]);
+    }
 );
 //...
 ``` 
@@ -470,7 +470,7 @@ class EmployeesController extends JsonApiController
 {
     /**
      * Return the Eloquent model that will be used 
-	 * to model the JSON API resources. 
+     * to model the JSON API resources. 
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
@@ -523,7 +523,7 @@ class EmployeesController extends JsonApiController
 {
     /**
      * Return the Eloquent model that will be used 
-	 * to model the JSON API resources. 
+     * to model the JSON API resources. 
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
@@ -558,21 +558,21 @@ class EmployeesController extends JsonApiController
         $totalAmount = function() use ($request) {
             $id = (new Orders())->getKeyName();
             return Orders::query()
-            	->where('employee_id', '=', $request->employee_id)
-				->get([$id])
-				->count();
+                ->where('employee_id', '=', $request->employee_id)
+                ->get([$id])
+                ->count();
         };
 
         $results = function()  use ($request) {
             return EloquentHelper::paginate(
                 $this->serializer,
                 Orders::query()
-                	->where('employee_id', '=', $request->employee_id)
+                    ->where('employee_id', '=', $request->employee_id)
             )->get();
         };
 
         $uri = route('employees.orders', ['employee_id' => $request->employee_id]);
-		
+        
         return $resource->get($totalAmount, $results, $uri, Orders::class);
     }
 }
@@ -586,7 +586,7 @@ And you're ready to go. Yes, it is **THAT** simple!
 
 ### GET
 
-This is the output for `EmployeesController@getAction` being consumed from command-line method issuing: `curl -X GET "http://localhost:9000/api/v1/employees/1"`.
+This is the output for `EmployeesController@getAction` being consumed from command-line method issuing: `curl -X GET "http://localhost:9000/employees/1"`.
 
 **Output:**
 
@@ -622,10 +622,10 @@ Content-type: application/vnd.api+json
         },
         "links": {
             "self": {
-                "href": "http://localhost:9000/api/v1/employees/1"
+                "href": "http://localhost:9000/employees/1"
             },
             "employee_orders": {
-                "href": "http://localhost:9000/api/v1/employees/1/orders"
+                "href": "http://localhost:9000/employees/1/orders"
             }
         },
         "relationships": {
@@ -666,20 +666,20 @@ Content-type: application/vnd.api+json
             },
             "links": {
                 "self": {
-                    "href": "http://localhost:9000/api/v1/orders/71"
+                    "href": "http://localhost:9000/orders/71"
                 },
                 "employee": {
-                    "href": "http://localhost:9000/api/v1/employees/1"
+                    "href": "http://localhost:9000/employees/1"
                 }
             }
         }
     ],
     "links": {
         "employees": {
-            "href": "http://localhost:9000/api/v1/employees"
+            "href": "http://localhost:9000/employees"
         },
         "employee_orders": {
-            "href": "http://localhost:9000/api/v1/employees/1/orders"
+            "href": "http://localhost:9000/employees/1/orders"
         }
     },
     "jsonapi": {
@@ -697,7 +697,7 @@ For instance, `attachments` member was hidden, but it is required, so it needs t
 
 Passing and `id` is optional and will be used instead of a server-side generated value if provided.
 
-Sending the following data to the server using `POST`to the following URI  `http://localhost:9000/api/v1/employees`: 
+Sending the following data to the server using `POST`to the following URI  `http://localhost:9000/employees`: 
 
 ```json
 {
@@ -722,7 +722,7 @@ Sending the following data to the server using `POST`to the following URI  `http
             "notes": null,
             "attachments": null
         }
-	}        
+    }        
 }        
 ```
 
@@ -732,7 +732,7 @@ Will produce:
 HTTP/1.1 201 Created
 Cache-Control: private, max-age=0, must-revalidate
 Content-type: application/vnd.api+json
-Location: http://localhost:9000/api/v1/employees/10
+Location: http://localhost:9000/employees/10
 ```
 
 Notice how 201 HTTP Status Code is returned and Location header too. Also `attachments` is not there anymore, and `full_name` was displayed.
@@ -763,19 +763,19 @@ Notice how 201 HTTP Status Code is returned and Location header too. Also `attac
         },
         "links": {
             "self": {
-                "href": "http://localhost:9000/api/v1/employees/10"
+                "href": "http://localhost:9000/employees/10"
             },
             "employee_orders": {
-                "href": "http://localhost:9000/api/v1/employees/10/orders"
+                "href": "http://localhost:9000/employees/10/orders"
             }
         }
     },
     "links": {
         "employees": {
-            "href": "http://localhost:9000/api/v1/employees"
+            "href": "http://localhost:9000/employees"
         },
         "employee_orders": {
-            "href": "http://localhost:9000/api/v1/employees/10/orders"
+            "href": "http://localhost:9000/employees/10/orders"
         }
     },
     "jsonapi": {
@@ -793,7 +793,7 @@ For the sake of this example, we'll just send in a new `job_title` value, and ke
 It's important to notice this time we are required to pass in the `id`, even if it has been passed in by the URI, and of course the `id` values must match. Otherwise it will fail.
 
 
-Sending the following data to the server using `PUT`to the following URI  `http://localhost:9000/api/v1/employees/10`: 
+Sending the following data to the server using `PUT`to the following URI  `http://localhost:9000/employees/10`: 
 
 ```json
 {
@@ -858,20 +858,20 @@ Content-type: application/vnd.api+json
         },
         "links": {
             "self": {
-                "href": "http://localhost:9000/api/v1/employees/10"
+                "href": "http://localhost:9000/employees/10"
             },
             "employee_orders": {
-                "href": "http://localhost:9000/api/v1/employees/10/orders"
+                "href": "http://localhost:9000/employees/10/orders"
             }
         }
     },
     "included": [],
     "links": {
         "employees": {
-            "href": "http://localhost:9000/api/v1/employees"
+            "href": "http://localhost:9000/employees"
         },
         "employee_orders": {
-            "href": "http://localhost:9000/api/v1/employees/10/orders"
+            "href": "http://localhost:9000/employees/10/orders"
         }
     },
     "jsonapi": {
@@ -887,7 +887,7 @@ PATCH allows partial updates, unlike PUT.
 
 We are required to pass in the `id` member, even if it has been passed in by the URI, and of course the `id` values must match. Otherwise it will fail.
 
-For instance, sending the following data to the server using the following URI  `http://localhost:9000/api/v1/employees/10`: 
+For instance, sending the following data to the server using the following URI  `http://localhost:9000/employees/10`: 
 
 ```json
 {
@@ -935,20 +935,20 @@ Content-type: application/vnd.api+json
         },
         "links": {
             "self": {
-                "href": "http://localhost:9000/api/v1/employees/10"
+                "href": "http://localhost:9000/employees/10"
             },
             "employee_orders": {
-                "href": "http://localhost:9000/api/v1/employees/10/orders"
+                "href": "http://localhost:9000/employees/10/orders"
             }
         }
     },
     "included": [],
     "links": {
         "employees": {
-            "href": "http://localhost:9000/api/v1/employees"
+            "href": "http://localhost:9000/employees"
         },
         "employee_orders": {
-            "href": "http://localhost:9000/api/v1/employees/10/orders"
+            "href": "http://localhost:9000/employees/10/orders"
         }
     },
     "jsonapi": {
@@ -961,7 +961,7 @@ Content-type: application/vnd.api+json
 
 ### DELETE
 
-DELETE is the easiest method to use, as it does not require body. Just issue a DELETE to `http://localhost:9000/api/v1/employees/10/` and `Employee` with `id 10` will be gone.
+DELETE is the easiest method to use, as it does not require body. Just issue a DELETE to `http://localhost:9000/employees/10/` and `Employee` with `id 10` will be gone.
 
 It will produce the following output: 
 
@@ -982,9 +982,9 @@ And notice how response will be empty:
 
 According to the standard, for GET method, it is possible to:
 - Show only those fields requested using `fields`query parameter.
-	- &fields[resource]=field1,field2
+    - &fields[resource]=field1,field2
     
-For instance, passing `/api/v1/employees/10?fields[employee]=company,first_name` will produce the following output: 
+For instance, passing `/employees/10?fields[employee]=company,first_name` will produce the following output: 
 
 ```json
 {
@@ -997,19 +997,19 @@ For instance, passing `/api/v1/employees/10?fields[employee]=company,first_name`
         },
         "links": {
             "self": {
-                "href": "http://localhost:9000/api/v1/employees/10"
+                "href": "http://localhost:9000/employees/10"
             },
             "employee_orders": {
-                "href": "http://localhost:9000/api/v1/employees/10/orders"
+                "href": "http://localhost:9000/employees/10/orders"
             }
         }
     },
     "links": {
         "employees": {
-            "href": "http://localhost:9000/api/v1/employees"
+            "href": "http://localhost:9000/employees"
         },
         "employee_orders": {
-            "href": "http://localhost:9000/api/v1/employees/10/orders"
+            "href": "http://localhost:9000/employees/10/orders"
         }
     },
     "jsonapi": {
@@ -1019,18 +1019,18 @@ For instance, passing `/api/v1/employees/10?fields[employee]=company,first_name`
 ```
     
 - Show only those `included` resources by passing in the relationship between them separated by dot, or just pass in list of resources separated by comma.
-	- &include=resource1
-	- &include=resource1.resource2,resource2.resource3
+    - &include=resource1
+    - &include=resource1.resource2,resource2.resource3
     
     
-For instance, `/api/v1/employees?included=order` will only load order type data inside `included` member, but `/api/v1/employees?included=order.employee` will only load those orders related to the `employee` type.
+For instance, `/employees?included=order` will only load order type data inside `included` member, but `/employees?included=order.employee` will only load those orders related to the `employee` type.
 
 - Sort results using `sort` and passing in the member names of the main resource defined in `data[type]` member. If it starts with a `-` order is `DESCENDING`, otherwise it's `ASCENDING`.
 
   - &sort=field1,-field2
   - &sort=-field1,field2
   
-For instance: `/api/v1/employees?sort=surname,-first_name`  
+For instance: `/employees?sort=surname,-first_name`  
 
 - Pagination is also defined to allow doing page pagination, cursor pagination or offset pagination.
   - &page[number]
@@ -1039,7 +1039,7 @@ For instance: `/api/v1/employees?sort=surname,-first_name`
   - &page[offset]
   - &page[size]
   
-For instance: `/api/v1/employees?page[number]=1&page[size]=10`  
+For instance: `/employees?page[number]=1&page[size]=10`  
 
 ## POST/PUT/PATCH with Relationships
 
@@ -1071,13 +1071,13 @@ This could be done issuing 2 `POST` to the end-points (one for Employee, one for
         "web_page": "http://northwindtraders.com",
         "notes": "Reads and writes French.",
         "full_name": "Laura Giussani"
-	},    
-	"relationships": {
+    },    
+    "relationships": {
       "order": {
         "data": [
           {
-          	"type": "order",
-          	"attributes": {
+            "type": "order",
+            "attributes": {
               "customer_id": "28",
               "order_date": "2006-05-11 00:00:00",
               "shipped_date": "2006-05-11 00:00:00",
@@ -1122,7 +1122,7 @@ use NilPortugues\Laravel5\JsonApi\Controller\JsonApiController;
 
 class EmployeesController extends JsonApiController
 {
-	/**
+    /**
      * Now you can actually create Employee and Orders at once.
      * Use transactions - DB::beginTransaction() for data integrity!
      *
@@ -1130,7 +1130,7 @@ class EmployeesController extends JsonApiController
      */
     protected function createResourceCallable()
     {
-		$createOrderResource = function (Model $model, array $data) {
+        $createOrderResource = function (Model $model, array $data) {
             if (!empty($data['relationships']['order']['data'])) {
                 $orderData = $data['relationships']['order']['data'];
 
@@ -1158,7 +1158,7 @@ class EmployeesController extends JsonApiController
 
             DB::beginTransaction();
             try {
-    			$model = $this->getDataModel()->create($attributes);
+                $model = $this->getDataModel()->create($attributes);
                 $createOrderResource($model, $data);
                 DB::commit();
                 return $model;
@@ -1302,7 +1302,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EmployeesController extends JsonApiController
 {
-	//All your supported methods...
+    //All your supported methods...
     
     /**
      * @param Response $response
