@@ -300,8 +300,8 @@ class EmployeesTransformer implements JsonApiMapping
     public function getUrls()
     {
         return [
-            'self' => ['name' => 'employees.get'],
-            'employees' => ['name' => 'employees.list'],
+            'self' => ['name' => 'employees.show', 'as_id' => 'id'],
+            'employees' => ['name' => 'employees.index'],
             'employee_orders' => ['name' => 'employees.orders', 'as_id' => 'id']
         ];
     }
@@ -372,7 +372,7 @@ class OrdersTransformer implements JsonApiMapping
     public function getUrls()
     {
         return [
-            'self'     => ['name' => 'orders.get'],
+            'self'     => ['name' => 'orders.show', 'as_id' => 'id'],
             'employee' => ['name' => 'employees.get', 'as_id' => 'employee_id'],
         ];
     }
