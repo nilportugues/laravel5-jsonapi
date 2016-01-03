@@ -11,12 +11,9 @@
 
 namespace NilPortugues\Laravel5\JsonApi;
 
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use NilPortugues\Api\JsonApi\JsonApiTransformer;
-use NilPortugues\Api\Mapping\Mapping;
-use NilPortugues\Laravel5\JsonApi\Mapper\Mapper;
-use ReflectionClass;
+use NilPortugues\Laravel5\JsonApi\Providers\Laravel51Provider;
 
 class Laravel5JsonApiServiceProvider extends ServiceProvider
 {
@@ -43,108 +40,21 @@ class Laravel5JsonApiServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi');
-        $this->app->singleton(
-            JsonApiSerializer::class,
-            function ($app) {
-                $mapping = $app['config']->get('jsonapi');
-                $transformer = new JsonApiTransformer(self::parseRoutes(new Mapper($mapping)));
 
-                $cacheableConfig = function () use ($transformer) {
-                    return new JsonApiSerializer($transformer);
-                };
+        $version = Application::VERSION;
 
-                return Cache::rememberForever(md5(json_encode($mapping)), $cacheableConfig);
-            }
-        );
-    }
-
-    /**
-     * @param Mapper $mapper
-     *
-     * @return Mapper
-     */
-    private static function parseRoutes(Mapper $mapper)
-    {
-        foreach ($mapper->getClassMap() as &$mapping) {
-            $mappingClass = new \ReflectionClass($mapping);
-
-            self::setUrlWithReflection($mapping, $mappingClass, 'resourceUrlPattern');
-            self::setUrlWithReflection($mapping, $mappingClass, 'selfUrl');
-            $mappingProperty = $mappingClass->getProperty('otherUrls');
-            $mappingProperty->setAccessible(true);
-
-            $otherUrls = (array) $mappingProperty->getValue($mapping);
-            if (!empty($otherUrls)) {
-                foreach ($otherUrls as &$url) {
-                    if (!empty($url['name'])) {
-                        $url = self::calculateRoute($url);
-                    }
-                }
-            }
-            $mappingProperty->setValue($mapping, $otherUrls);
-
-            self::setJsonApiRelationships($mappingClass, $mapping);
+        switch ($version) {
+            case false !== strpos($version, '5.1'):
+                $callable = Laravel51Provider::provider();
+                break;
+            default:
+                throw new \RuntimeException(
+                    sprintf('Laravel version %s is not supported. Please use the 5.1 for the time being', $version)
+                );
+                break;
         }
 
-        return $mapper;
-    }
-
-    /**
-     * @param Mapping         $mapping
-     * @param ReflectionClass $mappingClass
-     * @param string          $property
-     */
-    private static function setUrlWithReflection(Mapping $mapping, ReflectionClass $mappingClass, $property)
-    {
-        $mappingProperty = $mappingClass->getProperty($property);
-        $mappingProperty->setAccessible(true);
-        $value = $mappingProperty->getValue($mapping);
-
-        if (!empty($value['name'])) {
-            $route = self::calculateRoute($value);
-            $mappingProperty->setValue($mapping, $route);
-        }
-    }
-
-    /**
-     * @param ReflectionClass $mappingClass
-     * @param                 $mapping
-     */
-    private static function setJsonApiRelationships(ReflectionClass $mappingClass, $mapping)
-    {
-        $mappingProperty = $mappingClass->getProperty('relationshipSelfUrl');
-        $mappingProperty->setAccessible(true);
-
-        $relationshipSelfUrl = (array) $mappingProperty->getValue($mapping);
-        if (!empty($relationshipSelfUrl)) {
-            foreach ($relationshipSelfUrl as &$urlMember) {
-                if (!empty($urlMember)) {
-                    foreach ($urlMember as &$url) {
-                        if (!empty($url['name'])) {
-                            $url = self::calculateRoute($url);
-                        }
-                    }
-                }
-            }
-        }
-        $mappingProperty->setValue($mapping, $relationshipSelfUrl);
-    }
-
-    /**
-     * @param array $value
-     *
-     * @return mixed|string
-     */
-    private static function calculateRoute(array $value)
-    {
-        $route = urldecode(route($value['name']));
-
-        if (!empty($value['as_id'])) {
-            preg_match_all('/{(.*?)}/', $route, $matches);
-            $route = str_replace($matches[0], '{'.$value['as_id'].'}', $route);
-        }
-
-        return $route;
+        $this->app->singleton(JsonApiSerializer::class, $callable);
     }
 
     /**
