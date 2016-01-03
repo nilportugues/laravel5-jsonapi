@@ -44,7 +44,7 @@ class Laravel5JsonApiServiceProvider extends ServiceProvider
         $version = Application::VERSION;
 
         switch ($version) {
-            case false !== strpos($version, '5.1'):
+            case false !== strpos($version, '5.1.'):
                 $callable = Laravel51Provider::provider();
                 break;
             default:
