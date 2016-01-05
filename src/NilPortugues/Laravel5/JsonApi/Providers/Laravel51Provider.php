@@ -10,7 +10,6 @@
 
 namespace NilPortugues\Laravel5\JsonApi\Providers;
 
-use Illuminate\Support\Facades\Cache;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
 use NilPortugues\Api\Mapping\Mapping;
 use NilPortugues\Laravel5\JsonApi\JsonApiSerializer;
@@ -22,17 +21,17 @@ use ReflectionClass;
  */
 class Laravel51Provider
 {
-    public static function provider()
+    public function provider()
     {
         return function ($app) {
             $mapping = $app['config']->get('jsonapi');
-            $transformer = new JsonApiTransformer(self::parseRoutes(new Mapper($mapping)));
+            $transformer = new JsonApiTransformer($this->parseRoutes(new Mapper($mapping)));
 
             $cacheableConfig = function () use ($transformer) {
                 return new JsonApiSerializer($transformer);
             };
 
-            return Cache::rememberForever(md5(json_encode($mapping)), $cacheableConfig);
+            return $cacheableConfig();
         };
     }
 
@@ -41,13 +40,13 @@ class Laravel51Provider
      *
      * @return Mapper
      */
-    private static function parseRoutes(Mapper $mapper)
+    protected function parseRoutes(Mapper $mapper)
     {
         foreach ($mapper->getClassMap() as &$mapping) {
             $mappingClass = new \ReflectionClass($mapping);
 
-            self::setUrlWithReflection($mapping, $mappingClass, 'resourceUrlPattern');
-            self::setUrlWithReflection($mapping, $mappingClass, 'selfUrl');
+            $this->setUrlWithReflection($mapping, $mappingClass, 'resourceUrlPattern');
+            $this->setUrlWithReflection($mapping, $mappingClass, 'selfUrl');
             $mappingProperty = $mappingClass->getProperty('otherUrls');
             $mappingProperty->setAccessible(true);
 
@@ -55,13 +54,13 @@ class Laravel51Provider
             if (!empty($otherUrls)) {
                 foreach ($otherUrls as &$url) {
                     if (!empty($url['name'])) {
-                        $url = self::calculateRoute($url);
+                        $url = $this->calculateRoute($url);
                     }
                 }
             }
             $mappingProperty->setValue($mapping, $otherUrls);
 
-            self::setJsonApiRelationships($mappingClass, $mapping);
+            $this->setJsonApiRelationships($mappingClass, $mapping);
         }
 
         return $mapper;
@@ -72,14 +71,14 @@ class Laravel51Provider
      * @param ReflectionClass $mappingClass
      * @param string          $property
      */
-    private static function setUrlWithReflection(Mapping $mapping, ReflectionClass $mappingClass, $property)
+    protected function setUrlWithReflection(Mapping $mapping, ReflectionClass $mappingClass, $property)
     {
         $mappingProperty = $mappingClass->getProperty($property);
         $mappingProperty->setAccessible(true);
         $value = $mappingProperty->getValue($mapping);
 
         if (!empty($value['name'])) {
-            $route = self::calculateRoute($value);
+            $route = $this->calculateRoute($value);
             $mappingProperty->setValue($mapping, $route);
         }
     }
@@ -88,7 +87,7 @@ class Laravel51Provider
      * @param ReflectionClass $mappingClass
      * @param                 $mapping
      */
-    private static function setJsonApiRelationships(ReflectionClass $mappingClass, $mapping)
+    protected function setJsonApiRelationships(ReflectionClass $mappingClass, $mapping)
     {
         $mappingProperty = $mappingClass->getProperty('relationshipSelfUrl');
         $mappingProperty->setAccessible(true);
@@ -99,7 +98,7 @@ class Laravel51Provider
                 if (!empty($urlMember)) {
                     foreach ($urlMember as &$url) {
                         if (!empty($url['name'])) {
-                            $url = self::calculateRoute($url);
+                            $url = $this->calculateRoute($url);
                         }
                     }
                 }
@@ -113,7 +112,7 @@ class Laravel51Provider
      *
      * @return mixed|string
      */
-    private static function calculateRoute(array $value)
+    protected function calculateRoute(array $value)
     {
         $route = urldecode(route($value['name']));
 
