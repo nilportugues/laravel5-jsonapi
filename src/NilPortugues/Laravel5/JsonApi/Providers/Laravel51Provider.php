@@ -10,6 +10,7 @@
 
 namespace NilPortugues\Laravel5\JsonApi\Providers;
 
+use Illuminate\Support\Facades\Cache;
 use NilPortugues\Api\JsonApi\JsonApiTransformer;
 use NilPortugues\Api\Mapping\Mapping;
 use NilPortugues\Laravel5\JsonApi\JsonApiSerializer;
@@ -24,14 +25,11 @@ class Laravel51Provider
     public function provider()
     {
         return function ($app) {
-            $mapping = $app['config']->get('jsonapi');
-            $transformer = new JsonApiTransformer($this->parseRoutes(new Mapper($mapping)));
+            $parsedRoutes = Cache::rememberForever('jsonapi.mapping', function () use ($app) {
+                return $this->parseRoutes(new Mapper($app['config']->get('jsonapi')));
+            });
 
-            $cacheableConfig = function () use ($transformer) {
-                return new JsonApiSerializer($transformer);
-            };
-
-            return $cacheableConfig();
+            return new JsonApiSerializer(new JsonApiTransformer($parsedRoutes));
         };
     }
 
