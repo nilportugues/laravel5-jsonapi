@@ -10,7 +10,7 @@
 
 namespace NilPortugues\Laravel5\JsonApi\Controller;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
@@ -133,7 +133,7 @@ abstract class JsonApiController extends Controller
     /**
      * Get single resource.
      *
-     * @param Request $request
+     * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -153,7 +153,7 @@ abstract class JsonApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param $id
      *
      * @return callable
      * @codeCoverageIgnore
