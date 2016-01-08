@@ -43,7 +43,7 @@ class Laravel5JsonApiServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi');
 
         $version = '5.0.0';
-        if (class_exists(self::LARAVEL_APPLICATION)) {
+        if (class_exists(self::LARAVEL_APPLICATION, true)) {
             $class = self::LARAVEL_APPLICATION;
             $version = $class::VERSION;
         }
