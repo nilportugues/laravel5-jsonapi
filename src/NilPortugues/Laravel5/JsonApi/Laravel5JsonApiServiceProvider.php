@@ -11,13 +11,13 @@
 
 namespace NilPortugues\Laravel5\JsonApi;
 
-use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use NilPortugues\Laravel5\JsonApi\Providers\Laravel51Provider;
 use NilPortugues\Laravel5\JsonApi\Providers\Laravel52Provider;
 
 class Laravel5JsonApiServiceProvider extends ServiceProvider
 {
+    const LARAVEL_APPLICATION = 'Illuminate\Foundation\Application';
     const PATH = '/../../../config/jsonapi.php';
 
     /**
@@ -42,7 +42,11 @@ class Laravel5JsonApiServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.self::PATH, 'jsonapi');
 
-        $version = Application::VERSION;
+        $version = '5.0.0';
+        if (class_exists(self::LARAVEL_APPLICATION)) {
+            $class = self::LARAVEL_APPLICATION;
+            $version = $class::VERSION;
+        }
 
         switch ($version) {
             case false !== strpos($version, '5.0.'):
