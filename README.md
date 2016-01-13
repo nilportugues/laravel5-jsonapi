@@ -460,7 +460,7 @@ Whether it's Laravel 5 or Lumen, usage is exactly the same.
 
 Let's create a new controller that extends the `JsonApiController` provided by this package, as follows:
 
-
+**Lumen users must extends from `LumenJsonApiController` not `JsonApiController`**.
 
 ```php
 <?php namespace App\Http\Controllers;
