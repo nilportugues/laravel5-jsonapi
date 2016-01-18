@@ -34,6 +34,11 @@ trait JsonApiTrait
     protected $serializer;
 
     /**
+     * @var int
+     */
+    protected $pageSize = 10;
+
+    /**
      * @param JsonApiSerializer $serializer
      */
     public function __construct(JsonApiSerializer $serializer)
@@ -44,17 +49,15 @@ trait JsonApiTrait
     /**
      * Get many resources.
      *
-     * @param int $pageSize
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index($pageSize = 10)
+    public function index()
     {
         $apiRequest = RequestFactory::create();
 
         $page = $apiRequest->getPage();
         if (!$page->size()) {
-            $page->setSize($pageSize);
+            $page->setSize($this->pageSize);
         }
 
         $fields = $apiRequest->getFields();
@@ -67,7 +70,7 @@ trait JsonApiTrait
         $totalAmount = $this->totalAmountResourceCallable();
         $results = $this->listResourceCallable();
 
-        $controllerAction = '\\'.get_class($this).'@index';
+        $controllerAction = '\\'.get_called_class().'@index';
         $uri = action($controllerAction, []);
 
         return $this->addHeaders($resource->get($totalAmount, $results, $uri, get_class($this->getDataModel())));

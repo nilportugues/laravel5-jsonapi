@@ -90,10 +90,9 @@ class EmployeesController extends JsonApiController
     {
         $apiRequest = RequestFactory::create();
 
-        $pageSize = 10;
         $page = $apiRequest->getPage();
         if (!$page->size()) {
-            $page->setSize($pageSize);
+            $page->setSize($this->pageSize);
         }
 
         $fields = $apiRequest->getFields();

@@ -19,7 +19,6 @@
     },
     "require-dev": {
         "laravel/laravel": "5.*",
-        "laravel/lumen": "5.*",
         "phpunit/phpunit": "4.*",
         "fabpot/php-cs-fixer": "^1.10"
     },
