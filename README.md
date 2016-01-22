@@ -434,7 +434,36 @@ This is how our `app/Http/routes.php` will look:
 <?php
 $app->group(
     ['namespace' => 'Api'], function($app) {
-        $app->resource('employees', 'EmployeesController');
+        $app->get(
+            'employees', [
+            'as' => 'employees.index',
+            'uses' =>'EmployeesController@index'
+        ]);
+        $app->post(
+            'employees', [
+            'as' => 'employees.store',
+            'uses' =>'EmployeesController@store'
+        ]);
+        $app->get(
+            'employees/{employee_id}', [
+            'as' => 'employees.show', 
+            'uses' =>'EmployeesController@show'
+        ]);
+        $app->put(
+            'employees/{employee_id}', [
+            'as' => 'employees.update', 
+            'uses' =>'EmployeesController@update'
+        ]);
+        $app->patch(
+            'employees/{employee_id}', [
+            'as' => 'employees.patch',
+            'uses' =>'EmployeesController@update'
+        ]);
+        $app->delete(
+            'employees/{employee_id}', [
+            'as' => 'employees.destroy',
+            'uses' =>'EmployeesController@destroy'
+        ]);
         
         $app->get(
             'employees/{employee_id}/orders', [
@@ -973,7 +1002,7 @@ Cache-Control: private, max-age=0, must-revalidate
 Content-type: application/vnd.api+json
 ```
 
-And notice how response will be empty:
+And notice how response will be empty:ro
 
 ```
 ```
