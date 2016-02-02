@@ -225,6 +225,8 @@ CREATE TABLE `orders` (
 
 Follow up, we'll be creating Transformers. One Transformer is required for each class and it must implement the `\NilPortugues\Api\Mappings\JsonApiMapping` interface.
 
+We will be placing these files at `app/Model/Api`:
+
 **EmployeesTransformer**
 
 ```php
@@ -321,7 +323,7 @@ class EmployeesTransformer implements JsonApiMapping
 } 
 ```
 
-Same goes for `Orders`. 
+Same goes for `Orders`,  these files will also be placed at `app/Model/Api`:
 
 **OrdersTransformer**
 
@@ -391,7 +393,7 @@ class OrdersTransformer implements JsonApiMapping
 
 #### Step 4: Usage
 
-Create a `jsonapi.php` file in `config/` directory. This file should return an array returning all the class mappings.
+Create file `config/jsonapi.php`. This file should return an array returning all the class mappings.
 
 
 ```php
