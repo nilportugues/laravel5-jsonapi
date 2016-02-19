@@ -192,7 +192,7 @@ trait JsonApiTrait
      */
     protected function createResourceCallable()
     {
-        return function (array $data, array $values) {
+        return function (array $data, array $values, ErrorBag $errorBag) {
             $model = $this->getDataModel()->newInstance();
 
             foreach ($values as $attribute => $value) {
