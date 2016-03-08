@@ -10,6 +10,7 @@
 
 namespace NilPortugues\Laravel5\JsonApi\Controller;
 
+use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
@@ -71,9 +72,18 @@ trait JsonApiTrait
         $results = $this->listResourceCallable();
 
         $controllerAction = '\\'.get_called_class().'@index';
-        $uri = action($controllerAction, []);
+        $uri = $this->uriGenerator($controllerAction);
 
         return $this->addHeaders($resource->get($totalAmount, $results, $uri, get_class($this->getDataModel())));
+    }
+
+    /**
+     * @param $controllerAction
+     * @return mixed
+     */
+    protected function uriGenerator($controllerAction)
+    {
+        return Container::getInstance()->make('url')->action($controllerAction, [], true);
     }
 
     /**

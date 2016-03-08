@@ -10,6 +10,7 @@
 
 namespace NilPortugues\Laravel5\JsonApi\Controller;
 
+use Laravel\Lumen\Application;
 use Laravel\Lumen\Routing\Controller;
 
 /**
@@ -18,15 +19,23 @@ use Laravel\Lumen\Routing\Controller;
 abstract class LumenJsonApiController extends Controller
 {
     use JsonApiTrait;
-}
 
-/**
- * @param $name
- * @param $parameters
- * @param $absolute
- * @return mixed
- */
-function action($name, $parameters, $absolute)
-{
-    return app('url')->action($name, $parameters, $absolute);
+    /**
+     * @param string $controllerAction
+     * @return mixed
+     *
+     *
+     * Add the missing implementation by using this as inspiration:
+     * https://gist.github.com/radmen/92200c62b633320b98a8
+     */
+    protected function uriGenerator($controllerAction)
+    {
+         /** @var array $routes */
+        $routes = Application::getInstance()->getRoutes();
+        foreach ($routes as $route) {
+            if ($route['action'] === $controllerAction) {
+                return $route;
+            }
+        }
+    }
 }
