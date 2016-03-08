@@ -19,3 +19,14 @@ abstract class LumenJsonApiController extends Controller
 {
     use JsonApiTrait;
 }
+
+/**
+ * @param $name
+ * @param $parameters
+ * @param $absolute
+ * @return mixed
+ */
+function action($name, $parameters, $absolute)
+{
+    return app('url')->action($name, $parameters, $absolute);
+}
