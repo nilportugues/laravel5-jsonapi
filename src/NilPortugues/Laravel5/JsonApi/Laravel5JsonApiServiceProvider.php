@@ -64,6 +64,8 @@ class Laravel5JsonApiServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(JsonApiSerializer::class, $provider->provider());
+
+        $this->publishes([__DIR__.'/../../../config/jsonapi.php' => base_path('config')]);
     }
 
     /**
