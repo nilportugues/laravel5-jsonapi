@@ -1354,7 +1354,7 @@ class EmployeesController extends JsonApiController
 }    
 ```
 
-Now all supported actions will include the addded custom headers.
+Now all supported actions will include the added custom headers.
 
 <br>
 
