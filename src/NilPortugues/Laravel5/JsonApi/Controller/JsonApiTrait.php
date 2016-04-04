@@ -15,12 +15,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
 use NilPortugues\Api\JsonApi\Http\Response\ResourceNotFound;
-use NilPortugues\Api\JsonApi\Server\Actions\CreateResource;
-use NilPortugues\Api\JsonApi\Server\Actions\DeleteResource;
-use NilPortugues\Api\JsonApi\Server\Actions\GetResource;
-use NilPortugues\Api\JsonApi\Server\Actions\ListResource;
-use NilPortugues\Api\JsonApi\Server\Actions\PatchResource;
-use NilPortugues\Api\JsonApi\Server\Actions\PutResource;
+use NilPortugues\Laravel5\JsonApi\Actions\CreateResource;
+use NilPortugues\Laravel5\JsonApi\Actions\DeleteResource;
+use NilPortugues\Laravel5\JsonApi\Actions\GetResource;
+use NilPortugues\Laravel5\JsonApi\Actions\ListResource;
+use NilPortugues\Laravel5\JsonApi\Actions\PatchResource;
+use NilPortugues\Laravel5\JsonApi\Actions\PutResource;
 use NilPortugues\Api\JsonApi\Server\Errors\Error;
 use NilPortugues\Api\JsonApi\Server\Errors\ErrorBag;
 use NilPortugues\Laravel5\JsonApi\Eloquent\EloquentHelper;
@@ -79,6 +79,7 @@ trait JsonApiTrait
 
     /**
      * @param $controllerAction
+     *
      * @return mixed
      */
     protected function uriGenerator($controllerAction)

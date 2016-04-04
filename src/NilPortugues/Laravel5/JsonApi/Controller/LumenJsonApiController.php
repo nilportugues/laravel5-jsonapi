@@ -22,6 +22,7 @@ abstract class LumenJsonApiController extends Controller
 
     /**
      * @param string $controllerAction
+     *
      * @return mixed
      *
      *
@@ -30,7 +31,7 @@ abstract class LumenJsonApiController extends Controller
      */
     protected function uriGenerator($controllerAction)
     {
-         /** @var array $routes */
+        /** @var array $routes */
         $routes = Application::getInstance()->getRoutes();
         foreach ($routes as $route) {
             if ($route['action'] === $controllerAction) {
