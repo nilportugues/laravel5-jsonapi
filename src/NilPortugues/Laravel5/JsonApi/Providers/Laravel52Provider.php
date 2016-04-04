@@ -87,7 +87,7 @@ class Laravel52Provider extends Laravel51Provider
         }
 
         $port = parse_url($router->current(), PHP_URL_PORT);
-        $port = (null == $port) ? '' : ':'.$port;
+        $port = (null === $port) ? '' : ':'.$port;
 
         $scheme = parse_url($router->current(), PHP_URL_SCHEME);
         $host = parse_url($router->current(), PHP_URL_HOST).$port;
