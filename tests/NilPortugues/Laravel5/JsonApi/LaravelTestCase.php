@@ -17,6 +17,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Routing\Router;
 use NilPortugues\Tests\App\Transformers\EmployeesTransformer;
 use NilPortugues\Tests\App\Transformers\OrdersTransformer;
+use Psr\Log\NullLogger;
 
 /**
  * Class LaravelTestCase.
@@ -95,6 +96,7 @@ class LaravelTestCase extends \Illuminate\Foundation\Testing\TestCase
     {
         $app->instance('request', (new \Illuminate\Http\Request())->instance());
         $app->make('Illuminate\Foundation\Http\Kernel', [$app, $this->getRouter()])->bootstrap();
+        $app->bind('Illuminate\Contracts\Debug\ExceptionHandler', new \NilPortugues\Tests\App\Exceptions\Handler(new NullLogger()));
     }
 
     /**

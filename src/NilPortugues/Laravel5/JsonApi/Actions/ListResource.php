@@ -24,7 +24,7 @@ class ListResource extends \NilPortugues\Api\JsonApi\Server\Actions\ListResource
      */
     public function getErrorResponse(\Exception $e)
     {
-        if (env('APP_DEBUG')) {
+        if (config('app.debug')) {
             throw $e;
         }
 

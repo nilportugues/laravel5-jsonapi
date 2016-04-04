@@ -26,7 +26,7 @@ class GetResource extends \NilPortugues\Api\JsonApi\Server\Actions\GetResource
      */
     public function getErrorResponse(Exception $e)
     {
-        if (env('APP_DEBUG')) {
+        if (config('app.debug')) {
             throw $e;
         }
 

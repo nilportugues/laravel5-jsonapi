@@ -25,9 +25,13 @@ class Laravel51Provider
     public function provider()
     {
         return function ($app) {
-            $parsedRoutes = Cache::rememberForever('jsonapi.mapping', function () use ($app) {
-                return $this->parseRoutes(new Mapper($app['config']->get('jsonapi')));
-            });
+            if (config('app.debug')) {
+                $parsedRoutes = $this->parseRoutes(new Mapper($app['config']->get('jsonapi')));
+            } else {
+                $parsedRoutes = Cache::rememberForever('jsonapi.mapping', function () use ($app) {
+                    return $this->parseRoutes(new Mapper($app['config']->get('jsonapi')));
+                });
+            }
 
             return new JsonApiSerializer(new JsonApiTransformer($parsedRoutes));
         };

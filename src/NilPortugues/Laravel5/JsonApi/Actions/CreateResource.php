@@ -28,7 +28,7 @@ class CreateResource extends \NilPortugues\Api\JsonApi\Server\Actions\CreateReso
      */
     public function getErrorResponse(Exception $e, ErrorBag $errorBag)
     {
-        if (env('APP_DEBUG')) {
+        if (config('app.debug')) {
             throw $e;
         }
 

@@ -104,6 +104,9 @@ JSON;
 
     public function testGetActionWhenEmployeeDoesNotExist()
     {
+        //error need to be tested as production or exception will be thrown in debug mode.
+        $this->app['config']->set('app.debug', false);
+
         $response = $this->call('GET', 'http://localhost/employees/1000');
 
         $this->assertEquals(404, $response->getStatusCode());
@@ -121,6 +124,9 @@ JSON;
 
     public function testPostActionCreateNonexistentTypeAndReturnErrors()
     {
+        //error need to be tested as production or exception will be thrown in debug mode.
+        $this->app['config']->set('app.debug', false);
+
         $content = <<<JSON
 {
     "data": {
@@ -137,6 +143,9 @@ JSON;
 
     public function testPostActionReturnsErrorBecauseAttributesAreMissing()
     {
+        //error need to be tested as production or exception will be thrown in debug mode.
+        $this->app['config']->set('app.debug', false);
+
         $content = <<<JSON
 {
     "data": {
@@ -166,6 +175,9 @@ JSON;
 
     public function testPatchActionWhenEmployeeDoesNotExistReturns404()
     {
+        //error need to be tested as production or exception will be thrown in debug mode.
+        $this->app['config']->set('app.debug', false);
+
         $content = <<<JSON
 {
   "data": {
@@ -192,6 +204,9 @@ JSON;
 
     public function testPutActionWhenEmployeeDoesNotExistReturns404()
     {
+        //error need to be tested as production or exception will be thrown in debug mode.
+        $this->app['config']->set('app.debug', false);
+
         $content = <<<JSON
 {
   "data": {
