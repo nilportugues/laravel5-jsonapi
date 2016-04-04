@@ -32,7 +32,7 @@ class Laravel5JsonApiServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([__DIR__.self::PATH => config('jsonapi.php')]);
+        $this->publishes([realpath(__DIR__.'/../../../config') => base_path('config')]);
     }
 
     /**
@@ -64,8 +64,6 @@ class Laravel5JsonApiServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(JsonApiSerializer::class, $provider->provider());
-
-        $this->publishes([__DIR__.'/../../../config/jsonapi.php' => base_path('config')]);
     }
 
     /**
