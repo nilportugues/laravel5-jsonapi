@@ -378,7 +378,7 @@ class OrdersTransformer implements JsonApiMapping
     {
         return [
             'self'     => ['name' => 'orders.show', 'as_id' => 'id'],
-            'employee' => ['name' => 'employees.get', 'as_id' => 'employee_id'],
+            'employee' => ['name' => 'employees.show', 'as_id' => 'employee_id'],
         ];
     }
     /**
