@@ -1052,12 +1052,12 @@ For instance, passing `/employees/10?fields[employee]=company,first_name` will p
 }
 ```
     
-- Show only those `included` resources by passing in the relationship between them separated by dot, or just pass in list of resources separated by comma.
+- Show only those `include` resources by passing in the relationship between them separated by dot, or just pass in list of resources separated by comma.
     - &include=resource1
     - &include=resource1.resource2,resource2.resource3
     
     
-For instance, `/employees?included=order` will only load order type data inside `included` member, but `/employees?included=order.employee` will only load those orders related to the `employee` type.
+For instance, `/employees?include=order` will only load order type data inside `include` member, but `/employees?include=order.employee` will only load those orders related to the `employee` type.
 
 - Sort results using `sort` and passing in the member names of the main resource defined in `data[type]` member. If it starts with a `-` order is `DESCENDING`, otherwise it's `ASCENDING`.
 
