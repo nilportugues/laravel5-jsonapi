@@ -1005,7 +1005,7 @@ Cache-Control: private, max-age=0, must-revalidate
 Content-type: application/vnd.api+json
 ```
 
-And notice how response will be empty:ro
+And notice how response will be empty:
 
 ```
 ```
@@ -1373,8 +1373,6 @@ Get in touch with me using one of the following means:
 
  - Emailing me at <contact@nilportugues.com>
  - Opening an [Issue](https://github.com/nilportugues/laravel5-jsonapi-transformer/issues/new)
- - Using Gitter: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nilportugues/laravel5-jsonapi-transformer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
 
 <br>
 ## Authors
