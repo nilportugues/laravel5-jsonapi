@@ -331,7 +331,7 @@ Same goes for `Orders`,  these files will also be placed at `app/Model/Api`:
 ```php
 <?php namespace App\Model\Api;
 
-use App\Orders;
+use App\Model\Database\Orders;
 use NilPortugues\Api\Mappings\JsonApiMapping;
 
 class OrdersTransformer implements JsonApiMapping
