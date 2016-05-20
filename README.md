@@ -163,6 +163,10 @@ CREATE TABLE `employees` (
   KEY `zip_postal_code` (`zip_postal_code`),
   KEY `state_province` (`state_province`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+INSERT INTO `employees` (`id`, `company`, `last_name`, `first_name`, `email_address`, `job_title`, `business_phone`, `home_phone`, `mobile_phone`, `fax_number`, `address`, `city`, `state_province`, `zip_postal_code`, `country_region`, `web_page`, `notes`, `attachments`)
+VALUES
+    (10, 'How Apped', 'Whittlestone', 'Jon', 'jon@laravelfreelancer.com', 'Software Developer', '0118 9843212', NULL, NULL, NULL, '343 Friary Road', 'Manchester', 'Lancs.', 'M3 3DL', 'United Kingdom', NULL, NULL, NULL);
+
 ```
 
 **Orders (Eloquent Model)**
@@ -222,6 +226,10 @@ CREATE TABLE `orders` (
   KEY `fk_orders_orders_status1` (`status_id`),  
   CONSTRAINT `fk_orders_employees1` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
+INSERT INTO `orders` (`id`, `employee_id`, `customer_id`, `order_date`, `shipped_date`, `shipper_id`, `ship_name`, `ship_address`, `ship_city`, `ship_state_province`, `ship_zip_postal_code`, `ship_country_region`, `shipping_fee`, `taxes`, `payment_type`, `paid_date`, `notes`, `tax_rate`, `tax_status_id`, `status_id`)
+VALUES
+    (82, 10, NULL, '2015-03-12 00:00:00', '2015-03-12 00:00:00', NULL, NULL, '43, Borrowed Drive', 'New Oreleans', 'Louisiana', '4322', 'USA', 1.4000, 0.0000, NULL, NULL, NULL, 0, NULL, 0);
+
 ```
 
 Follow up, we'll be creating Transformers. One Transformer is required for each class and it must implement the `\NilPortugues\Api\Mappings\JsonApiMapping` interface.
