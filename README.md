@@ -165,7 +165,7 @@ CREATE TABLE `employees` (
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 INSERT INTO `employees` (`id`, `company`, `last_name`, `first_name`, `email_address`, `job_title`, `business_phone`, `home_phone`, `mobile_phone`, `fax_number`, `address`, `city`, `state_province`, `zip_postal_code`, `country_region`, `web_page`, `notes`, `attachments`)
 VALUES
-    (10, 'How Apped', 'Whittlestone', 'Jon', 'jon@laravelfreelancer.com', 'Software Developer', '0118 9843212', NULL, NULL, NULL, '343 Friary Road', 'Manchester', 'Lancs.', 'M3 3DL', 'United Kingdom', NULL, NULL, NULL);
+    (10, 'Acme Industries', 'Smith', 'Mike', 'mike.smith@mail.com', 'Horticultarlist', '0118 9843212', NULL, NULL, NULL, '343 Friary Road', 'Manchester', 'Lancs.', 'M3 3DL', 'United Kingdom', NULL, NULL, NULL);
 
 ```
 
