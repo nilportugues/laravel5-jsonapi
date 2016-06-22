@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "nilportugues/json-api": "^2.1",
+        "nilportugues/json-api": "^2.2",
         "symfony/psr-http-message-bridge": "~0.1",
         "nilportugues/serializer-eloquent": "~1.0"
     },
@@ -21,7 +21,7 @@
         "laravel/laravel": "5.*",
         "laravel/lumen": "^5.2",
         "phpunit/phpunit": "4.*",
-        "fabpot/php-cs-fixer": "^1.10"
+        "friendsofphp/php-cs-fixer": "^1.10"
     },
     "autoload": {
         "psr-4": {
