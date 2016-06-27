@@ -42,7 +42,7 @@ class Laravel52Provider extends Laravel51Provider
             if ($routerObject->getName() === $value['name']) {
                 $route = $routerObject->getPath();
 
-                return $this->calculateFullPath($value, $route, $router);
+                return $this->calculateFullPath($value, $route);
             }
         }
 
@@ -79,19 +79,13 @@ class Laravel52Provider extends Laravel51Provider
      *
      * @return mixed|string
      */
-    protected function calculateFullPath(array &$value, $route, UrlGenerator $router)
+    protected function calculateFullPath(array &$value, $route)
     {
         if (!empty($value['as_id'])) {
             preg_match_all('/{(.*?)}/', $route, $matches);
             $route = str_replace($matches[0], '{'.$value['as_id'].'}', $route);
         }
 
-        $port = parse_url($router->current(), PHP_URL_PORT);
-        $port = (null === $port) ? '' : ':'.$port;
-
-        $scheme = parse_url($router->current(), PHP_URL_SCHEME);
-        $host = parse_url($router->current(), PHP_URL_HOST).$port;
-
-        return sprintf('%s://%s/%s', $scheme, $host, $route);
+        return url($route);
     }
 }
