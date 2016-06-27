@@ -11,8 +11,6 @@
 namespace NilPortugues\Laravel5\JsonApi\Controller;
 
 use Illuminate\Routing\Controller;
-use Illuminate\Container\Container;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
 use NilPortugues\Api\JsonApi\Http\Response\ResourceNotFound;
@@ -100,6 +98,7 @@ abstract class JsonApiController extends Controller
     {
         $createResource = $this->createResourceCallable();
         $resource = new CreateResource($this->serializer);
+
         return $this->addHeaders(
           $resource->get((array) $request->get('data'), get_class($this->getDataModel()), $createResource)
         );
