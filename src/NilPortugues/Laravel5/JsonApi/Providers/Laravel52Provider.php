@@ -52,8 +52,7 @@ class Laravel52Provider extends Laravel51Provider
     }
 
     /**
-     * \Illuminate\Routing\UrlGenerator $router.
-     *
+     * @param UrlGenerator $router
      * @return mixed
      */
     protected function getRouterCollection(UrlGenerator $router)
@@ -75,7 +74,6 @@ class Laravel52Provider extends Laravel51Provider
     /**
      * @param array        $value
      * @param string       $route
-     * @param UrlGenerator $router
      *
      * @return mixed|string
      */
