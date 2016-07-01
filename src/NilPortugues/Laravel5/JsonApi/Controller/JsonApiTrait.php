@@ -128,7 +128,7 @@ trait JsonApiTrait
             }
 
             if (!empty($data['id'])) {
-                $model->setAttribute($model->getKeyName(), $values['id']);
+                $model->setAttribute($model->getKeyName(), $data['id']);
             }
 
             try {
