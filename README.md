@@ -52,7 +52,7 @@ $ composer require nilportugues/laravel5-json-api
 Now run the following artisan command: 
 
 ```
-php artisan vendor:publish
+$ php artisan vendor:publish
 ```
 
 ## Configuration (Laravel 5 & Lumen)
