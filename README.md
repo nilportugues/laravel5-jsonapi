@@ -39,7 +39,7 @@
 - [GET Query Params: include, fields, sort and page](#get-query-params-include-fields-sort-and-page)
 - [POST/PUT/PATCH with Relationships](#postputpatch-with-relationships)
 - [Custom Response Headers](#custom-response-headers)
-
+- [Common Errors and Solutions](#common-errors-and-solutions)
 
 ## Installation
 
@@ -1368,6 +1368,15 @@ class EmployeesController extends JsonApiController
 ```
 
 Now all supported actions will include the added custom headers.
+
+# Common Errors and Solutions
+
+### "Undefined index: @type"
+
+This usually happens because you did not write the namespace of your `Mapping` in `config/jsonapi.php`. 
+Double check, if missing, add it and refresh the resource. It should be gone!
+
+----
 
 <br>
 
