@@ -49,6 +49,11 @@ Use [Composer](https://getcomposer.org) to install the package:
 $ composer require nilportugues/laravel5-json-api
 ```
 
+Now run the following artisan command: 
+
+```
+$ php artisan vendor:publish
+```
 
 ## Configuration (Laravel 5 & Lumen)
 
