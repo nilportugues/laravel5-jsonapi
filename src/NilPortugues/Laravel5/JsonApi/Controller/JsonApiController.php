@@ -10,6 +10,7 @@
 
 namespace NilPortugues\Laravel5\JsonApi\Controller;
 
+use Carbon\Carbon;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use NilPortugues\Api\JsonApi\Http\Factory\RequestFactory;
@@ -99,8 +100,13 @@ abstract class JsonApiController extends Controller
         $createResource = $this->createResourceCallable();
         $resource = new CreateResource($this->serializer);
 
+        $model = $this->getDataModel();
+        $data = (array) $request->get('data');
+        $data['attributes'][$model::CREATED_AT] = Carbon::now()->toDateTimeString();
+        $data['attributes'][$model::UPDATED_AT] = Carbon::now()->toDateTimeString();
+
         return $this->addHeaders(
-          $resource->get((array) $request->get('data'), get_class($this->getDataModel()), $createResource)
+          $resource->get($data, get_class($this->getDataModel()), $createResource)
         );
     }
 
