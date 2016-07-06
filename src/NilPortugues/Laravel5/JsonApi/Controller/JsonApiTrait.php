@@ -10,6 +10,7 @@
 
 namespace NilPortugues\Laravel5\JsonApi\Controller;
 
+use Carbon\Carbon;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -197,10 +198,16 @@ trait JsonApiTrait
 
         $resource = new PatchResource($this->serializer);
 
+        $model = $this->getDataModel();
+        $data = (array) $request->get('data');
+        if (array_key_exists('attributes', $data) && $model->timestamps) {
+            $data['attributes'][$model::UPDATED_AT] = Carbon::now()->toDateTimeString();
+        }
+        
         return $this->addHeaders(
             $resource->get(
                 $id,
-                (array) $request->get('data'),
+                $data,
                 get_class($this->getDataModel()),
                 $find,
                 $update

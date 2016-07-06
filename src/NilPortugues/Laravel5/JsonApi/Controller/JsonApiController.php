@@ -102,8 +102,10 @@ abstract class JsonApiController extends Controller
 
         $model = $this->getDataModel();
         $data = (array) $request->get('data');
-        $data['attributes'][$model::CREATED_AT] = Carbon::now()->toDateTimeString();
-        $data['attributes'][$model::UPDATED_AT] = Carbon::now()->toDateTimeString();
+        if (array_key_exists('attributes', $data) && $model->timestamps) {
+            $data['attributes'][$model::CREATED_AT] = Carbon::now()->toDateTimeString();
+            $data['attributes'][$model::UPDATED_AT] = Carbon::now()->toDateTimeString();
+        }
 
         return $this->addHeaders(
           $resource->get($data, get_class($this->getDataModel()), $createResource)
