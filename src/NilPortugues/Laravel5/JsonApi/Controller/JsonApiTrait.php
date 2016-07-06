@@ -145,8 +145,8 @@ trait JsonApiTrait
 
     /**
      * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param $id
+     * @return Response
      */
     protected function putAction(Request $request, $id)
     {
@@ -154,15 +154,14 @@ trait JsonApiTrait
         $update = $this->updateResourceCallable();
 
         $resource = new PutResource($this->serializer);
+        $model = $this->getDataModel();
+        $data = (array) $request->get('data');
+        if (array_key_exists('attributes', $data) && $model->timestamps) {
+            $data['attributes'][$model::UPDATED_AT] = Carbon::now()->toDateTimeString();
+        }
 
         return $this->addHeaders(
-            $resource->get(
-                $id,
-                (array) $request->get('data'),
-                get_class($this->getDataModel()),
-                $find,
-                $update
-            )
+            $resource->get($id, $data, get_class($model), $find, $update)
         );
     }
 
@@ -187,8 +186,7 @@ trait JsonApiTrait
 
     /**
      * @param Request $request
-     * @param         $id
-     *
+     * @param $id
      * @return Response
      */
     protected function patchAction(Request $request, $id)
@@ -205,13 +203,7 @@ trait JsonApiTrait
         }
         
         return $this->addHeaders(
-            $resource->get(
-                $id,
-                $data,
-                get_class($this->getDataModel()),
-                $find,
-                $update
-            )
+            $resource->get($id, $data, get_class($model), $find, $update)
         );
     }
 
