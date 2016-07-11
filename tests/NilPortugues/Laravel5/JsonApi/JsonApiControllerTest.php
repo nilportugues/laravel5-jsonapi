@@ -58,6 +58,62 @@ class JsonApiControllerTest extends LaravelTestCase
         $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
     }
 
+    public function testPatchAction()
+    {
+        $this->createNewEmployee();
+
+        $content = <<<JSON
+{
+    "data": {
+        "type": "employee",
+        "attributes": {
+            "job_title": "Senior Web Developer"
+        }
+    }
+}
+JSON;
+        $response = $this->call('PATCH', 'http://localhost/employees/1', json_decode($content, true), [], [], [], '');
+        
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
+    }
+
+    public function testPutAction()
+    {
+        $this->createNewEmployee();
+
+        $content = <<<JSON
+{
+    "data": {
+        "type": "employee",
+        "attributes": {
+            "company": "NilPortugues.com",
+            "surname": "Portugués",
+            "first_name": "Nil",
+            "email_address": "nilportugues@localhost",
+            "job_title": "Senior Web Developer",
+            "business_phone": "(123)555-0100",
+            "home_phone": "(123)555-0102",
+            "mobile_phone": null,
+            "fax_number": "(123)555-0103",
+            "address": "Plaça Catalunya 1",
+            "city": "Barcelona",
+            "state_province": "Barcelona",
+            "zip_postal_code": "08028",
+            "country_region": "Spain",
+            "web_page": "http://nilportugues.com",
+            "notes": null,
+            "attachments": null
+        }
+    }
+}
+JSON;
+        $response = $this->call('PUT', 'http://localhost/employees/1', json_decode($content, true), [], [], [], '');
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('application/vnd.api+json', $response->headers->get('Content-type'));
+    }
+
     public function testDeleteAction()
     {
         $this->createNewEmployee();

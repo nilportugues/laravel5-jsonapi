@@ -171,7 +171,7 @@ trait JsonApiTrait
      */
     protected function updateResourceCallable()
     {
-        return function (Model $model, array $values, ErrorBag $errorBag) {
+        return function (Model $model, array $data, array $values, ErrorBag $errorBag) {
             foreach ($values as $attribute => $value) {
                 $model->$attribute = $value;
             }

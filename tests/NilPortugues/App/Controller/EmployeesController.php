@@ -37,9 +37,9 @@ class EmployeesController extends JsonApiController
     /**
      * @return callable
      */
-    protected function createResourceCallable()
+    private function createOrderResourceCallable()
     {
-        $createOrderResource = function (Model $model, array $data) {
+        return function (Model $model, array $data) {
             if (!empty($data['relationships']['order']['data'])) {
                 $orderData = $data['relationships']['order']['data'];
 
@@ -53,6 +53,14 @@ class EmployeesController extends JsonApiController
                 }
             }
         };
+    }
+
+    /**
+     * @return callable
+     */
+    protected function createResourceCallable()
+    {
+        $createOrderResource = $this->createOrderResourceCallable();
 
         return function (array $data, array $values, ErrorBag $errorBag) use ($createOrderResource) {
 
@@ -75,6 +83,35 @@ class EmployeesController extends JsonApiController
             } catch (\Exception $e) {
                 DB::rollback();
                 $errorBag[] = new Error('creation_error', 'Resource could not be created');
+                throw new \Exception();
+            }
+
+        };
+    }
+
+    /**
+     * @return callable
+     */
+    protected function updateResourceCallable()
+    {
+        $createOrderResource = $this->createOrderResourceCallable();
+
+        return function (Model $model, array $data, array $values, ErrorBag $errorBag) use ($createOrderResource) {
+
+            foreach ($values as $attribute => $value) {
+                $model->$attribute = $value;
+            }
+
+            DB::beginTransaction();
+            try {
+                $model->update();
+                $createOrderResource($model, $data);
+                DB::commit();
+
+                return $model;
+            } catch (\Exception $e) {
+                DB::rollback();
+                $errorBag[] = new Error('update_error', 'Resource could not be updated');
                 throw new \Exception();
             }
 
