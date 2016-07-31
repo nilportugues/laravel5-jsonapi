@@ -63,7 +63,7 @@ trait JsonApiTrait
         return function () {
             $idKey = $this->getDataModel()->getKeyName();
 
-            return $this->getDataModel()->query()->get([$idKey])->count();
+            return $this->getDataModel()->query()->count([$idKey]);
         };
     }
 
