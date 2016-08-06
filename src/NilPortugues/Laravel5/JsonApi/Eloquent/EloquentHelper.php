@@ -23,17 +23,18 @@ trait EloquentHelper
     /**
      * @param JsonApiSerializer $serializer
      * @param Builder           $builder
+     * @param int               $pageSize
      *
      * @return Builder
      */
-    public static function paginate(JsonApiSerializer $serializer, Builder $builder)
+    public static function paginate(JsonApiSerializer $serializer, Builder $builder, $pageSize = null)
     {
         self::sort($serializer, $builder, $builder->getModel());
 
         $request = RequestFactory::create();
 
         $builder->paginate(
-            $request->getPage()->size(),
+            $request->getPage()->size() ?: $pageSize,
             self::columns($serializer, $request->getFields()->get()),
             'page',
             $request->getPage()->number()

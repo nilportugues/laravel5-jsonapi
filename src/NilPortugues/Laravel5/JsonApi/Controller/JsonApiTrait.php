@@ -83,7 +83,7 @@ trait JsonApiTrait
     protected function listResourceCallable()
     {
         return function () {
-            return EloquentHelper::paginate($this->serializer, $this->getDataModel()->query())->get();
+            return EloquentHelper::paginate($this->serializer, $this->getDataModel()->query(), $this->pageSize)->get();
         };
     }
 
