@@ -134,6 +134,9 @@ trait JsonApiTrait
 
             try {
                 $model->save();
+
+                //We need to load the model from the DB in case the user is utilizing getRequiredFields() on the transformer.
+                $model = $model->fresh();
             } catch (\Exception $e) {
                 $errorBag[] = new Error('creation_error', 'Resource could not be created');
                 throw $e;
