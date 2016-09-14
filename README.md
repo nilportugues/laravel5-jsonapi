@@ -401,6 +401,15 @@ class OrdersTransformer implements JsonApiMapping
     {
         return [];
     }
+    
+    /**
+     * List the fields that are mandatory in a persitence action (POST/PUT). 
+     * If empty array is returned, all fields are mandatory.
+     */
+    public function getRequiredProperties()
+    {
+        return [];
+    }    
 } 
 ```
 
