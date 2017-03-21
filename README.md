@@ -1386,8 +1386,6 @@ Double check, if missing, add it and refresh the resource. It should be gone!
 
 ----
 
-<br>
-
 ## Contribute
 
 Contributions to the package are always welcome!
@@ -1396,7 +1394,6 @@ Contributions to the package are always welcome!
 * You can grab the source code at the package's [Git repository](https://github.com/nilportugues/laravel5-jsonapi-transformer).
 
 
-<br>
 ## Support
 
 Get in touch with me using one of the following means:
@@ -1404,7 +1401,6 @@ Get in touch with me using one of the following means:
  - Emailing me at <contact@nilportugues.com>
  - Opening an [Issue](https://github.com/nilportugues/laravel5-jsonapi-transformer/issues/new)
 
-<br>
 ## Authors
 
 * [Nil Portugués Calderó](http://nilportugues.com)
